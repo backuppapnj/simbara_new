@@ -25,10 +25,10 @@
 - [x] Run migrations and verify
 
 ### Task 1.4: Create Stock Opname Migrations
-- [ ] Create migration for stock_opnames table
-- [ ] Create migration for stock_opname_details table
-- [ ] Write unit tests for StockOpname and StockOpnameDetail models
-- [ ] Run migrations and verify
+- [x] Create migration for stock_opnames table
+- [x] Create migration for stock_opname_details table
+- [x] Write unit tests for StockOpname and StockOpnameDetail models
+- [x] Run migrations and verify
 
 ### Task 1.5: Create Model Relationships
 - [ ] Define Item relationships (hasMany mutations, requestDetails, etc.)
