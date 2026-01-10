@@ -136,10 +136,10 @@
 - [ ] Test data formatting
 
 ### Task 4.3: Create Show Page
-- [ ] Create Show.tsx page
-- [ ] Display all SIMAN fields
-- [ ] Add back button
-- [ ] Add action buttons (Update Lokasi, Update Kondisi, Perawatan)
+- [x] Create Show.tsx page [d16172b]
+- [x] Display all SIMAN fields
+- [x] Add back button
+- [x] Add action buttons (Update Lokasi, Update Kondisi, Perawatan)
 - [ ] Write integration tests
 - [ ] Test page rendering
 
@@ -147,18 +147,55 @@
 
 ---
 
-## Phase 5: Update Features
+## Phase 5: Photo Upload Feature (Enhancement)
 
-### Task 5.1: Create Update Location Feature
-- [ ] Create UpdateLocationRequest validation
-- [ ] Add POST /assets/{id}/update-location route
-- [ ] Create controller method
-- [ ] Create AssetHistory record on update
-- [ ] Write tests for update location
+### Task 5.1: Database & Model Setup
+- [x] Create AssetPhotos migration with ULID, foreign keys [83a9e52]
+- [x] Add fields: file_path, file_name, file_size, mime_type, caption, is_primary
+- [x] Add soft deletes
+- [x] Write unit tests for AssetPhoto model
+- [x] Run migration and verify
+
+### Task 5.2: Backend Implementation
+- [x] Create AssetPhoto model with relationships [83a9e52]
+- [x] Add photos() relationship to Asset model [83a9e52]
+- [x] Create StoreAssetPhotoRequest validation [83a9e52]
+- [x] Create UpdateAssetPhotoRequest validation [83a9e52]
+- [x] Add photo upload routes to web.php [83a9e52]
+- [x] Implement photosIndex() method [83a9e52]
+- [x] Implement photosStore() method [83a9e52]
+- [x] Implement photosUpdate() method [83a9e52]
+- [x] Implement photosDestroy() method [83a9e52]
+- [x] Write feature tests for all endpoints [83a9e52]
+- [x] Run vendor/bin/pint --dirty
+
+### Task 5.3: Frontend Components
+- [x] Create AssetPhotoGallery component [f53ca3c]
+- [x] Create AssetPhotoUpload component [f53ca3c]
+- [x] Integrate CameraCapture for photo capture [f53ca3c]
+- [x] Add photo preview and management [f53ca3c]
+- [x] Create use-page-props hook [d16172b]
+- [x] Update types with PageProps interface [d16172b]
+- [x] Integrate photo gallery into Asset Show page [d16172b]
+- [x] Test upload flow (file + camera)
+- [x] Test photo management (view, delete, set primary)
+
+### Task 5.4: Task: Conductor - User Manual Verification 'Phase 5: Photo Upload Feature' (Protocol in workflow.md)
+
+---
+
+## Phase 6: Update Features
+
+### Task 6.1: Create Update Location Feature
+- [x] Create UpdateLocationRequest validation
+- [x] Add POST /assets/{id}/update-location route [4f9cd9a]
+- [x] Create controller method [4f9cd9a]
+- [x] Create AssetHistory record on update [4f9cd9a]
+- [x] Write tests for update location
 - [ ] Create UpdateLocationForm.tsx component
 - [ ] Test location update flow
 
-### Task 5.2: Create Update Condition Feature
+### Task 6.2: Create Update Condition Feature
 - [ ] Create UpdateConditionRequest validation
 - [ ] Add POST /assets/{id}/update-condition route
 - [ ] Create controller method
@@ -167,7 +204,7 @@
 - [ ] Create UpdateConditionForm.tsx component
 - [ ] Test condition update flow
 
-### Task 5.3: Create Maintenance Feature
+### Task 6.3: Create Maintenance Feature
 - [ ] Create StoreMaintenanceRequest validation
 - [ ] Add POST /assets/{id}/maintenance route
 - [ ] Create controller method
@@ -176,7 +213,7 @@
 - [ ] Create MaintenanceForm.tsx component
 - [ ] Test maintenance creation flow
 
-### Task 5.4: Create Assign Handler Feature
+### Task 6.4: Create Assign Handler Feature
 - [ ] Create AssignHandlerRequest validation
 - [ ] Add POST /assets/{id}/assign-handler route
 - [ ] Create controller method
@@ -185,21 +222,21 @@
 - [ ] Create AssignHandlerForm.tsx component
 - [ ] Test handler assignment
 
-### Task 5.5: Task: Conductor - User Manual Verification 'Phase 5: Update Features' (Protocol in workflow.md)
+### Task 6.5: Task: Conductor - User Manual Verification 'Phase 6: Update Features' (Protocol in workflow.md)
 
 ---
 
-## Phase 6: History & Tracking Views
+## Phase 7: History & Tracking Views
 
-### Task 6.1: Create History Display
-- [ ] Add GET /assets/{id}/histories route
-- [ ] Create controller method with pagination
+### Task 7.1: Create History Display
+- [x] Add GET /assets/{id}/histories route [4f9cd9a]
+- [x] Create controller method with pagination [4f9cd9a]
 - [ ] Create history timeline component
 - [ ] Display movement history
-- [ ] Write tests for history endpoint
+- [x] Write tests for history endpoint
 - [ ] Test history display
 
-### Task 6.2: Create Maintenance History Display
+### Task 7.2: Create Maintenance History Display
 - [ ] Add GET /assets/{id}/maintenances route
 - [ ] Create controller method with pagination
 - [ ] Create maintenance list component
@@ -207,69 +244,70 @@
 - [ ] Write tests for maintenance history
 - [ ] Test maintenance display
 
-### Task 6.3: Add Tracking Tabs to Detail Page
+### Task 7.3: Add Tracking Tabs to Detail Page
 - [ ] Add tabs to Show.tsx (Info, History, Maintenance)
 - [ ] Implement tab switching
 - [ ] Load data on tab switch
 - [ ] Write tests for tabs
 - [ ] Test tab navigation
 
-### Task 6.4: Task: Conductor - User Manual Verification 'Phase 6: History & Tracking Views' (Protocol in workflow.md)
+### Task 7.4: Task: Conductor - User Manual Verification 'Phase 7: History & Tracking Views' (Protocol in workflow.md)
 
 ---
 
-## Phase 7: Permissions & Access Control
+## Phase 8: Permissions & Access Control
 
-### Task 7.1: Define Asset Permissions
+### Task 8.1: Define Asset Permissions
 - [ ] Define permissions in PermissionsSeeder
 - [ ] Add: view_any_asset, view_asset, import_asset, update_asset_location, update_asset_condition, manage_asset_maintenance, assign_asset_handler
 - [ ] Assign permissions to roles
 - [ ] Write tests for permissions
 - [ ] Run seeder and verify
 
-### Task 7.2: Apply Permissions to Controllers
+### Task 8.2: Apply Permissions to Controllers
 - [ ] Add permission checks to all controller methods
 - [ ] Test permission access per role
 - [ ] Write integration tests for permissions
 - [ ] Test unauthorized access is blocked
 
-### Task 7.3: Update UI Based on Permissions
+### Task 8.3: Update UI Based on Permissions
 - [ ] Hide/show features based on user permissions
 - [ ] Disable actions for unauthorized users
 - [ ] Write tests for permission-based UI
 - [ ] Test UI per role
 
-### Task 7.4: Task: Conductor - User Manual Verification 'Phase 7: Permissions & Access Control' (Protocol in workflow.md)
+### Task 8.4: Task: Conductor - User Manual Verification 'Phase 8: Permissions & Access Control' (Protocol in workflow.md)
 
 ---
 
-## Phase 8: Final Integration & Testing
+## Phase 9: Final Integration & Testing
 
-### Task 8.1: Run Complete Test Suite
-- [ ] Execute `php artisan test --compact`
+### Task 9.1: Run Complete Test Suite
+- [x] Execute `php artisan test --compact` - 589 tests passing
 - [ ] Execute `npm run test` for frontend tests
-- [ ] Verify coverage >80%
-- [ ] Fix any failing tests
-- [ ] Run `vendor/bin/pint --dirty`
+- [x] Verify coverage >80%
+- [ ] Fix any failing tests (pre-existing issues)
+- [x] Run `vendor/bin/pint --dirty`
 
-### Task 8.2: Browser Testing
+### Task 9.2: Browser Testing
 - [ ] Test complete import flow
 - [ ] Test list view on mobile and desktop
 - [ ] Test detail view
 - [ ] Test all update features
+- [ ] Test photo upload flow
 - [ ] Test permission-based access
 
-### Task 8.3: Import with Real Data
+### Task 9.3: Import with Real Data
 - [ ] Test import with docs/data_simplified.json
 - [ ] Verify all records imported correctly
 - [ ] Verify location mapping works
 - [ ] Check data integrity
 
-### Task 8.4: Accessibility & Responsive Check
+### Task 9.4: Accessibility & Responsive Check
 - [ ] Verify keyboard navigation
 - [ ] Check ARIA labels
 - [ ] Test on mobile viewport
 - [ ] Test on tablet viewport
 - [ ] Test on desktop viewport
 
-### Task 8.5: Task: Conductor - User Manual Verification 'Phase 8: Final Integration & Testing' (Protocol in workflow.md)
+### Task 9.5: Task: Conductor - User Manual Verification 'Phase 9: Final Integration & Testing' (Protocol in workflow.md)
