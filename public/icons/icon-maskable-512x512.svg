@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="icon-mask">
+      <rect width="512" height="512" fill="white" rx="76.8"/>
+    </mask>
+  </defs>
+
+  <!-- Safe zone for maskable icons (40% padding recommended) -->
+  <g mask="url(#icon-mask)">
+    <rect width="512" height="512" fill="#1e3a5f"/>
+
+    <!-- Centered icon content within safe zone -->
+    <g transform="translate(128, 128)">
+      <rect x="0" y="60" width="256" height="256"
+            fill="#2563eb" rx="8"/>
+      <polygon points="-20,60 128,-10 276,60" fill="#f59e0b"/>
+      <rect x="40" y="100" width="40" height="40" fill="#ffffff" rx="4"/>
+      <rect x="140" y="100" width="40" height="40" fill="#ffffff" rx="4"/>
+      <rect x="40" y="170" width="40" height="40" fill="#ffffff" rx="4"/>
+      <rect x="140" y="170" width="40" height="40" fill="#ffffff" rx="4"/>
+      <rect x="90" y="150" width="60" height="90" fill="#f59e0b" rx="4"/>
+    </g>
+  </g>
+</svg>

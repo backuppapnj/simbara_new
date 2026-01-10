@@ -2,7 +2,7 @@
 import { login } from '@/routes';
 import { email } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import { LoaderCircle, Mail } from 'lucide-react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -20,12 +20,16 @@ export default function ForgotPassword({ status }: { status?: string }) {
             <Head title="Forgot password" />
 
             {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
+                <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-3 text-center text-sm font-medium text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200">
                     {status}
                 </div>
             )}
 
             <div className="space-y-6">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+                    <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                </div>
+
                 <Form {...email.form()}>
                     {({ processing, errors }) => (
                         <>
@@ -45,14 +49,14 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                             <div className="my-6 flex items-center justify-start">
                                 <Button
-                                    className="w-full"
+                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md transition-all duration-200"
                                     disabled={processing}
                                     data-test="email-password-reset-link-button"
                                 >
                                     {processing && (
-                                        <LoaderCircle className="h-4 w-4 animate-spin" />
+                                        <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
                                     )}
-                                    Email password reset link
+                                    {processing ? 'Sending...' : 'Send password reset link'}
                                 </Button>
                             </div>
                         </>

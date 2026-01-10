@@ -24,4 +24,9 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
+    resolve: {
+        alias: {
+            '@': '/home/moohard/dev/work/asset-persediaan-system/resources/js',
+        },
+    },
 });

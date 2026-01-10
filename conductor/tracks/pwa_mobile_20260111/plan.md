@@ -1,0 +1,316 @@
+# Plan: PWA & Mobile Features
+
+## Phase 1: PWA Setup & Configuration
+
+### Task 1.1: Generate PWA Icons
+- [ ] Generate app icons in all required sizes (72, 96, 128, 144, 152, 192, 384, 512)
+- [ ] Create favicon.ico
+- [ ] Place icons in `public/icons/`
+- [ ] Verify icon formats and sizes
+
+### Task 1.2: Create PWA Manifest
+- [ ] Create `public/manifest.json`
+- [ ] Configure app name, short name, description
+- [ ] Set theme colors and display mode
+- [ ] Define icons array
+- [ ] Write tests for manifest validity
+- [ ] Test manifest in browser
+
+### Task 1.3: Setup Vite PWA Plugin
+- [ ] Install `@vitejs/plugin-pwa`
+- [ ] Configure plugin in `vite.config.ts`
+- [ ] Enable auto-update registration
+- [ ] Configure workbox caching strategies
+- [ ] Test build output
+
+### Task 1.4: Create Service Worker
+- [ ] Create `public/sw.js` with cache strategies
+- [ ] Configure cache-first for static assets
+- [ ] Configure network-first for API calls
+- [ ] Implement offline fallback
+- [ ] Write tests for service worker
+
+### Task 1.5: Task: Conductor - User Manual Verification 'Phase 1: PWA Setup & Configuration' (Protocol in workflow.md)
+
+---
+
+## Phase 2: Install UX & Prompts
+
+### Task 2.1: Create Install Prompt Components
+- [ ] Create `useInstallPWA` composable
+- [ ] Listen for beforeinstallprompt event
+- [ ] Create InstallPrompt component (banner/floating button)
+- [ ] Install button in Settings page
+- [ ] Detect installed state (standalone mode)
+- [ ] Write tests for install prompt
+- [ ] Test install flow
+
+### Task 2.2: Create Install Success UI
+- [ ] Show success message after install
+- [ ] Hide install button when installed
+- [ ] Add "Open App" CTA for returning users
+- [ ] Write tests for installed state
+- [ ] Test detection logic
+
+### Task 2.3: Task: Conductor - User Manual Verification 'Phase 2: Install UX & Prompts' (Protocol in workflow.md)
+
+---
+
+## Phase 3: Camera Access Components
+
+### Task 3.1: Create useCamera Composable
+- [ ] Create `useCamera.ts` composable
+- [ ] Implement startCamera() method
+- [ ] Implement stopCamera() method
+- [ ] Implement capturePhoto() method
+- [ ] Add error handling for permission denied
+- [ ] Write tests for camera composable
+- [ ] Test camera access on different devices
+
+### Task 3.2: Create CameraCapture Component
+- [ ] Create `CameraCapture.tsx` component
+- [ ] Show camera preview
+- [ ] Add capture button
+- [ ] Add flash toggle (front/back camera)
+- [ ] Show error states
+- [ ] Write tests for component
+- [ ] Test camera capture flow
+
+### Task 3.3: Create ImagePreview Component
+- [ ] Create `ImagePreview.tsx` component
+- [ ] Show captured images in grid
+- [ ] Add delete functionality
+- [ ] Add select primary image
+- [ ] Write tests for preview
+- [ ] Test preview interactions
+
+### Task 3.4: Task: Conductor - User Manual Verification 'Phase 3: Camera Access Components' (Protocol in workflow.md)
+
+---
+
+## Phase 4: Barcode/QR Scanner
+
+### Task 4.1: Install Barcode Library
+- [ ] Install `html5-qrcode` package
+- [ ] Install TypeScript definitions
+- [ ] Test library installation
+
+### Task 4.2: Create useBarcodeScanner Composable
+- [ ] Create `useBarcodeScanner.ts` composable
+- [ ] Implement startScanning() method
+- [ ] Implement stopScanning() method
+- [ ] Add vibration on success
+- [ ] Add error handling
+- [ ] Write tests for scanner composable
+- [ ] Test scanning functionality
+
+### Task 4.3: Create BarcodeScanner Component
+- [ ] Create `BarcodeScanner.tsx` component
+- [ ] Show camera view for scanning
+- [ ] Add scan button
+- [ ] Show scan result
+- [ ] Add continuous scan mode toggle
+- [ ] Write tests for scanner component
+- [ ] Test with various barcodes/QR codes
+
+### Task 4.4: Task: Conductor - User Manual Verification 'Phase 4: Barcode/QR Scanner' (Protocol in workflow.md)
+
+---
+
+## Phase 5: Image Processing
+
+### Task 5.1: Create Image Compression Utility
+- [ ] Create `compressImage()` utility
+- [ ] Implement max dimension scaling (1920px)
+- [ ] Implement JPEG compression (80% quality)
+- [ ] Write tests for compression
+- [ ] Test output quality and file size
+
+### Task 5.2: Create ImageCropper Component
+- [ ] Create `ImageCropper.tsx` component
+- [ ] Add crop functionality
+- [ ] Add rotation (90-degree increments)
+- [ ] Add aspect ratio presets
+- [ ] Write tests for cropper
+- [ ] Test crop and rotation
+
+### Task 5.3: Create Full Upload Flow
+- [ ] Combine camera + crop + compress
+- [ ] Add upload progress indicator
+- [ ] Handle upload errors
+- [ ] Show success/error states
+- [ ] Write tests for upload flow
+- [ ] Test complete upload pipeline
+
+### Task 5.4: Task: Conductor - User Manual Verification 'Phase 5: Image Processing' (Protocol in workflow.md)
+
+---
+
+## Phase 6: Offline Capability
+
+### Task 6.1: Create useOffline Composable
+- [ ] Create `useOffline.ts` composable
+- [ ] Listen to online/offline events
+- [ ] Return isOffline state
+- [ ] Write tests for offline detection
+- [ ] Test offline indicator
+
+### Task 6.2: Implement Caching Strategies
+- [ ] Configure cache-first for static assets
+- [ ] Configure network-first for API calls
+- [ ] Cache critical page data
+- [ ] Set cache expiration times
+- [ ] Write tests for caching
+- [ ] Test cache behavior
+
+### Task 6.3: Create Offline UI Components
+- [ ] Create offline banner/alert
+- [ ] Show offline mode indicator
+- [ ] Disable forms when offline
+- [ ] Show cached data warning
+- [ ] Write tests for offline UI
+- [ ] Test offline experience
+
+### Task 6.4: Task: Conductor - User Manual Verification 'Phase 6: Offline Capability' (Protocol in workflow.md)
+
+---
+
+## Phase 7: Push Notifications
+
+### Task 7.1: Setup VAPID Keys
+- [ ] Generate VAPID public/private keys
+- [ ] Store keys in Laravel config
+- [ ] Add VAPID key to .env.example
+- [ ] Write tests for key generation
+- [ ] Verify key validity
+
+### Task 7.2: Create Push Notification Composable
+- [ ] Create `usePushNotification.ts` hook
+- [ ] Request notification permission
+- [ ] Subscribe to push service
+- [ ] Store subscription in database
+- [ ] Write tests for subscription
+- [ ] Test permission flow
+
+### Task 7.3: Create Service Worker Push Handler
+- [ ] Add push message handler in sw.js
+- [ ] Handle notification click
+- [ ] Navigate to relevant page
+- [ ] Write tests for push handler
+- [ ] Test notification delivery
+
+### Task 7.4: Integrate with Existing Events
+- [ ] Send push notification on reorder alert
+- [ ] Send push notification on approval needed
+- [ ] Send push notification on request status
+- [ ] Write tests for push triggers
+- [ ] Test end-to-end notifications
+
+### Task 7.5: Task: Conductor - User Manual Verification 'Phase 7: Push Notifications' (Protocol in workflow.md)
+
+---
+
+## Phase 8: Mobile UI Components
+
+### Task 8.1: Create Bottom Navigation
+- [ ] Create `BottomNav.tsx` component
+- [ ] Add 5 tabs: Dashboard, Aset, ATK, Bahan Kantor, Settings
+- [ ] Show only on mobile (< 768px)
+- [ ] Hide sidebar on mobile when bottom nav active
+- [ ] Write tests for bottom nav
+- [ ] Test navigation and responsive behavior
+
+### Task 8.2: Create Pull-to-Refresh
+- [ ] Create `PullToRefresh.tsx` component
+- [ ] Implement pull gesture detection
+- [ ] Show loading indicator
+- [ ] Refresh data on release
+- [ ] Add to list pages (Assets, ATK, etc.)
+- [ ] Write tests for pull-to-refresh
+- [ ] Test refresh functionality
+
+### Task 8.3: Implement Touch Gestures
+- [ ] Add swipe actions on list items
+- [ ] Add long-press context menu
+- [ ] Add pinch-to-zoom for image preview
+- [ ] Add vibration feedback
+- [ ] Write tests for gestures
+- [ ] Test on touch devices
+
+### Task 8.4: Task: Conductor - User Manual Verification 'Phase 8: Mobile UI Components' (Protocol in workflow.md)
+
+---
+
+## Phase 9: Integration dengan Modul Eksisting
+
+### Task 9.1: Integrate Camera ke Modul Aset
+- [ ] Add photo upload to asset detail page
+- [ ] Replace input file with camera capture
+- [ ] Add to asset form (multiple photos)
+- [ ] Update Asset model to handle photos
+- [ ] Write tests for asset photo upload
+- [ ] Test photo capture and upload
+
+### Task 9.2: Integrate Scanner ke Input Forms
+- [ ] Add barcode scanner to asset input
+- [ ] Add barcode scanner to ATK input
+- [ ] Auto-fill form on scan result
+- [ ] Write tests for scanner integration
+- [ ] Test scanning workflow
+
+### Task 9.3: Integrate Camera ke Stock Opname
+- [ ] Add photo capture per item
+- [ ] Preview captured photos
+- [ ] Attach to stock_opname_details
+- [ ] Show in berita acara
+- [ ] Write tests for SO photos
+- [ ] Test photo documentation flow
+
+### Task 9.4: Task: Conductor - User Manual Verification 'Phase 9: Integration dengan Modul Eksisting' (Protocol in workflow.md)
+
+---
+
+## Phase 10: Final Testing & Optimization
+
+### Task 10.1: PWA Testing
+- [ ] Test install prompt on Chrome
+- [ ] Test install prompt on Safari
+- [ ] Test install prompt on Firefox
+- [ ] Verify app installs to home screen
+- [ ] Test app launch from home screen
+- [ ] Test offline mode
+- [ ] Test cache invalidation
+
+### Task 10.2: Camera & Scanner Testing
+- [ ] Test camera on Android Chrome
+- [ ] Test camera on iOS Safari
+- [ ] Test camera on desktop
+- [ ] Test barcode scanning
+- [ ] Test QR code scanning
+- [ ] Test image compression quality
+- [ ] Test upload flow
+
+### Task 10.3: Mobile UX Testing
+- [ ] Test bottom navigation
+- [ ] Test pull-to-refresh
+- [ ] Test touch gestures
+- [ ] Test push notifications
+- [ ] Test offline indicator
+- [ ] Verify responsive layouts on different screen sizes
+
+### Task 10.4: Performance Testing
+- [ ] Measure LCP (Largest Contentful Paint)
+- [ ] Measure FID (First Input Delay)
+- [ ] Measure CLS (Cumulative Layout Shift)
+- [ ] Test load time on 3G
+- [ ] Optimize bundle sizes
+- [ ] Verify PWA score (Lighthouse)
+
+### Task 10.5: Run Complete Test Suite
+- [ ] Execute `php artisan test --compact`
+- [ ] Execute `npm run test` for frontend tests
+- [ ] Verify coverage >80%
+- [ ] Fix any failing tests
+- [ ] Run `vendor/bin/pint --dirty`
+
+### Task 10.6: Task: Conductor - User Manual Verification 'Phase 10: Final Testing & Optimization' (Protocol in workflow.md)

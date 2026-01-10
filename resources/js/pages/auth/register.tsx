@@ -7,6 +7,7 @@ import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 
@@ -60,14 +61,13 @@ export default function Register() {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Password</Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
-                                    type="password"
+                                    name="password"
                                     required
                                     tabIndex={3}
                                     autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
+                                    placeholder="Create a password"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -76,14 +76,13 @@ export default function Register() {
                                 <Label htmlFor="password_confirmation">
                                     Confirm password
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password_confirmation"
-                                    type="password"
+                                    name="password_confirmation"
                                     required
                                     tabIndex={4}
                                     autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
+                                    placeholder="Confirm your password"
                                 />
                                 <InputError
                                     message={errors.password_confirmation}
@@ -92,12 +91,12 @@ export default function Register() {
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full"
+                                className="mt-2 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md transition-all duration-200"
                                 tabIndex={5}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-                                Create account
+                                {processing ? 'Creating account...' : 'Create account'}
                             </Button>
                         </div>
 

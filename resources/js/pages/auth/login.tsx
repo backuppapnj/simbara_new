@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 import { register } from '@/routes';
@@ -53,7 +54,7 @@ export default function Login({
                             </div>
 
                             <div className="grid gap-2">
-                                <div className="flex items-center">
+                                <div className="flex items-center justify-between">
                                     <Label htmlFor="password">Password</Label>
                                     {canResetPassword && (
                                         <TextLink
@@ -65,14 +66,13 @@ export default function Login({
                                         </TextLink>
                                     )}
                                 </div>
-                                <Input
+                                <PasswordInput
                                     id="password"
-                                    type="password"
                                     name="password"
                                     required
                                     tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder="Enter your password"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -88,13 +88,13 @@ export default function Login({
 
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
+                                className="mt-4 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md transition-all duration-200"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
                             >
                                 {processing && <Spinner />}
-                                Log in
+                                {processing ? 'Signing in...' : 'Sign in'}
                             </Button>
                         </div>
 

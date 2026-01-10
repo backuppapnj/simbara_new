@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with rounded corners -->
+  <rect width="192" height="192" fill="#1e3a5f" rx="28.799999999999997"/>
+
+  <!-- Stylized Building/Asset Icon -->
+  <g transform="translate(60, 54)">
+    <!-- Main building shape -->
+    <rect x="0" y="17" width="72" height="69"
+          fill="#2563eb" rx="2"/>
+
+    <!-- Roof -->
+    <polygon points="-7,17
+                      36,-4
+                      79,17"
+             fill="#f59e0b"/>
+
+    <!-- Windows -->
+    <rect x="11" y="30"
+          width="14" height="13"
+          fill="#ffffff" rx="1"/>
+    <rect x="47" y="30"
+          width="14" height="13"
+          fill="#ffffff" rx="1"/>
+    <rect x="11" y="52"
+          width="14" height="13"
+          fill="#ffffff" rx="1"/>
+    <rect x="47" y="52"
+          width="14" height="13"
+          fill="#ffffff" rx="1"/>
+
+    <!-- Door -->
+    <rect x="25" y="43"
+          width="22" height="43"
+          fill="#f59e0b" rx="1"/>
+  </g>
+
+  <!-- Bottom accent line -->
+  <rect x="24" y="165"
+        width="144" height="2"
+        fill="#f59e0b" rx="1"/>
+</svg>

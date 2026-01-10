@@ -25,6 +25,53 @@
                 "MINIMAX_API_KEY": "sk-cp-D-fNIgdKolZx6rvzEdV8E1ssK4tkcZrEao62xY2HYlHBrlS9e_2A0aNsPO8_YJIAM8qQKmfRWa0YePtvw8iaFmdg8lx4LsGt1AYRzf4D-dOsrjRHl2X6Is8",
                 "MINIMAX_API_HOST": "https://api.minimax.io"
             }
+        },
+        "web-search-prime": {
+            "type": "http",
+            "url": "https://api.z.ai/api/mcp/web_search_prime/mcp",
+            "headers": {
+                "Authorization": "Bearer 0005e5f5c2a84fe79a14fa38241f449a.vqwitnZwYEjGIavL"
+            }
+        },
+        "web-reader": {
+            "type": "http",
+            "url": "https://api.z.ai/api/mcp/web_reader/mcp",
+            "headers": {
+                "Authorization": "Bearer 0005e5f5c2a84fe79a14fa38241f449a.vqwitnZwYEjGIavL"
+            }
+        },
+        "zread": {
+            "type": "http",
+            "url": "https://api.z.ai/api/mcp/zread/mcp",
+            "headers": {
+                "Authorization": "Bearer 0005e5f5c2a84fe79a14fa38241f449a.vqwitnZwYEjGIavL"
+            }
+        },
+        "zai-mcp-server": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@z_ai/mcp-server"
+            ],
+            "env": {
+                "Z_AI_MODE": "ZAI",
+                "Z_AI_API_KEY": "0005e5f5c2a84fe79a14fa38241f449a.vqwitnZwYEjGIavL"
+            }
+        },
+         "shadcn": {
+            "command": "npx",
+            "args": [
+                "shadcn@latest",
+                "mcp"
+            ]
+        },
+        "@magicuidesign/mcp": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@magicuidesign/mcp@latest"
+            ]
         }
     }
 }
