@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Str;
 
 /**
  * Location Model
@@ -18,6 +19,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Location extends Model
 {
     use SoftDeletes;
+
+    /**
+     * The "booting" method of the model.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Location $location): void {
+            if (empty($location->id)) {
+                $location->id = (string) Str::ulid();
+            }
+        });
+    }
 
     protected $fillable = [
         'nama_ruangan',
