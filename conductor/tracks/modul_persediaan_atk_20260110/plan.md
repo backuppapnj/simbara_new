@@ -31,12 +31,12 @@
 - [x] Run migrations and verify
 
 ### Task 1.5: Create Model Relationships
-- [ ] Define Item relationships (hasMany mutations, requestDetails, etc.)
-- [ ] Define Purchase relationships (hasMany details, items)
-- [ ] Define Request relationships (hasMany details, user, department)
-- [ ] Define StockMutation relationships (belongsTo item)
-- [ ] Write tests for all relationships
-- [ ] Run `vendor/bin/pint --dirty`
+- [x] Define Item relationships (hasMany mutations, requestDetails, etc.)
+- [x] Define Purchase relationships (hasMany details, items)
+- [x] Define Request relationships (hasMany details, user, department)
+- [x] Define StockMutation relationships (belongsTo item)
+- [x] Write tests for all relationships
+- [x] Run `vendor/bin/pint --dirty`
 
 ### Task 1.6: Task: Conductor - User Manual Verification 'Phase 1: Database & Model Setup' (Protocol in workflow.md)
 

@@ -67,6 +67,30 @@ class Item extends Model
     }
 
     /**
+     * Purchase details for this item.
+     */
+    public function purchaseDetails(): HasMany
+    {
+        return $this->hasMany(PurchaseDetail::class);
+    }
+
+    /**
+     * Request details for this item.
+     */
+    public function requestDetails(): HasMany
+    {
+        return $this->hasMany(RequestDetail::class);
+    }
+
+    /**
+     * Stock opname details for this item.
+     */
+    public function stockOpnameDetails(): HasMany
+    {
+        return $this->hasMany(StockOpnameDetail::class);
+    }
+
+    /**
      * Check if stock is below reorder point.
      */
     public function isBelowReorderPoint(): bool
