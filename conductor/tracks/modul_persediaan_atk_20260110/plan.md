@@ -239,15 +239,9 @@
 - [ ] Add badge/warning color to items
 - [x] Write tests for alert logic
 - [ ] Test alert display
-- [ ] Create query for items below stok minimal
-- [ ] Create alert component (banner)
-- [ ] Show in dashboard and items list
-- [ ] Add badge/warning color to items
-- [ ] Write tests for alert logic
-- [ ] Test alert display
 
 ### Task 7.2: Create Dashboard Widgets
-- [ ] Create summary cards:
+- [x] Create summary cards:
   - Total items
   - Items below reorder point
   - Pending requests
