@@ -12,12 +12,12 @@ describe('Asset Model', function () {
         });
 
         test('uses ULID as primary key', function () {
-            $asset = Asset::factory()->raw();
-            $asset['id'] = (string) Str::ulid();
-            $created = Asset::create($asset);
+            $asset = Asset::factory()->make();
+            expect($asset->id)->toBeNull();
 
-            expect($created->id)->toBeString();
-            expect(strlen($created->id))->toBe(26);
+            $asset->save();
+            expect($asset->id)->toBeString();
+            expect(strlen($asset->id))->toBe(26);
         });
     });
 
@@ -98,24 +98,28 @@ describe('Asset Model', function () {
         });
 
         test('has many histories', function () {
-            $asset = Asset::factory()->create();
+            $asset = Asset::factory()->make();
+            $asset->save();
             expect($asset->histories())->not->toBeNull();
         });
 
         test('has many maintenances', function () {
-            $asset = Asset::factory()->create();
+            $asset = Asset::factory()->make();
+            $asset->save();
             expect($asset->maintenances())->not->toBeNull();
         });
 
         test('has many condition logs', function () {
-            $asset = Asset::factory()->create();
+            $asset = Asset::factory()->make();
+            $asset->save();
             expect($asset->conditionLogs())->not->toBeNull();
         });
     });
 
     describe('soft deletes', function () {
         test('uses soft deletes', function () {
-            $asset = Asset::factory()->create();
+            $asset = Asset::factory()->make();
+            $asset->save();
             $asset->delete();
 
             expect(App\Models\Asset::withTrashed()->where('id', $asset->id)->exists())->toBeTrue();
@@ -125,9 +129,9 @@ describe('Asset Model', function () {
 
     describe('scopes', function () {
         test('can filter by condition', function () {
-            Asset::factory()->create(['kd_kondisi' => '1']);
-            Asset::factory()->create(['kd_kondisi' => '2']);
-            Asset::factory()->create(['kd_kondisi' => '3']);
+            Asset::factory()->make(['kd_kondisi' => '1'])->save();
+            Asset::factory()->make(['kd_kondisi' => '2'])->save();
+            Asset::factory()->make(['kd_kondisi' => '3'])->save();
 
             $goodCondition = Asset::byCondition('1')->get();
             expect($goodCondition)->toHaveCount(1);
@@ -136,8 +140,8 @@ describe('Asset Model', function () {
 
         test('can filter by location', function () {
             $location = Location::factory()->create();
-            Asset::factory()->create(['lokasi_id' => $location->id]);
-            Asset::factory()->create();
+            Asset::factory()->make(['lokasi_id' => $location->id])->save();
+            Asset::factory()->make()->save();
 
             $locationAssets = Asset::byLocation($location->id)->get();
             expect($locationAssets)->toHaveCount(1);

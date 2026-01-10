@@ -18,7 +18,7 @@
 - [x] Run migrations and verify
 
 ### Task 1.3: Create Request Migrations
-- [ ] Create migration for requests table
+- [~] Create migration for requests table
 - [ ] Create migration for request_details table
 - [ ] Add approval fields (level1, level2, level3)
 - [ ] Write unit tests for Request and RequestDetail models

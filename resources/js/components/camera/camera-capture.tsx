@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useCamera } from '@/hooks/use-camera';
 import { cn } from '@/lib/utils';
 import { AlertCircle, Camera, RotateCcw, X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export interface CameraCaptureProps {
     onCapture?: (dataUrl: string) => void;
@@ -24,7 +24,6 @@ export function CameraCapture({
         stream,
         error,
         isLoading,
-        facingMode,
         startCamera,
         stopCamera,
         switchCamera,
@@ -38,6 +37,7 @@ export function CameraCapture({
         return () => {
             stopCamera();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

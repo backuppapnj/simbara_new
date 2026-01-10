@@ -4,16 +4,13 @@ import { Button } from '@/components/ui/button';
 import { dataUrlToSize, formatBytes, rotateImage } from '@/lib/image-utils';
 import { cn } from '@/lib/utils';
 import { Check, RotateCw, X, ZoomIn, ZoomOut } from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export interface ImageCropperProps {
     image: string;
     onConfirm: (processedImage: string) => void;
     onCancel: () => void;
     className?: string;
-    aspectRatio?: number | null;
-    maxWidth?: number;
-    maxHeight?: number;
 }
 
 export function ImageCropper({
@@ -21,15 +18,11 @@ export function ImageCropper({
     onConfirm,
     onCancel,
     className,
-    aspectRatio = null,
-    maxWidth = 1920,
-    maxHeight = 1920,
 }: ImageCropperProps) {
     const [processedImage, setProcessedImage] = useState<string>(image);
     const [rotation, setRotation] = useState(0);
     const [isProcessing, setIsProcessing] = useState(false);
     const [scale, setScale] = useState(1);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const imageSize = dataUrlToSize(processedImage);
 

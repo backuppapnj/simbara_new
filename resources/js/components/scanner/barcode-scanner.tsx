@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { useBarcodeScanner } from '@/hooks/use-barcode-scanner';
 import { cn } from '@/lib/utils';
 import { AlertCircle, CheckCircle, Scan, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface BarcodeScannerProps {
-    onScanSuccess?: (code: string, result?: any) => void;
+    onScanSuccess?: (code: string, result?: unknown) => void;
     onClose?: () => void;
     className?: string;
     continuousScan?: boolean;
@@ -22,10 +22,11 @@ export function BarcodeScanner({
     showCloseButton = true,
 }: BarcodeScannerProps) {
     const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
-    const scannerElementId = useRef(`barcode-scanner-${Date.now()}`);
+    const scannerElementId = useMemo(() => `barcode-scanner-${Math.random().toString(36).substring(7)}`, []);
     const hasScannedRef = useRef(false);
+    const stopScanningRef = useRef<(() => Promise<void>) | null>(null);
 
-    const handleDetected = (decodedText: string, decodedResult?: any) => {
+    const handleDetected = useCallback((decodedText: string, decodedResult?: unknown) => {
         // For non-continuous scan, only process the first scan
         if (!continuousScan && hasScannedRef.current) {
             return;
@@ -39,12 +40,12 @@ export function BarcodeScanner({
         }
 
         // Auto-stop scanner after successful scan (unless continuous)
-        if (!continuousScan) {
+        if (!continuousScan && stopScanningRef.current) {
             setTimeout(() => {
-                stopScanning();
+                stopScanningRef.current?.();
             }, 500);
         }
-    };
+    }, [continuousScan, onScanSuccess]);
 
     const {
         isScanning,
@@ -58,19 +59,25 @@ export function BarcodeScanner({
         qrbox: { width: 250, height: 250 },
     });
 
+    // Update ref when stopScanning changes
+    useEffect(() => {
+        stopScanningRef.current = stopScanning;
+    }, [stopScanning]);
+
     useEffect(() => {
         // Start scanner on mount
-        startScanning(scannerElementId.current);
+        startScanning(scannerElementId);
 
         return () => {
             cleanup();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleRestart = () => {
         hasScannedRef.current = false;
         setLastScannedCode(null);
-        startScanning(scannerElementId.current);
+        startScanning(scannerElementId);
     };
 
     const handleClose = () => {

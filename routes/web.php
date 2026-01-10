@@ -39,11 +39,18 @@ if (Features::enabled(Features::twoFactorAuthentication())) {
 // Password Confirmation Route (requires auth)
 Route::middleware(['auth'])->group(function () {
     Route::get('/confirm-password', fn () => Inertia::render('auth/confirm-password'))->name('password.confirm');
-    Route::post('/confirm-password', [\App\Http\Controllers\Auth\ConfirmPasswordController::class, 'store'])->name('password.confirm.store');
+    Route::post('/confirm-password', [\App\Http\Controllers\Auth\ConfirmPasswordController::class, 'store'])->name('password.confirm.app');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', \App\Http\Controllers\DashboardController::class)->name('dashboard');
+});
+
+// Push Subscription Routes (API)
+Route::middleware(['auth'])->group(function () {
+    Route::post('/push-subscriptions', [\App\Http\Controllers\Api\PushSubscriptionController::class, 'store'])->name('push-subscriptions.store');
+    Route::delete('/push-subscriptions', [\App\Http\Controllers\Api\PushSubscriptionController::class, 'destroy'])->name('push-subscriptions.destroy');
+    Route::get('/push-subscriptions/vapid-key', [\App\Http\Controllers\Api\PushSubscriptionController::class, 'vapidKey'])->name('push-subscriptions.vapid-key');
 });
 
 require __DIR__.'/settings.php';

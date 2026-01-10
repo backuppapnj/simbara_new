@@ -12,19 +12,19 @@
 - [x] Write unit tests for NotificationLog model
 - [x] Run migrations and verify
 
-### Task 1.2: Update User Model for Phone
-- [ ] Add phone field to users table (migration)
-- [ ] Update User model with phone accessor/mutator
-- [ ] Add phone validation rule
-- [ ] Write tests for phone formatting
-- [ ] Run migration and verify
+### Task 1.2: Update User Model for Phone [6824aa0]
+- [x] Add phone field to users table (migration)
+- [x] Update User model with phone accessor/mutator
+- [x] Add phone validation rule
+- [x] Write tests for phone formatting
+- [x] Run migration and verify
 
-### Task 1.3: Create Model Relationships
-- [ ] Define User relationships (hasOne notificationSetting, hasMany notificationLogs)
-- [ ] Define NotificationSetting relationships (belongsTo user)
-- [ ] Define NotificationLog relationships (belongsTo user)
-- [ ] Write tests for relationships
-- [ ] Run `vendor/bin/pint --dirty`
+### Task 1.3: Create Model Relationships [fe7932e]
+- [x] Define User relationships (hasOne notificationSetting, hasMany notificationLogs)
+- [x] Define NotificationSetting relationships (belongsTo user)
+- [x] Define NotificationLog relationships (belongsTo user)
+- [x] Write tests for relationships
+- [x] Run `vendor/bin/pint --dirty`
 
 ### Task 1.4: Task: Conductor - User Manual Verification 'Phase 1: Database & Model Setup' (Protocol in workflow.md)
 
