@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useCamera } from '@/hooks/use-camera';
 import { cn } from '@/lib/utils';
 import { AlertCircle, Camera, RotateCcw, X } from 'lucide-react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export interface CameraCaptureProps {
     onCapture?: (dataUrl: string) => void;
