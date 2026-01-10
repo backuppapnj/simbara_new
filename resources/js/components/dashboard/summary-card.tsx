@@ -44,7 +44,13 @@ export default function SummaryCard({
                         ) : (
                             <TrendingDown className="size-3 text-red-600 dark:text-red-500" />
                         )}
-                        <span className={trend.isPositive ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}>
+                        <span
+                            className={
+                                trend.isPositive
+                                    ? 'text-green-600 dark:text-green-500'
+                                    : 'text-red-600 dark:text-red-500'
+                            }
+                        >
                             {trend.value}%
                         </span>
                         <span>dari bulan lalu</span>

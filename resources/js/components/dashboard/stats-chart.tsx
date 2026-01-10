@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import type HTMLAttributes from 'react-html-attributes';
 import {
     Bar,
     BarChart,
@@ -12,7 +13,6 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import type HTMLAttributes from 'react-html-attributes';
 
 interface StatsChartProps extends HTMLAttributes<HTMLDivElement> {
     type: 'line' | 'bar';
@@ -45,7 +45,10 @@ export default function StatsChart({
                     <ResponsiveContainer width="100%" height={300}>
                         {type === 'line' ? (
                             <LineChart data={data}>
-                                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    className="stroke-muted"
+                                />
                                 <XAxis dataKey={xAxisKey} className="text-xs" />
                                 <YAxis className="text-xs" />
                                 <Tooltip
@@ -66,7 +69,10 @@ export default function StatsChart({
                             </LineChart>
                         ) : (
                             <BarChart data={data}>
-                                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    className="stroke-muted"
+                                />
                                 <XAxis dataKey={xAxisKey} className="text-xs" />
                                 <YAxis className="text-xs" />
                                 <Tooltip
@@ -77,7 +83,11 @@ export default function StatsChart({
                                     }}
                                 />
                                 <Legend />
-                                <Bar dataKey={dataKey} fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                                <Bar
+                                    dataKey={dataKey}
+                                    fill="hsl(var(--primary))"
+                                    radius={[4, 4, 0, 0]}
+                                />
                             </BarChart>
                         )}
                     </ResponsiveContainer>

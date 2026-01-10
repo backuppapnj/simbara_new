@@ -1,8 +1,19 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import QuickActions from '@/components/dashboard/quick-actions';
+import StatsChart from '@/components/dashboard/stats-chart';
+import SummaryCard from '@/components/dashboard/summary-card';
+import WelcomeSection from '@/components/dashboard/welcome-section';
+import { WhenVisible } from '@inertiajs/react';
+import {
+    Archive,
+    FileText,
+    Package,
+    ShoppingCart,
+    Wrench,
+} from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,25 +22,98 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface SummaryData {
+    total_assets: number;
+    total_atk: number;
+    pending_requests: number;
+    damaged_assets: number;
+}
+
+interface ChartData {
+    asset_distribution: Array<{ category: string; count: number; value: number }>;
+    monthly_trends: Array<{ month: string; requests: number; expenditure: number }>;
+}
+
+interface DashboardProps {
+    user: {
+        name: string;
+        email?: string;
+    };
+    summary?: SummaryData;
+    charts?: ChartData;
+}
+
 export default function Dashboard() {
+    const { props } = usePage<DashboardProps>();
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+
+            <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
+                {/* Welcome Section */}
+                <WelcomeSection />
+
+                {/* Summary Cards */}
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <SummaryCard
+                        title="Total Aset"
+                        value={props.summary?.total_assets ?? 0}
+                        icon={Package}
+                        isLoading={!props.summary}
+                    />
+                    <SummaryCard
+                        title="Total ATK"
+                        value={props.summary?.total_atk ?? 0}
+                        icon={FileText}
+                        isLoading={!props.summary}
+                    />
+                    <SummaryCard
+                        title="Permintaan Pending"
+                        value={props.summary?.pending_requests ?? 0}
+                        icon={ShoppingCart}
+                        isLoading={!props.summary}
+                    />
+                    <SummaryCard
+                        title="Aset Rusak"
+                        value={props.summary?.damaged_assets ?? 0}
+                        icon={Wrench}
+                        isLoading={!props.summary}
+                    />
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
+
+                {/* Quick Actions */}
+                <QuickActions />
+
+                {/* Charts */}
+                <WhenVisible
+                    data="charts"
+                    fallback={
+                        <div className="grid gap-4 lg:grid-cols-2">
+                            <div className="h-[400px] animate-pulse rounded-xl bg-muted" />
+                            <div className="h-[400px] animate-pulse rounded-xl bg-muted" />
+                        </div>
+                    }
+                >
+                    <div className="grid gap-4 lg:grid-cols-2">
+                        <StatsChart
+                            type="bar"
+                            title="Distribusi Aset per Kategori"
+                            data={props.charts?.asset_distribution ?? []}
+                            dataKey="count"
+                            xAxisKey="category"
+                            isLoading={!props.charts}
+                        />
+                        <StatsChart
+                            type="line"
+                            title="Tren Permintaan Bulanan"
+                            data={props.charts?.monthly_trends ?? []}
+                            dataKey="requests"
+                            xAxisKey="month"
+                            isLoading={!props.charts}
+                        />
+                    </div>
+                </WhenVisible>
             </div>
         </AppLayout>
     );
