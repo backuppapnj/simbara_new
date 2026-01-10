@@ -3,19 +3,19 @@
 ## Phase 1: Database & Model Setup
 
 ### Task 1.1: Create OfficeSupplies Migration
-- [ ] Create migration for office_supplies table
-- [ ] Create migration for office_mutations table
-- [ ] Add ULID primary keys, soft deletes
-- [ ] Write unit tests for OfficeSupply model
-- [ ] Write unit tests for OfficeMutation model
-- [ ] Run migrations and verify
+- [x] Create migration for office_supplies table
+- [x] Create migration for office_mutations table
+- [x] Add ULID primary keys, soft deletes
+- [x] Write unit tests for OfficeSupply model
+- [x] Write unit tests for OfficeMutation model
+- [x] Run migrations and verify
 
 ### Task 1.2: Create Purchase Migrations
-- [ ] Create migration for office_purchases table
-- [ ] Create migration for office_purchase_details table
-- [ ] Add foreign key relationships
-- [ ] Write unit tests for OfficePurchase and OfficePurchaseDetail models
-- [ ] Run migrations and verify
+- [x] Create migration for office_purchases table
+- [x] Create migration for office_purchase_details table
+- [x] Add foreign key relationships
+- [x] Write unit tests for OfficePurchase and OfficePurchaseDetail models
+- [x] Run migrations and verify
 
 ### Task 1.3: Create Request Migrations
 - [ ] Create migration for office_requests table

@@ -45,7 +45,7 @@
 ## Phase 2: Master Data ATK
 
 ### Task 2.1: Create Items CRUD
-- [ ] Create ItemController with CRUD methods
+- [~] Create ItemController with CRUD methods
 - [ ] Add routes: GET /items, POST /items, PUT /items/{id}
 - [ ] Create validation rules (ItemRequest)
 - [ ] Write tests for CRUD operations
@@ -116,14 +116,14 @@
 ## Phase 4: Permintaan & Approval Workflow
 
 ### Task 4.1: Create Permintaan Form
-- [ ] Create request form for Pegawai
-- [ ] Add dynamic item rows
-- [ ] Validate stok tersedia (warning only)
-- [ ] Create POST /requests route
-- [ ] Save Request + RequestDetails
-- [ ] Set initial status to 'pending'
-- [ ] Write tests for request creation
-- [ ] Test form submission
+- [~] Create request form for Pegawai
+- [~] Add dynamic item rows
+- [~] Validate stok tersedia (warning only)
+- [~] Create POST /requests route
+- [~] Save Request + RequestDetails
+- [~] Set initial status to 'pending'
+- [~] Write tests for request creation
+- [~] Test form submission
 
 ### Task 4.2: Create Approval System
 - [ ] Create approval component

@@ -25,4 +25,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
         ->name('two-factor.show');
+
+    Route::get('settings/notifications', [\App\Http\Controllers\NotificationSettingController::class, 'index'])
+        ->name('notifications.settings');
+    Route::put('settings/notifications', [\App\Http\Controllers\NotificationSettingController::class, 'update'])
+        ->name('notifications.settings.update');
 });

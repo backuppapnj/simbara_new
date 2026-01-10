@@ -177,6 +177,14 @@ class Asset extends Model
     }
 
     /**
+     * Get the photos for the asset.
+     */
+    public function photos(): HasMany
+    {
+        return $this->hasMany(AssetPhoto::class);
+    }
+
+    /**
      * Scope a query to only include assets with a specific condition.
      */
     public function scopeByCondition($query, string $condition)

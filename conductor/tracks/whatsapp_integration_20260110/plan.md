@@ -33,7 +33,7 @@
 ## Phase 2: Fonnte API Integration
 
 ### Task 2.1: Create FonnteService
-- [ ] Create FonnteService class
+- [~] Create FonnteService class
 - [ ] Implement send() method
 - [ ] Implement formatPhone() method
 - [ ] Add error handling

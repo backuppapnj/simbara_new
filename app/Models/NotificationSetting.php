@@ -50,4 +50,28 @@ class NotificationSetting extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Check if the current time is within quiet hours.
+     */
+    public function isQuietHours(): bool
+    {
+        // If quiet hours are not set, return false
+        if (! $this->quiet_hours_start || ! $this->quiet_hours_end) {
+            return false;
+        }
+
+        $now = now()->format('H:i');
+        $start = $this->quiet_hours_start;
+        $end = $this->quiet_hours_end;
+
+        // Check if now is within quiet hours range
+        if ($start <= $end) {
+            // Normal range (e.g., 22:00 - 23:00 same day)
+            return $now >= $start && $now <= $end;
+        } else {
+            // Overnight range (e.g., 22:00 - 06:00 next day)
+            return $now >= $start || $now <= $end;
+        }
+    }
 }

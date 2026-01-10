@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Str;
 
 class AtkRequest extends Model
 {
     use HasFactory;
+    use HasUlids;
     use SoftDeletes;
-
-    public $incrementing = false;
-
-    protected $keyType = 'string';
 
     protected $fillable = [
         'no_permintaan',
@@ -42,10 +39,6 @@ class AtkRequest extends Model
         parent::boot();
 
         static::creating(function (AtkRequest $request): void {
-            if (empty($request->id)) {
-                $request->id = (string) Str::ulid();
-            }
-
             if (empty($request->no_permintaan)) {
                 $request->no_permintaan = 'REQ-'.date('Ymd').'-'.str_pad(static::count() + 1, 4, '0', STR_PAD_LEFT);
             }
