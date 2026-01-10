@@ -79,26 +79,26 @@
 
 ## Phase 4: Events & Listeners
 
-### Task 4.1: Define Notification Events
-- [ ] Create RequestCreated event
-- [ ] Create ApprovalNeeded event
-- [ ] Create ReorderPointAlert event
-- [ ] Define event properties
-- [ ] Write tests for events
+### Task 4.1: Define Notification Events [83a9e52]
+- [x] Create RequestCreated event
+- [x] Create ApprovalNeeded event
+- [x] Create ReorderPointAlert event
+- [x] Define event properties
+- [x] Write tests for events
 
-### Task 4.2: Create Event Listeners
-- [ ] Create SendWhatsAppNotificationListener
-- [ ] Implement logic to dispatch job
-- [ ] Check user notification settings
-- [ ] Check quiet hours
-- [ ] Write tests for listeners
-- [ ] Test event → job dispatch flow
+### Task 4.2: Create Event Listeners [f53ca3c]
+- [x] Create SendWhatsAppNotificationListener
+- [x] Implement logic to dispatch job
+- [x] Check user notification settings
+- [x] Check quiet hours
+- [x] Write tests for listeners
+- [x] Test event → job dispatch flow
 
-### Task 4.3: Register Events in EventServiceProvider
-- [ ] Register events and listeners
-- [ ] Test event firing
-- [ ] Verify listeners are called
-- [ ] Write integration tests
+### Task 4.3: Register Events in EventServiceProvider [auto-discovery]
+- [x] Register events and listeners (auto-discovery in Laravel 12)
+- [x] Test event firing
+- [x] Verify listeners are called
+- [x] Write integration tests
 
 ### Task 4.4: Task: Conductor - User Manual Verification 'Phase 4: Events & Listeners' (Protocol in workflow.md)
 
@@ -106,15 +106,15 @@
 
 ## Phase 5: Message Templates
 
-### Task 5.1: Create Message Generator Service
-- [ ] Create MessageGenerator service
-- [ ] Implement generate() method with event type switch
-- [ ] Create template for RequestCreated (to Operator)
-- [ ] Create template for ApprovalNeeded (to Kasubag/KPA)
-- [ ] Create template for ReorderPointAlert (to Operator)
-- [ ] Add emoji and formatting
-- [ ] Write tests for each template
-- [ ] Test message generation
+### Task 5.1: Create Message Generator Service [d16172b]
+- [x] Create MessageGenerator service
+- [x] Implement generate() method with event type switch
+- [x] Create template for RequestCreated (to Operator)
+- [x] Create template for ApprovalNeeded (to Kasubag/KPA)
+- [x] Create template for ReorderPointAlert (to Operator)
+- [x] Add emoji and formatting
+- [x] Write tests for each template
+- [x] Test message generation
 
 ### Task 5.2: Task: Conductor - User Manual Verification 'Phase 5: Message Templates' (Protocol in workflow.md)
 
