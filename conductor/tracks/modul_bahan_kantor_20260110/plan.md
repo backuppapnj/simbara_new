@@ -30,13 +30,13 @@
 - [x] Run migrations and verify
 
 ### Task 1.5: Create Model Relationships
-- [ ] Define OfficeSupply relationships (hasMany mutations, requestDetails, usages)
-- [ ] Define OfficePurchase relationships (hasMany details)
-- [ ] Define OfficeRequest relationships (hasMany details, user, department)
-- [ ] Define OfficeMutation relationships (belongsTo supply, user)
-- [ ] Define OfficeUsage relationships (belongsTo supply, user)
-- [ ] Write tests for all relationships
-- [ ] Run `vendor/bin/pint --dirty`
+- [x] Define OfficeSupply relationships (hasMany mutations, requestDetails, usages)
+- [x] Define OfficePurchase relationships (hasMany details)
+- [x] Define OfficeRequest relationships (hasMany details, user, department)
+- [x] Define OfficeMutation relationships (belongsTo supply, user)
+- [x] Define OfficeUsage relationships (belongsTo supply, user)
+- [x] Write tests for all relationships
+- [x] Run `vendor/bin/pint --dirty`
 
 ### Task 1.6: Task: Conductor - User Manual Verification 'Phase 1: Database & Model Setup' (Protocol in workflow.md)
 

@@ -27,6 +27,7 @@ class MessageGenerator
     protected function generateRequestCreatedMessage(array $data): string
     {
         $items = $this->formatItemList($data['items'] ?? []);
+        $requestUrl = isset($data['request_id']) ? $this->getRequestUrl($data['request_id']) : $this->getBaseUrl().'/requests';
 
         return "🔔 PERMINTAAN BARU\n\n".
             "No: {$data['request_no']}\n".
@@ -36,7 +37,7 @@ class MessageGenerator
             "Items:\n".
             $items."\n".
             "Silakan cek dan proses permintaan.\n\n".
-            "Link: {$this->getRequestUrl($data['request_id'])}\n\n".
+            "Link: {$requestUrl}\n\n".
             "---\n".
             "Sistem Manajemen Aset & Persediaan\n".
             'Pengadilan Agama Penajam Paser Utara';
@@ -50,6 +51,7 @@ class MessageGenerator
     protected function generateApprovalNeededMessage(array $data): string
     {
         $items = $this->formatItemList($data['items'] ?? []);
+        $requestUrl = isset($data['request_id']) ? $this->getRequestUrl($data['request_id']) : $this->getBaseUrl().'/requests';
 
         return "✋ PERMINTAAN BUTUH APPROVAL\n\n".
             "No: {$data['request_no']}\n".
@@ -59,7 +61,7 @@ class MessageGenerator
             "Items:\n".
             $items."\n".
             "Mohon review dan approval.\n\n".
-            "Link: {$this->getRequestUrl($data['request_id'])}\n\n".
+            "Link: {$requestUrl}\n\n".
             "---\n".
             "Sistem Manajemen Aset & Persediaan\n".
             'Pengadilan Agama Penajam Paser Utara';
@@ -119,7 +121,7 @@ class MessageGenerator
     protected function getRequestUrl(string $requestId): string
     {
         // In production, this should use config('app.url') or route()
-        return config('app.url')."/requests/{$requestId}";
+        return $this->getBaseUrl()."/requests/{$requestId}";
     }
 
     /**
@@ -128,6 +130,14 @@ class MessageGenerator
     protected function getItemsUrl(): string
     {
         // In production, this should use config('app.url') or route()
-        return config('app.url').'/items';
+        return $this->getBaseUrl().'/items';
+    }
+
+    /**
+     * Get the base URL for the application.
+     */
+    protected function getBaseUrl(): string
+    {
+        return config('app.url');
     }
 }

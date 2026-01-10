@@ -63,7 +63,7 @@ class OfficeSupply extends Model
      */
     public function requestDetails(): HasMany
     {
-        return $this->hasMany(OfficeRequestDetail::class);
+        return $this->hasMany(OfficeRequestDetail::class, 'supply_id');
     }
 
     /**
@@ -71,7 +71,7 @@ class OfficeSupply extends Model
      */
     public function usages(): HasMany
     {
-        return $this->hasMany(OfficeUsage::class);
+        return $this->hasMany(OfficeUsage::class, 'supply_id');
     }
 
     /**

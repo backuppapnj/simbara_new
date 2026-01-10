@@ -188,20 +188,20 @@
 ## Phase 6: Stock Opname
 
 ### Task 6.1: Create Stock Opname Form
-- [ ] Create stock opname form
-- [ ] Input: periode (bulan/tahun)
-- [ ] Generate list of all items with current stok
-- [ ] Input field for stok_fisik
-- [ ] Auto-calculate selisih
-- [ ] Create POST /stock-opnames route
-- [ ] Save StockOpname + StockOpnameDetails
-- [ ] Write tests for SO creation
-- [ ] Test selisih calculation
+- [x] Create stock opname form
+- [x] Input: periode (bulan/tahun)
+- [x] Generate list of all items with current stok
+- [x] Input field for stok_fisik
+- [x] Auto-calculate selisih
+- [x] Create POST /stock-opnames route
+- [x] Save StockOpname + StockOpnameDetails
+- [x] Write tests for SO creation
+- [x] Test selisih calculation
 
 ### Task 6.2: Create Berita Acara PDF
 - [ ] Install PDF generation library
 - [ ] Create BA PDF template
-- [ ] Add GET /stock-opnames/{id}/ba-pdf route
+- [x] Add GET /stock-opnames/{id}/ba-pdf route
 - [ ] Generate PDF with:
   - Header info (no SO, tanggal, periode)
   - List items with selisih
@@ -210,20 +210,20 @@
 - [ ] Test PDF download
 
 ### Task 6.3: Create Stock Opname Approval
-- [ ] Add POST /stock-opnames/{id}/submit route
-- [ ] Add POST /stock-opnames/{id}/approve route
-- [ ] On approval, create adjustment StockMutations
-- [ ] Update item stok based on selisih
-- [ ] Write tests for approval and adjustment
-- [ ] Test stok adjustment logic
+- [x] Add POST /stock-opnames/{id}/submit route
+- [x] Add POST /stock-opnames/{id}/approve route
+- [x] On approval, create adjustment StockMutations
+- [x] Update item stok based on selisih
+- [x] Write tests for approval and adjustment
+- [x] Test stok adjustment logic
 
 ### Task 6.4: Create Stock Opname List & Detail Views
-- [ ] Create Index.tsx with SO list
-- [ ] Filter by status and periode
-- [ ] Create Show.tsx with SO details
-- [ ] Show selisih summary
-- [ ] Add action buttons (submit, approve, download BA)
-- [ ] Write tests for views
+- [x] Create Index.tsx with SO list
+- [x] Filter by status and periode
+- [x] Create Show.tsx with SO details
+- [x] Show selisih summary
+- [x] Add action buttons (submit, approve, download BA)
+- [ ] Write tests for views (requires built frontend)
 - [ ] Test permission-based actions
 
 ### Task 6.5: Task: Conductor - User Manual Verification 'Phase 6: Stock Opname' (Protocol in workflow.md)
@@ -233,6 +233,12 @@
 ## Phase 7: Reorder Alert & Dashboard
 
 ### Task 7.1: Create Reorder Alert System
+- [x] Create query for items below stok minimal
+- [x] Create alert component (banner)
+- [ ] Show in dashboard and items list
+- [ ] Add badge/warning color to items
+- [x] Write tests for alert logic
+- [ ] Test alert display
 - [ ] Create query for items below stok minimal
 - [ ] Create alert component (banner)
 - [ ] Show in dashboard and items list
