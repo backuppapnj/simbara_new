@@ -18,16 +18,16 @@
 - [x] Run migrations and verify
 
 ### Task 1.3: Create Request Migrations
-- [ ] Create migration for office_requests table
-- [ ] Create migration for office_request_details table
-- [ ] Add approval fields (direct approval only)
-- [ ] Write unit tests for OfficeRequest and OfficeRequestDetail models
-- [ ] Run migrations and verify
+- [x] Create migration for office_requests table
+- [x] Create migration for office_request_details table
+- [x] Add approval fields (direct approval only)
+- [x] Write unit tests for OfficeRequest and OfficeRequestDetail models
+- [x] Run migrations and verify
 
 ### Task 1.4: Create Usage Migration
-- [ ] Create migration for office_usages table
-- [ ] Write unit tests for OfficeUsage model
-- [ ] Run migrations and verify
+- [x] Create migration for office_usages table
+- [x] Write unit tests for OfficeUsage model
+- [x] Run migrations and verify
 
 ### Task 1.5: Create Model Relationships
 - [ ] Define OfficeSupply relationships (hasMany mutations, requestDetails, usages)

@@ -36,7 +36,7 @@ class StockOpnameController extends Controller
 
         $stockOpnames = $query->paginate(10);
 
-        return Inertia::render('StockOpnames/Index', [
+        return Inertia::render('stock-opnames/Index', [
             'stockOpnames' => $stockOpnames,
             'filters' => $request->only(['status', 'periode_bulan', 'periode_tahun']),
         ]);
@@ -52,7 +52,7 @@ class StockOpnameController extends Controller
             ->orderBy('nama_barang')
             ->get();
 
-        return Inertia::render('StockOpnames/Create', [
+        return Inertia::render('stock-opnames/Create', [
             'items' => $items,
         ]);
     }
@@ -93,7 +93,7 @@ class StockOpnameController extends Controller
     {
         $stockOpname->load(['stockOpnameDetails.item', 'approver']);
 
-        return Inertia::render('StockOpnames/Show', [
+        return Inertia::render('stock-opnames/Show', [
             'stockOpname' => $stockOpname,
         ]);
     }

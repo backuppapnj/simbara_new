@@ -39,27 +39,27 @@
 ## Phase 2: Import Feature
 
 ### Task 2.1: Create Import Validation Rules
-- [ ] Create ImportAssetRequest with validation rules
-- [ ] Validate JSON structure (metadata + data)
-- [ ] Validate required fields per record
-- [ ] Write tests for validation rules
-- [ ] Test error messages
+- [x] Create ImportAssetRequest with validation rules
+- [x] Validate JSON structure (metadata + data)
+- [x] Validate required fields per record
+- [x] Write tests for validation rules
+- [x] Test error messages
 
 ### Task 2.2: Create Import Service
-- [ ] Create AssetImportService for processing JSON
-- [ ] Implement chunk processing (100 records per batch)
-- [ ] Implement location mapping logic
-- [ ] Implement transaction handling per chunk
-- [ ] Write tests for import service
-- [ ] Test with sample data from docs/data_simplified.json
+- [x] Create AssetImportService for processing JSON
+- [x] Implement chunk processing (100 records per batch)
+- [x] Implement location mapping logic
+- [x] Implement transaction handling per chunk
+- [x] Write tests for import service
+- [x] Test with sample data from docs/data_simplified.json
 
 ### Task 2.3: Create Import Controller & Route
-- [ ] Add GET /assets/import route
-- [ ] Add POST /assets/import route
-- [ ] Create AssetController->import()
-- [ ] Create AssetController->processImport()
-- [ ] Write tests for controllers
-- [ ] Test route access with permissions
+- [x] Add GET /assets/import route
+- [x] Add POST /assets/import route
+- [x] Create AssetController->import()
+- [x] Create AssetController->processImport()
+- [x] Write tests for controllers
+- [x] Test route access with permissions
 
 ### Task 2.4: Create Import UI Components
 - [ ] Create Import.tsx page

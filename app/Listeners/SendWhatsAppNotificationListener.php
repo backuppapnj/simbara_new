@@ -32,9 +32,31 @@ class SendWhatsAppNotificationListener
     {
         return match ($event::class) {
             RequestCreated::class, ApprovalNeeded::class => $event->request->user,
-            ReorderPointAlert::class => User::role('operator')->first(),
+            ReorderPointAlert::class => $this->getOperatorUser(),
             default => null,
         };
+    }
+
+    /**
+     * Get the operator user for reorder alerts.
+     */
+    protected function getOperatorUser(): ?User
+    {
+        // Try to get a user with operator role
+        try {
+            $operator = User::role('operator')->first();
+
+            if ($operator !== null) {
+                return $operator;
+            }
+        } catch (\Exception $e) {
+            // Role doesn't exist or permission package not configured
+        }
+
+        // Fallback: get first user with reorder alerts enabled
+        return User::whereHas('notificationSetting', function ($query) {
+            $query->where('notify_reorder_alert', true);
+        })->first();
     }
 
     /**
@@ -118,7 +140,7 @@ class SendWhatsAppNotificationListener
             return false;
         }
 
-        if (!$settings->whatsapp_enabled) {
+        if (! $settings->whatsapp_enabled) {
             return false;
         }
 

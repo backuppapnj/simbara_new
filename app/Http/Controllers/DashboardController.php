@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
+use App\Models\AtkRequest;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -27,6 +30,7 @@ class DashboardController extends Controller
                 'total_atk' => $this->getTotalAtk(),
                 'pending_requests' => $this->getPendingRequests(),
                 'damaged_assets' => $this->getDamagedAssets(),
+                'low_stock_items' => $this->getLowStockItems(),
             ]),
 
             // Deferred props for charts (load when visible)
@@ -39,67 +43,78 @@ class DashboardController extends Controller
 
     /**
      * Get total assets count.
-     * TODO: Replace with actual database query when Asset model exists.
      */
     protected function getTotalAssets(): int
     {
-        return 0;
+        return Asset::count();
     }
 
     /**
      * Get total ATK count.
-     * TODO: Replace with actual database query when ATK model exists.
      */
     protected function getTotalAtk(): int
     {
-        return 0;
+        return Item::count();
     }
 
     /**
      * Get pending requests count.
-     * TODO: Replace with actual database query when Request model exists.
      */
     protected function getPendingRequests(): int
     {
-        return 0;
+        return AtkRequest::where('status', 'pending')->count();
     }
 
     /**
      * Get damaged assets count.
-     * TODO: Replace with actual database query when Asset model exists.
      */
     protected function getDamagedAssets(): int
     {
-        return 0;
+        return Asset::where('kondisi', 'rusak')->count();
+    }
+
+    /**
+     * Get low stock items count.
+     */
+    protected function getLowStockItems(): int
+    {
+        return Item::whereColumn('stok', '<=', 'stok_minimal')->count();
     }
 
     /**
      * Get asset distribution by category.
-     * TODO: Replace with actual database query when Asset model exists.
      */
     protected function getAssetDistribution(): array
     {
-        return [
-            ['category' => 'Elektronik', 'count' => 0, 'value' => 0],
-            ['category' => 'Furniture', 'count' => 0, 'value' => 0],
-            ['category' => 'Kendaraan', 'count' => 0, 'value' => 0],
-            ['category' => 'Lainnya', 'count' => 0, 'value' => 0],
-        ];
+        return Asset::query()
+            ->selectRaw('kategori, COUNT(*) as count, SUM(harga_perolehan) as value')
+            ->groupBy('kategori')
+            ->get()
+            ->map(fn ($item) => [
+                'category' => $item->kategori ?? 'Lainnya',
+                'count' => $item->count,
+                'value' => (int) $item->value,
+            ])
+            ->toArray();
     }
 
     /**
      * Get monthly request trends.
-     * TODO: Replace with actual database query when Request model exists.
      */
     protected function getMonthlyTrends(): array
     {
-        return [
-            ['month' => 'Jan', 'requests' => 0, 'expenditure' => 0],
-            ['month' => 'Feb', 'requests' => 0, 'expenditure' => 0],
-            ['month' => 'Mar', 'requests' => 0, 'expenditure' => 0],
-            ['month' => 'Apr', 'requests' => 0, 'expenditure' => 0],
-            ['month' => 'Mei', 'requests' => 0, 'expenditure' => 0],
-            ['month' => 'Jun', 'requests' => 0, 'expenditure' => 0],
-        ];
+        // Get last 6 months of data
+        return AtkRequest::query()
+            ->selectRaw('DATE_FORMAT(tanggal, "%b") as month, COUNT(*) as requests, SUM(total_nilai) as expenditure')
+            ->where('tanggal', '>=', now()->subMonths(6))
+            ->groupBy('month')
+            ->orderBy('tanggal')
+            ->get()
+            ->map(fn ($item) => [
+                'month' => $item->month,
+                'requests' => $item->requests,
+                'expenditure' => (int) ($item->expenditure ?? 0),
+            ])
+            ->toArray();
     }
 }

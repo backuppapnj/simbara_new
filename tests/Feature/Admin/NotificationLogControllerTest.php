@@ -3,6 +3,11 @@
 use App\Models\NotificationLog;
 use App\Models\User;
 
+beforeEach(function () {
+    // Seed roles before each test
+    $this->seed(\Database\Seeders\RolesSeeder::class);
+});
+
 test('guests cannot access notification logs', function () {
     $response = $this->get(route('admin.notification-logs.index'));
 
@@ -28,7 +33,8 @@ test('admin users can view notification logs', function () {
 
     $response = $this->actingAs($admin)->get(route('admin.notification-logs.index'));
 
-    $response->assertOk();
+    // Note: Component assertion requires Vite build, only check status
+    $response->assertStatus(200);
 });
 
 test('admin can filter logs by status', function () {
@@ -43,7 +49,7 @@ test('admin can filter logs by status', function () {
 
     $response = $this->actingAs($admin)->get(route('admin.notification-logs.index', ['status' => 'sent']));
 
-    $response->assertOk();
+    $response->assertStatus(200);
 });
 
 test('admin can filter logs by event type', function () {
@@ -57,7 +63,7 @@ test('admin can filter logs by event type', function () {
 
     $response = $this->actingAs($admin)->get(route('admin.notification-logs.index', ['event_type' => 'request_created']));
 
-    $response->assertOk();
+    $response->assertStatus(200);
 });
 
 test('admin can view log details', function () {
@@ -73,7 +79,7 @@ test('admin can view log details', function () {
 
     $response = $this->actingAs($admin)->get(route('admin.notification-logs.show', $log));
 
-    $response->assertOk();
+    $response->assertStatus(200);
 });
 
 test('logs are paginated', function () {
@@ -86,5 +92,5 @@ test('logs are paginated', function () {
 
     $response = $this->actingAs($admin)->get(route('admin.notification-logs.index', ['per_page' => 25]));
 
-    $response->assertOk();
+    $response->assertStatus(200);
 });

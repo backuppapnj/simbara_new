@@ -298,12 +298,195 @@ describe('AtkRequest Management', function () {
         it('forbids viewing other users requests', function () {
             $user1 = User::factory()->create();
             $user2 = User::factory()->create();
-            $request = AtkRequest::factory()->for($user2)->create();
+            $request = AtkRequest::factory()->create(['user_id' => $user2->id]);
 
             $response = $this->actingAs($user1)
                 ->getJson("/atk-requests/{$request->id}");
 
             $response->assertForbidden();
+        });
+    });
+
+    describe('POST /atk-requests/{id}/approve-level1', function () {
+        it('requires authentication', function () {
+            $request = AtkRequest::factory()->pending()->create();
+
+            $response = $this->postJson("/atk-requests/{$request->id}/approve-level1");
+
+            $response->assertUnauthorized();
+        });
+
+        it('approves request at level 1', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->pending()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/approve-level1");
+
+            $response->assertOk()
+                ->assertJson([
+                    'data' => [
+                        'status' => 'level1_approved',
+                        'level1_approval_by' => $user->id,
+                    ],
+                ]);
+
+            $this->assertDatabaseHas('atk_requests', [
+                'id' => $request->id,
+                'status' => 'level1_approved',
+                'level1_approval_by' => $user->id,
+            ]);
+        });
+
+        it('can only approve pending requests', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->level2Approved()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/approve-level1");
+
+            $response->assertUnprocessable();
+        });
+    });
+
+    describe('POST /atk-requests/{id}/approve-level2', function () {
+        it('requires authentication', function () {
+            $request = AtkRequest::factory()->level1Approved()->create();
+
+            $response = $this->postJson("/atk-requests/{$request->id}/approve-level2");
+
+            $response->assertUnauthorized();
+        });
+
+        it('approves request at level 2', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->level1Approved()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/approve-level2");
+
+            $response->assertOk()
+                ->assertJson([
+                    'data' => [
+                        'status' => 'level2_approved',
+                        'level2_approval_by' => $user->id,
+                    ],
+                ]);
+
+            $this->assertDatabaseHas('atk_requests', [
+                'id' => $request->id,
+                'status' => 'level2_approved',
+                'level2_approval_by' => $user->id,
+            ]);
+        });
+
+        it('can only approve level1 approved requests', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->pending()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/approve-level2");
+
+            $response->assertUnprocessable();
+        });
+    });
+
+    describe('POST /atk-requests/{id}/approve-level3', function () {
+        it('requires authentication', function () {
+            $request = AtkRequest::factory()->level2Approved()->create();
+
+            $response = $this->postJson("/atk-requests/{$request->id}/approve-level3");
+
+            $response->assertUnauthorized();
+        });
+
+        it('approves request at level 3', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->level2Approved()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/approve-level3");
+
+            $response->assertOk()
+                ->assertJson([
+                    'data' => [
+                        'status' => 'level3_approved',
+                        'level3_approval_by' => $user->id,
+                    ],
+                ]);
+
+            $this->assertDatabaseHas('atk_requests', [
+                'id' => $request->id,
+                'status' => 'level3_approved',
+                'level3_approval_by' => $user->id,
+            ]);
+        });
+
+        it('can only approve level2 approved requests', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->pending()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/approve-level3");
+
+            $response->assertUnprocessable();
+        });
+    });
+
+    describe('POST /atk-requests/{id}/reject', function () {
+        it('requires authentication', function () {
+            $request = AtkRequest::factory()->pending()->create();
+
+            $response = $this->postJson("/atk-requests/{$request->id}/reject");
+
+            $response->assertUnauthorized();
+        });
+
+        it('rejects request with reason', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->pending()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/reject", [
+                    'alasan_penolakan' => 'Stok tidak tersedia',
+                ]);
+
+            $response->assertOk()
+                ->assertJson([
+                    'data' => [
+                        'status' => 'rejected',
+                        'alasan_penolakan' => 'Stok tidak tersedia',
+                    ],
+                ]);
+
+            $this->assertDatabaseHas('atk_requests', [
+                'id' => $request->id,
+                'status' => 'rejected',
+                'alasan_penolakan' => 'Stok tidak tersedia',
+            ]);
+        });
+
+        it('requires rejection reason', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->pending()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/reject");
+
+            $response->assertUnprocessable()
+                ->assertJsonValidationErrors(['alasan_penolakan']);
+        });
+
+        it('can only reject pending or approved requests', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->rejected()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/reject", [
+                    'alasan_penolakan' => 'Test',
+                ]);
+
+            $response->assertUnprocessable();
         });
     });
 });

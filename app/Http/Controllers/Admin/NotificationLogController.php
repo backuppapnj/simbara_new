@@ -6,13 +6,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\NotificationLog;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final readonly class NotificationLogController extends Controller
+class NotificationLogController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of notification logs.
      */
