@@ -50,7 +50,7 @@
 - [x] Customize view routes if needed [5b9bf57]
 
 ### Task 3.2: Customize Fortify actions
-- [ ] Review CreateNewUser action
+- [~] Review CreateNewUser action
 - [ ] Add phone and nip fields to registration
 - [ ] Write unit tests for registration
 
@@ -80,7 +80,7 @@
 - [x] Write integration tests [2a96c26]
 
 ### Task 4.4: Create UsersSeeder
-- [ ] Create default super_admin user
+- [~] Create default super_admin user
 - [ ] Create sample users for each role
 - [ ] Write integration tests
 
