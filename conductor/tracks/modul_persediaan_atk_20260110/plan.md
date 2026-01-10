@@ -126,14 +126,14 @@
 - [x] Test form submission
 
 ### Task 4.2: Create Approval System
-- [~] Create approval component
-- [~] Add POST /requests/{id}/approve-level1
-- [~] Add POST /requests/{id}/approve-level2
-- [~] Add POST /requests/{id}/approve-level3
-- [~] Add POST /requests/{id}/reject
-- [~] Implement approval logic with role checks
-- [~] Write tests for each approval level
-- [~] Test approval workflow
+- [x] Create approval component
+- [x] Add POST /requests/{id}/approve-level1
+- [x] Add POST /requests/{id}/approve-level2
+- [x] Add POST /requests/{id}/approve-level3
+- [x] Add POST /requests/{id}/reject
+- [x] Implement approval logic with role checks
+- [x] Write tests for each approval level
+- [x] Test approval workflow
 
 ### Task 4.3: Create Request List & Views
 - [ ] Create Index.tsx with request list

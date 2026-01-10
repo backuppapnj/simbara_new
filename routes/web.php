@@ -92,6 +92,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [\App\Http\Controllers\AtkRequestController::class, 'index'])->name('index');
         Route::post('/', [\App\Http\Controllers\AtkRequestController::class, 'store'])->name('store');
         Route::get('/{atkRequest}', [\App\Http\Controllers\AtkRequestController::class, 'show'])->name('show');
+
+        // Approval routes
+        Route::post('/{atkRequest}/approve-level1', [\App\Http\Controllers\AtkRequestController::class, 'approveLevel1'])->name('approve-level1');
+        Route::post('/{atkRequest}/approve-level2', [\App\Http\Controllers\AtkRequestController::class, 'approveLevel2'])->name('approve-level2');
+        Route::post('/{atkRequest}/approve-level3', [\App\Http\Controllers\AtkRequestController::class, 'approveLevel3'])->name('approve-level3');
+        Route::post('/{atkRequest}/reject', [\App\Http\Controllers\AtkRequestController::class, 'reject'])->name('reject');
     });
 });
 

@@ -122,28 +122,28 @@
 
 ## Phase 6: Notification Settings & Quiet Hours
 
-### Task 6.1: Create NotificationSettings CRUD
-- [ ] Create NotificationSettingController
-- [ ] Add routes for user settings
-- [ ] Create validation rules
-- [ ] Write tests for CRUD operations
-- [ ] Test settings persistence
+### Task 6.1: Create NotificationSettings CRUD [f53ca3c]
+- [x] Create NotificationSettingController
+- [x] Add routes for user settings
+- [x] Create validation rules
+- [x] Write tests for CRUD operations
+- [x] Test settings persistence
 
-### Task 6.2: Implement Quiet Hours Logic
-- [ ] Add quiet_hours_start and quiet_hours_end fields
-- [ ] Implement isQuietHours() check
-- [ ] Handle overnight range (22:00 - 06:00)
-- [ ] Write tests for quiet hours logic
-- [ ] Test time boundary conditions
+### Task 6.2: Implement Quiet Hours Logic [f53ca3c]
+- [x] Add quiet_hours_start and quiet_hours_end fields
+- [x] Implement isQuietHours() check
+- [x] Handle overnight range (22:00 - 06:00)
+- [x] Write tests for quiet hours logic
+- [x] Test time boundary conditions
 
-### Task 6.3: Create User Settings UI
-- [ ] Create Settings/Notifications.tsx page
-- [ ] Add global toggle
-- [ ] Add toggle per event
-- [ ] Add quiet hours time inputs
-- [ ] Implement form submission
-- [ ] Write tests for components
-- [ ] Test settings update
+### Task 6.3: Create User Settings UI [f53ca3c]
+- [x] Create Settings/Notifications.tsx page
+- [x] Add global toggle
+- [x] Add toggle per event
+- [x] Add quiet hours time inputs
+- [x] Implement form submission
+- [x] Write tests for components
+- [x] Test settings update
 
 ### Task 6.4: Task: Conductor - User Manual Verification 'Phase 6: Notification Settings & Quiet Hours' (Protocol in workflow.md)
 
@@ -169,13 +169,13 @@
 - [ ] Write tests for logs page
 - [ ] Test filtering and display
 
-### Task 7.3: Create NotificationLogController
-- [ ] Create controller methods for logs
-- [ ] Implement index with filters
-- [ ] Implement show method
-- [ ] Add authorization (admin only)
-- [ ] Write tests for controller
-- [ ] Test access control
+### Task 7.3: Create NotificationLogController [f53ca3c]
+- [x] Create controller methods for logs
+- [x] Implement index with filters
+- [x] Implement show method
+- [x] Add authorization (admin only)
+- [x] Write tests for controller
+- [x] Test access control
 
 ### Task 7.4: Task: Conductor - User Manual Verification 'Phase 7: Admin Panel' (Protocol in workflow.md)
 
