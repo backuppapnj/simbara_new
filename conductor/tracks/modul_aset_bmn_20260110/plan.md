@@ -3,34 +3,34 @@
 ## Phase 1: Database & Model Setup
 
 ### Task 1.1: Create Assets Migration
-- [~] Create migration for assets table with all SIMAN fields
-- [~] Add ULID primary key, foreign keys (locations, users)
-- [~] Add soft deletes
-- [~] Write unit tests for Asset model
-- [ ] Run migration and verify
+- [x] Create migration for assets table with all SIMAN fields
+- [x] Add ULID primary key, foreign keys (locations, users)
+- [x] Add soft deletes
+- [x] Write unit tests for Asset model
+- [x] Run migration and verify
 
 ### Task 1.2: Create AssetHistories Migration
-- [ ] Create migration for asset_histories table
-- [ ] Add foreign key relationships
-- [ ] Write unit tests for AssetHistory model
-- [ ] Run migration and verify
+- [x] Create migration for asset_histories table
+- [x] Add foreign key relationships
+- [x] Write unit tests for AssetHistory model
+- [x] Run migration and verify
 
 ### Task 1.3: Create AssetMaintenances Migration
-- [ ] Create migration for asset_maintenances table
-- [ ] Write unit tests for AssetMaintenance model
-- [ ] Run migration and verify
+- [x] Create migration for asset_maintenances table
+- [x] Write unit tests for AssetMaintenance model
+- [x] Run migration and verify
 
 ### Task 1.4: Create AssetConditionLogs Migration
-- [ ] Create migration for asset_condition_logs table
-- [ ] Write unit tests for AssetConditionLog model
-- [ ] Run migration and verify
+- [x] Create migration for asset_condition_logs table
+- [x] Write unit tests for AssetConditionLog model
+- [x] Run migration and verify
 
 ### Task 1.5: Create Asset Model with Relationships
-- [ ] Create Asset model with relationships (belongsTo Location, User)
-- [ ] Add hasMany relationships (histories, maintenances, conditionLogs)
-- [ ] Add casts for decimal fields, dates
-- [ ] Write tests for model relationships
-- [ ] Run `vendor/bin/pint --dirty`
+- [x] Create Asset model with relationships (belongsTo Location, User)
+- [x] Add hasMany relationships (histories, maintenances, conditionLogs)
+- [x] Add casts for decimal fields, dates
+- [x] Write tests for model relationships
+- [x] Run `vendor/bin/pint --dirty`
 
 ### Task 1.6: Task: Conductor - User Manual Verification 'Phase 1: Database & Model Setup' (Protocol in workflow.md)
 
