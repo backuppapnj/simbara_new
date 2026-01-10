@@ -3,9 +3,6 @@
 use App\Actions\Fortify\CreateNewUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase;
-
-uses(TestCase::class);
 
 describe('CreateNewUser validation', function (): void {
     it('validates phone field with max 20 characters', function (): void {

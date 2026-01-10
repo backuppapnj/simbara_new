@@ -1,16 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Http\Middleware\CheckPermission;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Tests\TestCase;
-
-uses(TestCase::class)->in('..');
 
 describe('CheckPermission Middleware', function (): void {
     beforeEach(function (): void {

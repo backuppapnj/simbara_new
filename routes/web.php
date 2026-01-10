@@ -36,6 +36,12 @@ if (Features::enabled(Features::twoFactorAuthentication())) {
     Route::post('/two-factor-recovery-code', [\App\Http\Controllers\Auth\TwoFactorAuthenticationController::class, 'storeRecoveryCode'])->name('two-factor.recovery');
 }
 
+// Password Confirmation Route (requires auth)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/confirm-password', fn () => Inertia::render('auth/confirm-password'))->name('password.confirm');
+    Route::post('/confirm-password', [\App\Http\Controllers\Auth\ConfirmPasswordController::class, 'store'])->name('password.confirm.store');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
