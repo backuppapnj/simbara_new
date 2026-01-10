@@ -39,14 +39,14 @@
 ## Phase 2: Import Feature
 
 ### Task 2.1: Create Import Validation Rules
-- [x] Create ImportAssetRequest with validation rules
+- [x] Create ImportAssetRequest with validation rules [4f9cd9a]
 - [x] Validate JSON structure (metadata + data)
 - [x] Validate required fields per record
 - [x] Write tests for validation rules
 - [x] Test error messages
 
 ### Task 2.2: Create Import Service
-- [x] Create AssetImportService for processing JSON
+- [x] Create AssetImportService for processing JSON [4f9cd9a]
 - [x] Implement chunk processing (100 records per batch)
 - [x] Implement location mapping logic
 - [x] Implement transaction handling per chunk
@@ -54,15 +54,23 @@
 - [x] Test with sample data from docs/data_simplified.json
 
 ### Task 2.3: Create Import Controller & Route
-- [x] Add GET /assets/import route
-- [x] Add POST /assets/import route
-- [x] Create AssetController->import()
-- [x] Create AssetController->processImport()
+- [x] Add GET /assets/import route [4f9cd9a]
+- [x] Add POST /assets/import route [4f9cd9a]
+- [x] Create AssetController->import() [4f9cd9a]
+- [x] Create AssetController->processImport() [4f9cd9a]
 - [x] Write tests for controllers
 - [x] Test route access with permissions
 
-### Task 2.4: Create Import UI Components
-- [ ] Create Import.tsx page
+### Task 2.4: Location Tracking (Partial Phase 4)
+- [x] Add GET /assets/{id}/histories route [4f9cd9a]
+- [x] Create AssetController->histories() [4f9cd9a]
+- [x] Add POST /assets/{id}/update-location route [4f9cd9a]
+- [x] Create AssetController->updateLocation() [4f9cd9a]
+- [x] Auto-record location changes to asset_histories [4f9cd9a]
+- [x] Write tests for location update and history
+
+### Task 2.5: Create Import UI Components
+- [x] Create Import.tsx page placeholder [4f9cd9a]
 - [ ] Create file upload component with drag-drop
 - [ ] Create preview component (show first 50 records)
 - [ ] Create progress indicator
@@ -70,7 +78,7 @@
 - [ ] Write tests for components
 - [ ] Test file upload and preview
 
-### Task 2.5: Task: Conductor - User Manual Verification 'Phase 2: Import Feature' (Protocol in workflow.md)
+### Task 2.6: Task: Conductor - User Manual Verification 'Phase 2: Import Feature' (Protocol in workflow.md)
 
 ---
 
