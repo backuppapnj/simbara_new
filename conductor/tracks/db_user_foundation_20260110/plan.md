@@ -50,14 +50,14 @@
 - [x] Customize view routes if needed [5b9bf57]
 
 ### Task 3.2: Customize Fortify actions
-- [~] Review CreateNewUser action
-- [ ] Add phone and nip fields to registration
-- [ ] Write unit tests for registration
+- [x] Review CreateNewUser action [70c3272]
+- [x] Add phone and nip fields to registration [70c3272]
+- [x] Write unit tests for registration [b7764d0]
 
 ### Task 3.3: Test authentication flow
-- [ ] Test login functionality
-- [ ] Test registration with new fields
-- [ ] Test password reset
+- [x] Test login functionality [b7764d0]
+- [x] Test registration with new fields [b7764d0]
+- [x] Test password reset [b7764d0]
 
 ### Task 3.4: Task: Conductor - User Manual Verification 'Phase 3: Fortify Authentication' (Protocol in workflow.md)
 
@@ -80,9 +80,9 @@
 - [x] Write integration tests [2a96c26]
 
 ### Task 4.4: Create UsersSeeder
-- [~] Create default super_admin user
-- [ ] Create sample users for each role
-- [ ] Write integration tests
+- [x] Create default super_admin user [70c3272]
+- [x] Create sample users for each role [70c3272]
+- [x] Write integration tests [b7764d0]
 
 ### Task 4.5: Task: Conductor - User Manual Verification 'Phase 4: Database Seeders' (Protocol in workflow.md)
 
