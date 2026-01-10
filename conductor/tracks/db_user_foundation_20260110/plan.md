@@ -15,8 +15,8 @@
 - [ ] Write unit tests for Department model
 
 ### Task 1.4: Run migrations and verify
-- [~] Execute php artisan migrate
-- [ ] Verify table structure
+- [x] Execute php artisan migrate [2a96c26]
+- [x] Verify table structure [2a96c26]
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Database Migrations' (Protocol in workflow.md)
 
 ---
@@ -29,14 +29,14 @@
 - [ ] Configure ServiceProvider
 
 ### Task 2.2: Create User model with HasRoles trait
-- [ ] Extend User model with HasRoles
+- [x] Extend User model with HasRoles [5c03ab2]
 - [ ] Add relationship methods
 - [ ] Write unit tests for role assignment
 
 ### Task 2.3: Create custom Permission middleware
-- [~] Create middleware for role/permission checks
-- [ ] Register middleware in bootstrap/app.php
-- [ ] Write unit tests for middleware
+- [x] Create middleware for role/permission checks [2a96c26]
+- [x] Register middleware in bootstrap/app.php [2a96c26]
+- [x] Write unit tests for middleware [5c03ab2]
 
 ### Task 2.4: Task: Conductor - User Manual Verification 'Phase 2: Permission & Role Setup' (Protocol in workflow.md)
 
@@ -66,18 +66,18 @@
 ## Phase 4: Database Seeders
 
 ### Task 4.1: Create RolesSeeder
-- [~] Create seeder for all 6 roles
-- [ ] Write integration tests
+- [x] Create seeder for all 6 roles [2a96c26]
+- [x] Write integration tests [2a96c26]
 
 ### Task 4.2: Create PermissionsSeeder
-- [~] Define permissions for each module
-- [ ] Assign permissions to roles
-- [ ] Write integration tests
+- [x] Define permissions for each module [2a96c26]
+- [x] Assign permissions to roles [2a96c26]
+- [x] Write integration tests [2a96c26]
 
 ### Task 4.3: Create LocationsSeeder and DepartmentsSeeder
-- [~] Seed sample locations/ruangan
-- [ ] Seed sample departments/unit kerja
-- [ ] Write integration tests
+- [x] Seed sample locations/ruangan [2a96c26]
+- [x] Seed sample departments/unit kerja [2a96c26]
+- [x] Write integration tests [2a96c26]
 
 ### Task 4.4: Create UsersSeeder
 - [ ] Create default super_admin user
