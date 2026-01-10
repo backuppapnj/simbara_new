@@ -12,8 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('office_requests', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
+            $table->string('no_permintaan', 50)->unique();
+            $table->ulid('user_id');
+            $table->ulid('department_id');
+            $table->date('tanggal');
+            $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
+            $table->ulid('approved_by')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->text('keterangan')->nullable();
+            $table->text('alasan_penolakan')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('restrict');
+            $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

@@ -35,7 +35,7 @@ class AssetController extends Controller
     {
         try {
             // Upload and get file content
-            $file = $request->file('json_file');
+            $file = $request->validated()['json_file'];
             $content = file_get_contents($file->getRealPath());
             $jsonData = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 

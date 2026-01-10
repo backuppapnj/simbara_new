@@ -98,7 +98,8 @@ class AtkRequestController extends Controller
         if ($hasAdminRole) {
             $canView = true;
         } else {
-            $canView = $atkRequest->user_id === $user->id;
+            // Use loose comparison because user_id may be cast to string from DB
+            $canView = $atkRequest->user_id == $user->id;
         }
 
         if (! $canView) {

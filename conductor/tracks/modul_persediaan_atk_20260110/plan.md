@@ -45,14 +45,14 @@
 ## Phase 2: Master Data ATK
 
 ### Task 2.1: Create Items CRUD
-- [~] Create ItemController with CRUD methods
-- [ ] Add routes: GET /items, POST /items, PUT /items/{id}
-- [ ] Create validation rules (ItemRequest)
-- [ ] Write tests for CRUD operations
-- [ ] Test permissions per role
+- [x] Create ItemController with CRUD methods
+- [x] Add routes: GET /items, POST /items, PUT /items/{id}
+- [x] Create validation rules (ItemRequest)
+- [x] Write tests for CRUD operations
+- [x] Test permissions per role
 
 ### Task 2.2: Create Items UI Components
-- [ ] Create Index.tsx with table view
+- [x] Create Index.tsx with table view
 - [ ] Create Create.tsx form
 - [ ] Create Show.tsx detail view
 - [ ] Add reorder point indicator (badge)
@@ -60,12 +60,12 @@
 - [ ] Test responsive behavior
 
 ### Task 2.3: Create Kartu Stok View
-- [ ] Add GET /items/{id}/mutations route
-- [ ] Create controller method with pagination
-- [ ] Create mutations list component
+- [x] Add GET /items/{id}/mutations route
+- [x] Create controller method with pagination
+- [x] Create mutations list component
 - [ ] Show running balance (stok sesudah)
 - [ ] Filter by jenis mutasi and date range
-- [ ] Write tests for kartu stok
+- [x] Write tests for kartu stok
 - [ ] Test real-time updates
 
 ### Task 2.4: Task: Conductor - User Manual Verification 'Phase 2: Master Data ATK' (Protocol in workflow.md)
