@@ -19,6 +19,7 @@ class NotificationSetting extends Model
     protected $fillable = [
         'user_id',
         'whatsapp_enabled',
+        'push_enabled',
         'notify_reorder_alert',
         'notify_approval_needed',
         'notify_request_update',
@@ -35,6 +36,7 @@ class NotificationSetting extends Model
     {
         return [
             'whatsapp_enabled' => 'boolean',
+            'push_enabled' => 'boolean',
             'notify_reorder_alert' => 'boolean',
             'notify_approval_needed' => 'boolean',
             'notify_request_update' => 'boolean',

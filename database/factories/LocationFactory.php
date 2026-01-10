@@ -17,7 +17,11 @@ class LocationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nama_ruangan' => fake()->word(),
+            'gedung' => fake()->word(),
+            'lantai' => fake()->numberBetween(1, 5),
+            'kapasitas' => fake()->numberBetween(1, 100),
+            'keterangan' => fake()->sentence(),
         ];
     }
 }

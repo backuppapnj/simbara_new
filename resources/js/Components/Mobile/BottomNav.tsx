@@ -1,8 +1,8 @@
 'use client';
 
-import { Home, Package, PenTool, ShoppingCart, Settings } from 'lucide-react';
-import { Link, usePage } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
+import { Link, usePage } from '@inertiajs/react';
+import { Home, Package, PenTool, Settings, ShoppingCart } from 'lucide-react';
 
 interface NavItem {
     label: string;
@@ -29,8 +29,8 @@ export function BottomNav() {
     };
 
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border safe-area-inset-bottom">
-            <div className="flex items-center justify-around h-16 px-2">
+        <nav className="safe-area-inset-bottom fixed right-0 bottom-0 left-0 z-40 border-t border-border bg-background md:hidden">
+            <div className="flex h-16 items-center justify-around px-2">
                 {navItems.map((item) => {
                     const active = isActive(item.href);
                     const Icon = item.icon;
@@ -40,10 +40,10 @@ export function BottomNav() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                'flex flex-col items-center justify-center gap-1 min-w-0 flex-1 py-2 px-1 rounded-lg transition-colors relative group',
+                                'group relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 transition-colors',
                                 active
                                     ? 'text-primary'
-                                    : 'text-muted-foreground hover:text-foreground'
+                                    : 'text-muted-foreground hover:text-foreground',
                             )}
                             aria-label={item.label}
                             aria-current={active ? 'page' : undefined}
@@ -52,14 +52,14 @@ export function BottomNav() {
                                 <Icon
                                     className={cn(
                                         'size-5 transition-all',
-                                        active && 'stroke-[2.5px]'
+                                        active && 'stroke-[2.5px]',
                                     )}
                                 />
                                 {active && (
-                                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-primary" />
+                                    <span className="absolute -bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-primary" />
                                 )}
                             </span>
-                            <span className="text-[10px] font-medium leading-tight truncate w-full text-center">
+                            <span className="w-full truncate text-center text-[10px] leading-tight font-medium">
                                 {item.label}
                             </span>
                         </Link>

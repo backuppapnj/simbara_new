@@ -32,9 +32,21 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- Favicon --}}
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+        {{-- PWA Manifest --}}
+        <link rel="manifest" href="/manifest.json">
+        <meta name="theme-color" content="#1e3a5f">
+
+        {{-- PWA Mobile Meta Tags --}}
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="Aset PA PPU">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="Aset PA PPU">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

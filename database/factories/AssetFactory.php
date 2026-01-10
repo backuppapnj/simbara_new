@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Location;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -48,13 +46,11 @@ class AssetFactory extends Factory
             'tgl_rekam' => fake()->date(),
             'tgl_rekam_pertama' => fake()->date(),
             'lokasi_ruang' => fake()->word(),
-            'lokasi_id' => Location::factory(),
             'asl_perlh' => fake()->word(),
             'kd_satker' => fake()->regexify('[A-Z0-9]{20}'),
             'ur_satker' => fake()->company(),
             'jml_photo' => fake()->numberBetween(0, 5),
             'umur_sisa' => fake()->numberBetween(0, 20),
-            'penanggung_jawab_id' => User::factory(),
         ];
     }
 }

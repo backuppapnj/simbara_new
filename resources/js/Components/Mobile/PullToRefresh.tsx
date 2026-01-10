@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { RefreshCw } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface PullToRefreshProps {
     onRefresh: () => Promise<void> | void;
@@ -41,7 +41,10 @@ export function PullToRefresh({
         if (diff > 0) {
             // Add resistance - the further you pull, the harder it gets
             const resistance = 0.4;
-            const newPullDistance = Math.min(diff * resistance, threshold * 1.5);
+            const newPullDistance = Math.min(
+                diff * resistance,
+                threshold * 1.5,
+            );
             setPullDistance(newPullDistance);
         }
     };
@@ -94,7 +97,7 @@ export function PullToRefresh({
         >
             {/* Pull indicator */}
             <div
-                className="absolute left-0 right-0 flex items-center justify-center pointer-events-none transition-transform"
+                className="pointer-events-none absolute right-0 left-0 flex items-center justify-center transition-transform"
                 style={{
                     transform: `translateY(${Math.max(0, pullDistance - 40)}px)`,
                     opacity: pullProgress,
@@ -106,14 +109,16 @@ export function PullToRefresh({
                         'rounded-full p-2 transition-colors',
                         isRefreshing
                             ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted text-muted-foreground'
+                            : 'bg-muted text-muted-foreground',
                     )}
                 >
                     <RefreshCw
                         className="size-5"
                         style={{
                             transform: `rotate(${rotate}deg)`,
-                            transition: isRefreshing ? 'transform 1s linear' : 'none',
+                            transition: isRefreshing
+                                ? 'transform 1s linear'
+                                : 'none',
                         }}
                     />
                 </div>
@@ -123,7 +128,9 @@ export function PullToRefresh({
             <div
                 className="transition-transform"
                 style={{
-                    transform: isRefreshing ? 'scale(0.98)' : `translateY(${Math.max(0, pullDistance - 20)}px)`,
+                    transform: isRefreshing
+                        ? 'scale(0.98)'
+                        : `translateY(${Math.max(0, pullDistance - 20)}px)`,
                 }}
             >
                 {children}

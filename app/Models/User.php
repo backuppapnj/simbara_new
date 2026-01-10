@@ -15,6 +15,10 @@ class User extends Authenticatable
     use HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
 
     /**
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, PushSubscription> $pushSubscriptions
+     */
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
@@ -53,6 +57,37 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'is_active' => 'boolean',
+            'phone' => 'string',
         ];
+    }
+
+    /**
+     * Set the phone number attribute and auto-format to +62.
+     */
+    public function setPhoneAttribute(?string $value): void
+    {
+        if ($value === null) {
+            $this->attributes['phone'] = null;
+
+            return;
+        }
+
+        // Remove any whitespace
+        $phone = preg_replace('/\s+/', '', $value);
+
+        // Convert to +62 format
+        $phone = preg_replace('/^(0|62)/', '+62', $phone);
+
+        $this->attributes['phone'] = $phone;
+    }
+
+    /**
+     * Get the push subscriptions for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PushSubscription>
+     */
+    public function pushSubscriptions()
+    {
+        return $this->hasMany(PushSubscription::class);
     }
 }

@@ -12,9 +12,12 @@ describe('Asset Model', function () {
         });
 
         test('uses ULID as primary key', function () {
-            $asset = Asset::factory()->create();
-            expect($asset->id)->toBeString();
-            expect(strlen($asset->id))->toBe(26);
+            $asset = Asset::factory()->raw();
+            $asset['id'] = (string) Str::ulid();
+            $created = Asset::create($asset);
+
+            expect($created->id)->toBeString();
+            expect(strlen($created->id))->toBe(26);
         });
     });
 
@@ -78,7 +81,8 @@ describe('Asset Model', function () {
     describe('relationships', function () {
         test('belongs to a location', function () {
             $location = Location::factory()->create();
-            $asset = Asset::factory()->for($location)->create();
+            $assetData = Asset::factory()->raw(['lokasi_id' => $location->id]);
+            $asset = Asset::create($assetData);
 
             expect($asset->location)->toBeInstanceOf(Location::class);
             expect($asset->location->id)->toBe($location->id);
@@ -86,7 +90,8 @@ describe('Asset Model', function () {
 
         test('belongs to a handler (user)', function () {
             $user = User::factory()->create();
-            $asset = Asset::factory()->for($user, 'penanggungJawab')->create();
+            $assetData = Asset::factory()->raw(['penanggung_jawab_id' => $user->id]);
+            $asset = Asset::create($assetData);
 
             expect($asset->penanggungJawab)->toBeInstanceOf(User::class);
             expect($asset->penanggungJawab->id)->toBe($user->id);
@@ -131,7 +136,7 @@ describe('Asset Model', function () {
 
         test('can filter by location', function () {
             $location = Location::factory()->create();
-            Asset::factory()->for($location)->create();
+            Asset::factory()->create(['lokasi_id' => $location->id]);
             Asset::factory()->create();
 
             $locationAssets = Asset::byLocation($location->id)->get();

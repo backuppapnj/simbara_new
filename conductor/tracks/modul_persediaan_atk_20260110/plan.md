@@ -11,11 +11,11 @@
 - [x] Run migrations and verify
 
 ### Task 1.2: Create Purchase Migrations
-- [ ] Create migration for purchases table
-- [ ] Create migration for purchase_details table
-- [ ] Add foreign key relationships
-- [ ] Write unit tests for Purchase and PurchaseDetail models
-- [ ] Run migrations and verify
+- [x] Create migration for purchases table
+- [x] Create migration for purchase_details table
+- [x] Add foreign key relationships
+- [x] Write unit tests for Purchase and PurchaseDetail models
+- [x] Run migrations and verify
 
 ### Task 1.3: Create Request Migrations
 - [ ] Create migration for requests table

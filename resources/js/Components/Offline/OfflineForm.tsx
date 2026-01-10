@@ -1,8 +1,8 @@
 'use client';
 
-import { WifiOff } from 'lucide-react';
 import { useOffline } from '@/Composables/useOffline';
 import { cn } from '@/lib/utils';
+import { WifiOff } from 'lucide-react';
 
 interface OfflineFormProps {
     children: React.ReactNode;
@@ -22,12 +22,14 @@ export function OfflineForm({
             <div
                 className={cn(
                     'relative rounded-lg border border-border bg-muted/30 p-8 text-center',
-                    className
+                    className,
                 )}
             >
-                <WifiOff className="mx-auto size-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Offline Mode</h3>
-                <p className="text-sm text-muted-foreground mb-4">{disabledMessage}</p>
+                <WifiOff className="mx-auto mb-4 size-12 text-muted-foreground" />
+                <h3 className="mb-2 text-lg font-semibold">Offline Mode</h3>
+                <p className="mb-4 text-sm text-muted-foreground">
+                    {disabledMessage}
+                </p>
                 <p className="text-xs text-muted-foreground">
                     Please connect to the internet to use this feature.
                 </p>
@@ -45,7 +47,12 @@ interface OfflineButtonProps {
     className?: string;
 }
 
-export function OfflineButton({ children, onClick, disabled, className }: OfflineButtonProps) {
+export function OfflineButton({
+    children,
+    onClick,
+    disabled,
+    className,
+}: OfflineButtonProps) {
     const { isOffline } = useOffline();
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

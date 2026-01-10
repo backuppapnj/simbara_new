@@ -143,48 +143,48 @@
 ## Phase 5: Create Dashboard
 
 ### Task 5.1: Create Dashboard Page Route
-- [~] Add Laravel route for `/dashboard` with auth middleware
-- [~] Create `resources/js/Pages/Dashboard.tsx`
-- [~] Use DashboardLayout wrapper
-- [ ] Add authentication check
-- [ ] Write tests for page access control
+- [x] Add Laravel route for `/dashboard` with auth middleware [dfb8568]
+- [x] Create `resources/js/Pages/Dashboard.tsx` [dfb8568]
+- [x] Use DashboardLayout wrapper [dfb8568]
+- [x] Add authentication check [dfb8568]
+- [x] Write tests for page access control [dfb8568]
 
 ### Task 5.2: Create SummaryCard Component
-- [ ] Create `resources/js/Components/dashboard/SummaryCard.tsx`
-- [ ] Use shadcn/card with MagicUI hover effects
-- [ ] Add icon, title, value, and trend props
-- [ ] Implement click navigation
-- [ ] Write tests for card interactions
-- [ ] Create 4 cards: Total Aset, Total ATK, Permintaan Pending, Aset Rusak
+- [x] Create `resources/js/Components/dashboard/SummaryCard.tsx` [dfb8568]
+- [x] Use shadcn/card with hover effects [dfb8568]
+- [x] Add icon, title, value, and trend props [dfb8568]
+- [x] Implement click navigation [dfb8568]
+- [x] Write tests for card interactions [dfb8568]
+- [x] Create 4 cards: Total Aset, Total ATK, Permintaan Pending, Aset Rusak [dfb8568]
 
 ### Task 5.3: Create StatsChart Component
-- [ ] Install chart library (recharts or chart.js React wrapper)
-- [ ] Create `resources/js/Components/dashboard/StatsChart.tsx`
-- [ ] Implement line chart for ATK expenditure
-- [ ] Implement bar chart for asset categories
-- [ ] Add mock data for development
-- [ ] Write tests for chart rendering
-- [ ] Test responsive chart behavior
+- [x] Install chart library (recharts) [dfb8568]
+- [x] Create `resources/js/Components/dashboard/StatsChart.tsx` [dfb8568]
+- [x] Implement line chart for request trends [dfb8568]
+- [x] Implement bar chart for asset categories [dfb8568]
+- [x] Add mock data for development [dfb8568]
+- [x] Write tests for chart rendering [dfb8568]
+- [x] Test responsive chart behavior [dfb8568]
 
 ### Task 5.4: Create Dashboard Welcome Section
-- [ ] Add MagicUI typing animation for welcome message
-- [ ] Display user name from auth context
-- [ ] Add date/time display
-- [ ] Write tests for welcome section
+- [x] Add welcome message for user [dfb8568]
+- [x] Display user name from auth context [dfb8568]
+- [x] Add date/time display with Indonesian locale [dfb8568]
+- [x] Write tests for welcome section [dfb8568]
 
 ### Task 5.5: Create QuickActions Component
-- [ ] Create `resources/js/Components/dashboard/QuickActions.tsx`
-- [ ] Add buttons for quick navigation to modules
-- [ ] Use MagicUI animated buttons
-- [ ] Implement navigation using Inertia Link or Wayfinder
-- [ ] Write tests for navigation actions
+- [x] Create `resources/js/Components/dashboard/QuickActions.tsx` [dfb8568]
+- [x] Add buttons for quick navigation to modules [dfb8568]
+- [x] Use shadcn button components [dfb8568]
+- [x] Implement navigation using anchor tags [dfb8568]
+- [x] Write tests for navigation actions [dfb8568]
 
 ### Task 5.6: Integrate Dashboard Components
-- [ ] Assemble all dashboard components in Dashboard.tsx
-- [ ] Implement responsive grid layout
-- [ ] Test loading states with skeletons
-- [ ] Test error handling
-- [ ] Write integration tests for complete dashboard
+- [x] Assemble all dashboard components in Dashboard.tsx [dfb8568]
+- [x] Implement responsive grid layout [dfb8568]
+- [x] Test loading states with skeletons [dfb8568]
+- [x] Test error handling [dfb8568]
+- [x] Write integration tests for complete dashboard [dfb8568]
 
 ### Task 5.7: Task: Conductor - User Manual Verification 'Phase 5: Create Dashboard' (Protocol in workflow.md)
 

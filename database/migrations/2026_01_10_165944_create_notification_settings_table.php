@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('whatsapp_enabled')->default(true);
+            $table->boolean('push_enabled')->default(true);
             $table->boolean('notify_reorder_alert')->default(true);
             $table->boolean('notify_approval_needed')->default(true);
             $table->boolean('notify_request_update')->default(false);

@@ -1,8 +1,8 @@
 'use client';
 
-import { AlertCircle, Loader2 } from 'lucide-react';
 import { useOffline } from '@/Composables/useOffline';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 interface OfflineAlertProps {
     title?: string;
@@ -45,13 +45,17 @@ export function StaleDataAlert({ dataTimestamp }: StaleDataAlertProps) {
     }
 
     return (
-        <Alert variant="default" className="mb-4 border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950">
+        <Alert
+            variant="default"
+            className="mb-4 border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950"
+        >
             <Loader2 className="size-4 animate-spin" />
             <AlertTitle className="text-amber-800 dark:text-amber-200">
                 Data May Be Outdated
             </AlertTitle>
             <AlertDescription className="text-amber-700 dark:text-amber-300">
-                This data was last updated recently. It may not reflect the latest changes.
+                This data was last updated recently. It may not reflect the
+                latest changes.
             </AlertDescription>
         </Alert>
     );

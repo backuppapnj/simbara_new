@@ -1,8 +1,7 @@
 'use client';
 
-import { Check, Trash2, ZoomIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Check, Trash2, ZoomIn } from 'lucide-react';
 
 export interface CapturedImage {
     id: string;
@@ -32,7 +31,7 @@ export function ImagePreview({
             <div
                 className={cn(
                     'flex min-h-32 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50',
-                    className
+                    className,
                 )}
             >
                 <p className="text-sm text-gray-500">No images captured</p>
@@ -58,7 +57,7 @@ export function ImagePreview({
 
                         {/* Primary badge */}
                         {image.isPrimary && (
-                            <div className="absolute left-2 top-2 rounded-full bg-blue-600 px-2 py-1 text-xs font-medium text-white">
+                            <div className="absolute top-2 left-2 rounded-full bg-blue-600 px-2 py-1 text-xs font-medium text-white">
                                 Primary
                             </div>
                         )}
@@ -69,7 +68,7 @@ export function ImagePreview({
                                 {onPreview && (
                                     <button
                                         onClick={() => onPreview(image)}
-                                        className="rounded-full bg-white p-2 text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+                                        className="rounded-full bg-white p-2 text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-white focus:outline-none"
                                         aria-label="Preview image"
                                     >
                                         <ZoomIn className="h-4 w-4" />
@@ -78,7 +77,7 @@ export function ImagePreview({
                                 {onSetPrimary && !image.isPrimary && (
                                     <button
                                         onClick={() => onSetPrimary(image.id)}
-                                        className="rounded-full bg-white p-2 text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+                                        className="rounded-full bg-white p-2 text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-white focus:outline-none"
                                         aria-label="Set as primary"
                                     >
                                         <Check className="h-4 w-4" />
@@ -87,7 +86,7 @@ export function ImagePreview({
                                 {onDelete && (
                                     <button
                                         onClick={() => onDelete(image.id)}
-                                        className="rounded-full bg-red-600 p-2 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                        className="rounded-full bg-red-600 p-2 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none"
                                         aria-label="Delete image"
                                     >
                                         <Trash2 className="h-4 w-4" />

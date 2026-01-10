@@ -37,18 +37,18 @@
 ## Phase 2: Install UX & Prompts
 
 ### Task 2.1: Create Install Prompt Components
-- [ ] Create `useInstallPWA` composable
-- [ ] Listen for beforeinstallprompt event
-- [ ] Create InstallPrompt component (banner/floating button)
-- [ ] Install button in Settings page
-- [ ] Detect installed state (standalone mode)
+- [x] Create `useInstallPWA` composable
+- [x] Listen for beforeinstallprompt event
+- [x] Create InstallPrompt component (banner/floating button)
+- [x] Install button in Settings page
+- [x] Detect installed state (standalone mode)
 - [ ] Write tests for install prompt
 - [ ] Test install flow
 
 ### Task 2.2: Create Install Success UI
-- [ ] Show success message after install
-- [ ] Hide install button when installed
-- [ ] Add "Open App" CTA for returning users
+- [x] Show success message after install
+- [x] Hide install button when installed
+- [x] Add "Open App" CTA for returning users
 - [ ] Write tests for installed state
 - [ ] Test detection logic
 
@@ -59,28 +59,28 @@
 ## Phase 3: Camera Access Components
 
 ### Task 3.1: Create useCamera Composable
-- [ ] Create `useCamera.ts` composable
-- [ ] Implement startCamera() method
-- [ ] Implement stopCamera() method
-- [ ] Implement capturePhoto() method
-- [ ] Add error handling for permission denied
+- [x] Create `useCamera.ts` composable
+- [x] Implement startCamera() method
+- [x] Implement stopCamera() method
+- [x] Implement capturePhoto() method
+- [x] Add error handling for permission denied
 - [ ] Write tests for camera composable
 - [ ] Test camera access on different devices
 
 ### Task 3.2: Create CameraCapture Component
-- [ ] Create `CameraCapture.tsx` component
-- [ ] Show camera preview
-- [ ] Add capture button
-- [ ] Add flash toggle (front/back camera)
-- [ ] Show error states
+- [x] Create `CameraCapture.tsx` component
+- [x] Show camera preview
+- [x] Add capture button
+- [x] Add flash toggle (front/back camera)
+- [x] Show error states
 - [ ] Write tests for component
 - [ ] Test camera capture flow
 
 ### Task 3.3: Create ImagePreview Component
-- [ ] Create `ImagePreview.tsx` component
-- [ ] Show captured images in grid
-- [ ] Add delete functionality
-- [ ] Add select primary image
+- [x] Create `ImagePreview.tsx` component
+- [x] Show captured images in grid
+- [x] Add delete functionality
+- [x] Add select primary image
 - [ ] Write tests for preview
 - [ ] Test preview interactions
 
@@ -91,25 +91,25 @@
 ## Phase 4: Barcode/QR Scanner
 
 ### Task 4.1: Install Barcode Library
-- [ ] Install `html5-qrcode` package
-- [ ] Install TypeScript definitions
-- [ ] Test library installation
+- [x] Install `html5-qrcode` package
+- [x] Install TypeScript definitions
+- [x] Test library installation
 
 ### Task 4.2: Create useBarcodeScanner Composable
-- [ ] Create `useBarcodeScanner.ts` composable
-- [ ] Implement startScanning() method
-- [ ] Implement stopScanning() method
-- [ ] Add vibration on success
-- [ ] Add error handling
+- [x] Create `useBarcodeScanner.ts` composable
+- [x] Implement startScanning() method
+- [x] Implement stopScanning() method
+- [x] Add vibration on success
+- [x] Add error handling
 - [ ] Write tests for scanner composable
 - [ ] Test scanning functionality
 
 ### Task 4.3: Create BarcodeScanner Component
-- [ ] Create `BarcodeScanner.tsx` component
-- [ ] Show camera view for scanning
-- [ ] Add scan button
-- [ ] Show scan result
-- [ ] Add continuous scan mode toggle
+- [x] Create `BarcodeScanner.tsx` component
+- [x] Show camera view for scanning
+- [x] Add scan button
+- [x] Show scan result
+- [x] Add continuous scan mode toggle
 - [ ] Write tests for scanner component
 - [ ] Test with various barcodes/QR codes
 
@@ -120,25 +120,25 @@
 ## Phase 5: Image Processing
 
 ### Task 5.1: Create Image Compression Utility
-- [ ] Create `compressImage()` utility
-- [ ] Implement max dimension scaling (1920px)
-- [ ] Implement JPEG compression (80% quality)
+- [x] Create `compressImage()` utility
+- [x] Implement max dimension scaling (1920px)
+- [x] Implement JPEG compression (80% quality)
 - [ ] Write tests for compression
 - [ ] Test output quality and file size
 
 ### Task 5.2: Create ImageCropper Component
-- [ ] Create `ImageCropper.tsx` component
-- [ ] Add crop functionality
-- [ ] Add rotation (90-degree increments)
-- [ ] Add aspect ratio presets
+- [x] Create `ImageCropper.tsx` component
+- [x] Add crop functionality
+- [x] Add rotation (90-degree increments)
+- [x] Add aspect ratio presets
 - [ ] Write tests for cropper
 - [ ] Test crop and rotation
 
 ### Task 5.3: Create Full Upload Flow
-- [ ] Combine camera + crop + compress
-- [ ] Add upload progress indicator
-- [ ] Handle upload errors
-- [ ] Show success/error states
+- [x] Combine camera + crop + compress
+- [x] Add upload progress indicator
+- [x] Handle upload errors
+- [x] Show success/error states
 - [ ] Write tests for upload flow
 - [ ] Test complete upload pipeline
 
@@ -149,9 +149,9 @@
 ## Phase 6: Offline Capability
 
 ### Task 6.1: Create useOffline Composable
-- [ ] Create `useOffline.ts` composable
-- [ ] Listen to online/offline events
-- [ ] Return isOffline state
+- [x] Create `useOffline.ts` composable
+- [x] Listen to online/offline events
+- [x] Return isOffline state
 - [ ] Write tests for offline detection
 - [ ] Test offline indicator
 
@@ -164,10 +164,10 @@
 - [ ] Test cache behavior
 
 ### Task 6.3: Create Offline UI Components
-- [ ] Create offline banner/alert
-- [ ] Show offline mode indicator
-- [ ] Disable forms when offline
-- [ ] Show cached data warning
+- [x] Create offline banner/alert
+- [x] Show offline mode indicator
+- [x] Disable forms when offline
+- [x] Show cached data warning
 - [ ] Write tests for offline UI
 - [ ] Test offline experience
 
@@ -213,27 +213,27 @@
 ## Phase 8: Mobile UI Components
 
 ### Task 8.1: Create Bottom Navigation
-- [ ] Create `BottomNav.tsx` component
-- [ ] Add 5 tabs: Dashboard, Aset, ATK, Bahan Kantor, Settings
-- [ ] Show only on mobile (< 768px)
-- [ ] Hide sidebar on mobile when bottom nav active
+- [x] Create `BottomNav.tsx` component
+- [x] Add 5 tabs: Dashboard, Aset, ATK, Bahan Kantor, Settings
+- [x] Show only on mobile (< 768px)
+- [x] Hide sidebar on mobile when bottom nav active
 - [ ] Write tests for bottom nav
 - [ ] Test navigation and responsive behavior
 
 ### Task 8.2: Create Pull-to-Refresh
-- [ ] Create `PullToRefresh.tsx` component
-- [ ] Implement pull gesture detection
-- [ ] Show loading indicator
-- [ ] Refresh data on release
+- [x] Create `PullToRefresh.tsx` component
+- [x] Implement pull gesture detection
+- [x] Show loading indicator
+- [x] Refresh data on release
 - [ ] Add to list pages (Assets, ATK, etc.)
 - [ ] Write tests for pull-to-refresh
 - [ ] Test refresh functionality
 
 ### Task 8.3: Implement Touch Gestures
-- [ ] Add swipe actions on list items
-- [ ] Add long-press context menu
-- [ ] Add pinch-to-zoom for image preview
-- [ ] Add vibration feedback
+- [x] Add swipe actions on list items
+- [x] Add long-press context menu
+- [x] Add pinch-to-zoom for image preview
+- [x] Add vibration feedback
 - [ ] Write tests for gestures
 - [ ] Test on touch devices
 

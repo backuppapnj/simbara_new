@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { AlertCircle, Scan, X, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBarcodeScanner } from '@/hooks/use-barcode-scanner';
 import { cn } from '@/lib/utils';
+import { AlertCircle, CheckCircle, Scan, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface BarcodeScannerProps {
     onScanSuccess?: (code: string, result?: any) => void;
@@ -81,17 +81,12 @@ export function BarcodeScanner({
     };
 
     return (
-        <div
-            className={cn(
-                'relative flex flex-col bg-black',
-                className
-            )}
-        >
+        <div className={cn('relative flex flex-col bg-black', className)}>
             {/* Close button */}
             {showCloseButton && onClose && (
                 <button
                     onClick={handleClose}
-                    className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-white"
+                    className="absolute top-4 right-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 focus:ring-2 focus:ring-white focus:outline-none"
                     aria-label="Close scanner"
                 >
                     <X className="h-5 w-5" />
@@ -118,7 +113,9 @@ export function BarcodeScanner({
                             <h3 className="mb-2 text-lg font-semibold text-white">
                                 Scanner Error
                             </h3>
-                            <p className="mb-4 text-sm text-gray-300">{error.message}</p>
+                            <p className="mb-4 text-sm text-gray-300">
+                                {error.message}
+                            </p>
                             <Button
                                 onClick={handleRestart}
                                 variant="default"
@@ -134,17 +131,24 @@ export function BarcodeScanner({
                 {/* Scanner element */}
                 <div
                     id={scannerElementId.current}
-                    className={cn('h-full w-full', !isLoading && !error && 'block')}
+                    className={cn(
+                        'h-full w-full',
+                        !isLoading && !error && 'block',
+                    )}
                 />
 
                 {/* Scan result overlay */}
                 {lastScannedCode && !continuousScan && (
-                    <div className="absolute bottom-20 left-4 right-4 z-10 rounded-lg bg-green-600 p-4 text-white">
+                    <div className="absolute right-4 bottom-20 left-4 z-10 rounded-lg bg-green-600 p-4 text-white">
                         <div className="flex items-center gap-3">
                             <CheckCircle className="h-6 w-6 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium">Scanned Successfully</p>
-                                <p className="text-xs opacity-90 truncate">{lastScannedCode}</p>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium">
+                                    Scanned Successfully
+                                </p>
+                                <p className="truncate text-xs opacity-90">
+                                    {lastScannedCode}
+                                </p>
                             </div>
                             <Button
                                 onClick={handleRestart}
@@ -160,22 +164,22 @@ export function BarcodeScanner({
 
                 {/* Scanning guide overlay */}
                 {isScanning && !lastScannedCode && (
-                    <div className="absolute inset-0 pointer-events-none">
+                    <div className="pointer-events-none absolute inset-0">
                         {/* Corner brackets */}
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-48 w-48">
-                            <div className="absolute left-0 top-0 h-8 w-8 border-l-4 border-t-4 border-white" />
-                            <div className="absolute right-0 top-0 h-8 w-8 border-r-4 border-t-4 border-white" />
-                            <div className="absolute left-0 bottom-0 h-8 w-8 border-l-4 border-b-4 border-white" />
+                        <div className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2">
+                            <div className="absolute top-0 left-0 h-8 w-8 border-t-4 border-l-4 border-white" />
+                            <div className="absolute top-0 right-0 h-8 w-8 border-t-4 border-r-4 border-white" />
+                            <div className="absolute bottom-0 left-0 h-8 w-8 border-b-4 border-l-4 border-white" />
                             <div className="absolute right-0 bottom-0 h-8 w-8 border-r-4 border-b-4 border-white" />
                         </div>
 
                         {/* Scan line animation */}
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48">
-                            <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-white to-transparent animate-pulse" />
+                        <div className="absolute top-1/2 left-1/2 w-48 -translate-x-1/2 -translate-y-1/2">
+                            <div className="h-0.5 w-full animate-pulse bg-gradient-to-r from-transparent via-white to-transparent" />
                         </div>
 
                         {/* Instructions */}
-                        <div className="absolute bottom-4 left-0 right-0 text-center">
+                        <div className="absolute right-0 bottom-4 left-0 text-center">
                             <p className="text-sm text-white/80">
                                 Align barcode or QR code within the frame
                             </p>
@@ -185,21 +189,15 @@ export function BarcodeScanner({
             </div>
 
             {/* Controls */}
-            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent p-6">
+            <div className="absolute right-0 bottom-0 left-0 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent p-6">
                 <div className="flex-1">
                     {isScanning && (
-                        <p className="text-sm text-white/80">
-                            Scanning...
-                        </p>
+                        <p className="text-sm text-white/80">Scanning...</p>
                     )}
                 </div>
 
                 {continuousScan && lastScannedCode && (
-                    <Button
-                        onClick={handleRestart}
-                        variant="default"
-                        size="sm"
-                    >
+                    <Button onClick={handleRestart} variant="default" size="sm">
                         <Scan className="mr-2 h-4 w-4" />
                         Clear
                     </Button>

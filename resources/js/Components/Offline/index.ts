@@ -1,3 +1,3 @@
-export { OfflineBanner } from './OfflineBanner';
 export { OfflineAlert, StaleDataAlert } from './OfflineAlert';
-export { OfflineForm, OfflineButton } from './OfflineForm';
+export { OfflineBanner } from './OfflineBanner';
+export { OfflineButton, OfflineForm } from './OfflineForm';

@@ -2,15 +2,15 @@
 
 ## Phase 1: Database & Model Setup
 
-### Task 1.1: Create Settings & Logs Migrations
-- [ ] Create migration for settings table (key-value config)
-- [ ] Create migration for notification_settings table
-- [ ] Create migration for notification_logs table
-- [ ] Add ULID primary keys where needed
-- [ ] Write unit tests for Setting model
-- [ ] Write unit tests for NotificationSetting model
-- [ ] Write unit tests for NotificationLog model
-- [ ] Run migrations and verify
+### Task 1.1: Create Settings & Logs Migrations [8512abd]
+- [x] Create migration for settings table (key-value config)
+- [x] Create migration for notification_settings table
+- [x] Create migration for notification_logs table
+- [x] Add ULID primary keys where needed
+- [x] Write unit tests for Setting model
+- [x] Write unit tests for NotificationSetting model
+- [x] Write unit tests for NotificationLog model
+- [x] Run migrations and verify
 
 ### Task 1.2: Update User Model for Phone
 - [ ] Add phone field to users table (migration)

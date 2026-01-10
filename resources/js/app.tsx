@@ -6,6 +6,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 
+// Import PWA service worker registration
+import { registerSW } from 'virtual:pwa-register';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -31,3 +34,31 @@ createInertiaApp({
 
 // This will set light / dark mode on load...
 initializeTheme();
+
+// Register PWA service worker
+const updateSW = registerSW({
+    onNeedRefresh() {
+        if (confirm('New content available. Reload to update?')) {
+            updateSW(true);
+        }
+    },
+    onOfflineReady() {
+        console.log('App is ready to work offline');
+    },
+    onRegistered(registration) {
+        console.log('Service Worker registered:', registration);
+
+        // Check for updates every hour
+        if (registration) {
+            setInterval(
+                () => {
+                    registration.update();
+                },
+                60 * 60 * 1000,
+            );
+        }
+    },
+    onRegisterError(error) {
+        console.error('Service Worker registration error:', error);
+    },
+});
