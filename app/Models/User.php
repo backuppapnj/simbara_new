@@ -18,6 +18,8 @@ class User extends Authenticatable
 
     /**
      * @property-read \Illuminate\Database\Eloquent\Collection<int, PushSubscription> $pushSubscriptions
+     * @property-read NotificationSetting|null $notificationSetting
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, NotificationLog> $notificationLogs
      */
 
     /**

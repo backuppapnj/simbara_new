@@ -3,11 +3,11 @@
 ## Phase 1: Setup & Configuration
 
 ### Task 1.1: Initialize shadcn/ui
-- [~] Run `npx shadcn@latest init` to initialize shadcn/ui
-- [ ] Configure components.json with proper paths and Tailwind v4
-- [ ] Update globals.css with custom theme variables
-- [ ] Write tests to verify shadcn components can be imported
-- [ ] Install required base dependencies (class-variance-authority, clsx, tailwind-merge)
+- [x] Run `npx shadcn@latest init` to initialize shadcn/ui
+- [x] Configure components.json with proper paths and Tailwind v4
+- [x] Update globals.css with custom theme variables
+- [x] Write tests to verify shadcn components can be imported
+- [x] Install required base dependencies (class-variance-authority, clsx, tailwind-merge)
 
 ### Task 1.2: Setup MagicUI
 - [ ] Add MagicUI repository to components.json

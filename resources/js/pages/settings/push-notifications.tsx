@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import { AppLayout } from '@/layouts/app-layout';
-import { AppHeaderLayout } from '@/layouts/app/app-header-layout';
+import AppLayout from '@/layouts/app-layout';
+import AppHeaderLayout from '@/layouts/app/app-header-layout';
 import { usePushNotification } from '@/Hooks/use-push-notification';
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/alert';
