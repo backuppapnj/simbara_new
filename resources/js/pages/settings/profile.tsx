@@ -1,5 +1,5 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import { send } from '@/routes/verification';
+// import { send } from '@/routes/verification'; // TODO: Enable when email verification is enabled
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Form, Head, Link, usePage } from '@inertiajs/react';
@@ -91,20 +91,21 @@ export default function Profile({
                                     />
                                 </div>
 
-                                {mustVerifyEmail &&
+                                {/* Email verification is disabled */}
+                                {false && mustVerifyEmail &&
                                     auth.user.email_verified_at === null && (
                                         <div>
                                             <p className="-mt-4 text-sm text-muted-foreground">
                                                 Your email address is
                                                 unverified.{' '}
-                                                <Link
+                                                {/* <Link
                                                     href={send()}
                                                     as="button"
                                                     className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                                 >
                                                     Click here to resend the
                                                     verification email.
-                                                </Link>
+                                                </Link> */}
                                             </p>
 
                                             {status ===

@@ -24,6 +24,8 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'favicon.svg'],
+            strategies: 'generateSW',
+            swSrc: 'resources/js/sw.ts',
             manifest: {
                 name: 'Sistem Manajemen Aset PA PPU',
                 short_name: 'Aset PA PPU',
