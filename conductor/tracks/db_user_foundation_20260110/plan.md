@@ -3,8 +3,8 @@
 ## Phase 1: Database Migrations
 
 ### Task 1.1: Create users table migration
-- [~] Create migration for enhanced users table with phone, nip, position, is_active
-- [~] Write unit tests for User model
+- [x] Create migration for enhanced users table with phone, nip, position, is_active [599d713]
+- [x] Write unit tests for User model [599d713]
 
 ### Task 1.2: Create locations table migration
 - [ ] Create migration for locations/ruangan
