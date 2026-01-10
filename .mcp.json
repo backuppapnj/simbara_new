@@ -1,0 +1,30 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "php",
+            "args": [
+                "artisan",
+                "boost:mcp"
+            ]
+        },
+        "filesystem": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "/home/moohard/dev/work/asset-persediaan-system"
+            ]
+        },
+        "MiniMax": {
+            "command": "uvx",
+            "args": [
+                "minimax-coding-plan-mcp",
+                "-y"
+            ],
+            "env": {
+                "MINIMAX_API_KEY": "sk-cp-D-fNIgdKolZx6rvzEdV8E1ssK4tkcZrEao62xY2HYlHBrlS9e_2A0aNsPO8_YJIAM8qQKmfRWa0YePtvw8iaFmdg8lx4LsGt1AYRzf4D-dOsrjRHl2X6Is8",
+                "MINIMAX_API_HOST": "https://api.minimax.io"
+            }
+        }
+    }
+}

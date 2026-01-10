@@ -15,7 +15,7 @@
 - [ ] Write unit tests for Department model
 
 ### Task 1.4: Run migrations and verify
-- [ ] Execute php artisan migrate
+- [~] Execute php artisan migrate
 - [ ] Verify table structure
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Database Migrations' (Protocol in workflow.md)
 
@@ -34,7 +34,7 @@
 - [ ] Write unit tests for role assignment
 
 ### Task 2.3: Create custom Permission middleware
-- [ ] Create middleware for role/permission checks
+- [~] Create middleware for role/permission checks
 - [ ] Register middleware in bootstrap/app.php
 - [ ] Write unit tests for middleware
 
@@ -45,9 +45,9 @@
 ## Phase 3: Fortify Authentication
 
 ### Task 3.1: Configure Fortify features
-- [ ] Update config/fortify.php
-- [ ] Enable/disable appropriate features
-- [ ] Customize view routes if needed
+- [x] Update config/fortify.php [5b9bf57]
+- [x] Enable/disable appropriate features [5b9bf57]
+- [x] Customize view routes if needed [5b9bf57]
 
 ### Task 3.2: Customize Fortify actions
 - [ ] Review CreateNewUser action
@@ -66,16 +66,16 @@
 ## Phase 4: Database Seeders
 
 ### Task 4.1: Create RolesSeeder
-- [ ] Create seeder for all 6 roles
+- [~] Create seeder for all 6 roles
 - [ ] Write integration tests
 
 ### Task 4.2: Create PermissionsSeeder
-- [ ] Define permissions for each module
+- [~] Define permissions for each module
 - [ ] Assign permissions to roles
 - [ ] Write integration tests
 
 ### Task 4.3: Create LocationsSeeder and DepartmentsSeeder
-- [ ] Seed sample locations/ruangan
+- [~] Seed sample locations/ruangan
 - [ ] Seed sample departments/unit kerja
 - [ ] Write integration tests
 

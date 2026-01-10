@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -39,8 +40,12 @@ class CheckPermission
             if (str_starts_with($item, 'permission:')) {
                 $perm = substr($item, strlen('permission:'));
 
-                if ($user->hasPermissionTo($perm)) {
-                    return $next($request);
+                try {
+                    if ($user->hasPermissionTo($perm)) {
+                        return $next($request);
+                    }
+                } catch (PermissionDoesNotExist) {
+                    // Permission does not exist, continue checking
                 }
             } else {
                 if ($user->hasRole($item)) {
