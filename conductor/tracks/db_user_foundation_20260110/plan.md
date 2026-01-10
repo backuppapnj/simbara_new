@@ -7,11 +7,11 @@
 - [x] Write unit tests for User model [599d713]
 
 ### Task 1.2: Create locations table migration
-- [ ] Create migration for locations/ruangan
+- [x] Create migration for locations/ruangan [2003693]
 - [ ] Write unit tests for Location model
 
 ### Task 1.3: Create departments table migration
-- [ ] Create migration for departments/unit kerja
+- [x] Create migration for departments/unit kerja [a550c99]
 - [ ] Write unit tests for Department model
 
 ### Task 1.4: Run migrations and verify
@@ -24,7 +24,7 @@
 ## Phase 2: Permission & Role Setup
 
 ### Task 2.1: Install Spatie Laravel Permission
-- [ ] Composer require spatie/laravel-permission
+- [x] Composer require spatie/laravel-permission [a550c99]
 - [ ] Publish config and migrations
 - [ ] Configure ServiceProvider
 
