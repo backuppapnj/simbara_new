@@ -116,24 +116,24 @@
 ## Phase 4: Permintaan & Approval Workflow
 
 ### Task 4.1: Create Permintaan Form
-- [~] Create request form for Pegawai
-- [~] Add dynamic item rows
-- [~] Validate stok tersedia (warning only)
-- [~] Create POST /requests route
-- [~] Save Request + RequestDetails
-- [~] Set initial status to 'pending'
-- [~] Write tests for request creation
-- [~] Test form submission
+- [x] Create request form for Pegawai
+- [x] Add dynamic item rows
+- [x] Validate stok tersedia (warning only)
+- [x] Create POST /requests route
+- [x] Save Request + RequestDetails
+- [x] Set initial status to 'pending'
+- [x] Write tests for request creation
+- [x] Test form submission
 
 ### Task 4.2: Create Approval System
-- [ ] Create approval component
-- [ ] Add POST /requests/{id}/approve-level1
-- [ ] Add POST /requests/{id}/approve-level2
-- [ ] Add POST /requests/{id}/approve-level3
-- [ ] Add POST /requests/{id}/reject
-- [ ] Implement approval logic with role checks
-- [ ] Write tests for each approval level
-- [ ] Test approval workflow
+- [~] Create approval component
+- [~] Add POST /requests/{id}/approve-level1
+- [~] Add POST /requests/{id}/approve-level2
+- [~] Add POST /requests/{id}/approve-level3
+- [~] Add POST /requests/{id}/reject
+- [~] Implement approval logic with role checks
+- [~] Write tests for each approval level
+- [~] Test approval workflow
 
 ### Task 4.3: Create Request List & Views
 - [ ] Create Index.tsx with request list
