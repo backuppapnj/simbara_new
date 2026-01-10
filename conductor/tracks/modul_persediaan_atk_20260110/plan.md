@@ -18,11 +18,11 @@
 - [x] Run migrations and verify
 
 ### Task 1.3: Create Request Migrations
-- [~] Create migration for requests table
-- [ ] Create migration for request_details table
-- [ ] Add approval fields (level1, level2, level3)
-- [ ] Write unit tests for Request and RequestDetail models
-- [ ] Run migrations and verify
+- [x] Create migration for requests table
+- [x] Create migration for request_details table
+- [x] Add approval fields (level1, level2, level3)
+- [x] Write unit tests for Request and RequestDetail models
+- [x] Run migrations and verify
 
 ### Task 1.4: Create Stock Opname Migrations
 - [ ] Create migration for stock_opnames table
