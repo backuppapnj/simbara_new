@@ -75,12 +75,16 @@ export default async function globalSetup() {
   // This is important for SQLite in WAL mode to ensure all changes are flushed
   if (fs.existsSync(dbFilePath)) {
     try {
+      // Check if sqlite3 command is available
+      execSync('which sqlite3', { stdio: 'ignore' });
+
       execSync(`sqlite3 "${dbFilePath}" "PRAGMA wal_checkpoint(TRUNCATE);"`, {
         cwd: projectRoot,
         stdio: 'inherit',
       });
     } catch (error) {
-      console.warn('Warning: WAL checkpoint failed after migration:', error);
+      // Log warning but don't fail - sqlite3 CLI might not be installed
+      console.warn('Warning: WAL checkpoint skipped after migration (sqlite3 not available)');
     }
   }
 

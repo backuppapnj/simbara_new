@@ -252,9 +252,29 @@ Plan ini mencakup perbaikan menyeluruh untuk seluruh suite test E2E Playwright y
 - [ ] Identify remaining failures jika ada
 
 ### Task 5.2: Run Tests 3x for Consistency
-- [ ] Execute test suite 3x berturut-turut
-- [ ] Verify hasil konsisten (tidak flaky)
-- [ ] Document flaky tests jika ada
+- [x] Execute test suite 3x berturut-turut
+- [x] Verify hasil konsisten (tidak flaky)
+- [x] Document flaky tests jika ada
+
+**Consistency Report:** `conductor/archive/e2e-fix_20250112/CONSISTENCY_REPORT.md`
+
+**Findings:**
+- ❌ **CRITICAL BLOCKER:** All 3 runs failed at auth setup (100% consistent failure)
+- **Error:** `page.waitForSelector('input[name="email"]')` timeout (30s exceeded)
+- **Impact:** 602 tests blocked, 0 tests executed
+- **Consistency:** 100% consistent (same error, same location, same timing)
+- **Flaky Tests:** Cannot assess - no tests ran beyond auth setup
+
+**Immediate Action Required:**
+1. Fix auth setup timeout in `tests/e2e/support/auth.ts:12`
+2. Investigate why `/login` page not rendering email input
+3. View screenshot: `test-results/auth.setup.ts-generate-auth-storage-states-setup/test-failed-1.png`
+
+**Secondary Issue:**
+- ⚠️ SQLite3 CLI not installed (WAL checkpoint warnings)
+- **Fix:** `sudo apt-get install sqlite3` or use PHP SQLite PDO
+
+**Status:** BLOCKED - Cannot proceed to Tasks 5.3/5.4 until auth is fixed
 
 ### Task 5.3: Generate Test Report
 - [ ] Generate HTML report dengan `npx playwright test --reporter=html`

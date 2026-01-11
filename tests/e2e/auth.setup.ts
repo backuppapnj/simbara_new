@@ -15,8 +15,16 @@ setup('generate auth storage states', async ({ browser }) => {
   for (const user of Object.values(testUsers)) {
     const context = await browser.newContext();
     const page = await context.newPage();
-    await login(page, user);
-    await context.storageState({ path: path.join(authDir, `${user.label}.json`) });
-    await context.close();
+    // Set longer timeout for auth setup
+    page.setDefaultTimeout(120000);
+    try {
+      await login(page, user);
+      await context.storageState({ path: path.join(authDir, `${user.label}.json`) });
+    } catch (error) {
+      console.error(`Failed to login as ${user.label}:`, error);
+      throw error;
+    } finally {
+      await context.close();
+    }
   }
 });

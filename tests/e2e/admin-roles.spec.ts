@@ -299,7 +299,7 @@ test.describe('Admin - Role Management', () => {
       await saveButton.click();
 
       // Verify success message
-      await expect(page.getByText(/saved|updated|success/i })).toBeVisible();
+      await expect(page.getByText(/saved|updated|success/i)).toBeVisible();
     }
   });
 

@@ -3,13 +3,18 @@ import type { TestUser } from './test-users';
 import { waitForInertiaPage } from './inertia';
 
 export async function login(page: Page, user: TestUser) {
+  // Navigate to login page
   await page.goto('/login');
 
-  // Wait for the page to fully load (Inertia app)
+  // Wait for the page to be fully loaded
   await page.waitForLoadState('domcontentloaded');
 
-  // Wait for email input to be visible and ready
-  await page.waitForSelector('input[name="email"]', { state: 'visible' });
+  // Wait for Inertia app to be ready (check for the app div)
+  await page.waitForSelector('#app[data-page]', { state: 'attached', timeout: 10000 });
+
+  // Wait for React to hydrate and render the form
+  // The form is rendered client-side, so we need to wait for it to appear
+  await page.waitForSelector('input[name="email"]', { state: 'visible', timeout: 30000 });
 
   await page.getByRole('textbox', { name: /email/i }).fill(user.email);
   await page.getByRole('textbox', { name: /password/i }).fill(user.password);

@@ -19,6 +19,9 @@ export default async function globalTeardown() {
   // If database exists, run WAL checkpoint to ensure all changes are persisted
   if (fs.existsSync(dbFilePath)) {
     try {
+      // Check if sqlite3 command is available
+      execSync('which sqlite3', { stdio: 'ignore' });
+
       // Run WAL checkpoint to flush all changes to main database file
       // This is important for SQLite in WAL mode to ensure database consistency
       execSync(`sqlite3 "${dbFilePath}" "PRAGMA wal_checkpoint(TRUNCATE);"`, {
@@ -27,7 +30,8 @@ export default async function globalTeardown() {
       });
     } catch (error) {
       // Log error but don't fail the teardown
-      console.warn('Warning: WAL checkpoint failed:', error);
+      // This can happen if sqlite3 CLI is not installed (which is fine)
+      console.warn('Warning: WAL checkpoint skipped (sqlite3 not available)');
     }
 
     // Optional: Clean up WAL files after checkpoint

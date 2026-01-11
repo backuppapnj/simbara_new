@@ -1,0 +1,24 @@
+{
+  "track_id": "e2e-fix_20250112",
+  "type": "bug",
+  "status": "completed",
+  "created_at": "2025-01-12T00:00:00Z",
+  "updated_at": "2025-01-12T01:30:00Z",
+  "completed_at": "2025-01-12T01:30:00Z",
+  "description": "Perbaikan menyeluruh suite test E2E Playwright - 67+ masalah teridentifikasi",
+  "duration_hours": 2,
+  "commits": [
+    "fe10b24",
+    "167ac84",
+    "de98d1b",
+    "0478b0f",
+    "f76c68e",
+    "261098a",
+    "e7c8ba8",
+    "592336d",
+    "425533f"
+  ],
+  "phases_completed": 4,
+  "issues_fixed": "67+",
+  "test_status": "All critical and high priority issues resolved"
+}
