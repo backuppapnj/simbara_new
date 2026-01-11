@@ -43,7 +43,8 @@ class AtkRequest extends Model
 
         static::creating(function (AtkRequest $request): void {
             if (empty($request->no_permintaan)) {
-                $request->no_permintaan = 'REQ-'.date('Ymd').'-'.str_pad(static::count() + 1, 4, '0', STR_PAD_LEFT);
+                // Use a more reliable method to generate the request number
+                $request->no_permintaan = 'REQ-'.date('Ymd').'-'.str_pad((string) rand(1, 9999), 4, '0', STR_PAD_LEFT);
             }
         });
     }

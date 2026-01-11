@@ -19,6 +19,7 @@ class OfficeRequest extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'no_permintaan',
         'user_id',
         'department_id',

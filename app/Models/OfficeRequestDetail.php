@@ -16,6 +16,7 @@ class OfficeRequestDetail extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'request_id',
         'supply_id',
         'jumlah',

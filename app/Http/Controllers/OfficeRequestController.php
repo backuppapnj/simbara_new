@@ -14,6 +14,7 @@ use App\Models\OfficeSupply;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class OfficeRequestController extends Controller
 {
@@ -54,8 +55,13 @@ class OfficeRequestController extends Controller
         $officeRequest = DB::transaction(function () use ($validated) {
             $user = auth()->user();
 
+            // Generate request number
+            $noPermintaan = 'REQ-'.date('Ymd').'-'.strtoupper(substr((string) Str::ulid(), -6));
+
             // Create the main request
             $officeRequest = OfficeRequest::create([
+                'id' => (string) Str::ulid(),
+                'no_permintaan' => $noPermintaan,
                 'user_id' => $user->id,
                 'department_id' => $validated['department_id'],
                 'tanggal' => $validated['tanggal'],
@@ -66,6 +72,7 @@ class OfficeRequestController extends Controller
             // Create request details
             foreach ($validated['items'] as $item) {
                 OfficeRequestDetail::create([
+                    'id' => (string) Str::ulid(),
                     'request_id' => $officeRequest->id,
                     'supply_id' => $item['supply_id'],
                     'jumlah' => $item['jumlah'],

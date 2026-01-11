@@ -19,6 +19,7 @@ class OfficeSupply extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'nama_barang',
         'satuan',
         'kategori',

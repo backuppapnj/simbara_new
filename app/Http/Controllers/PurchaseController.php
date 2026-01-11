@@ -54,7 +54,7 @@ class PurchaseController extends Controller
     /**
      * Store a newly created purchase in storage.
      */
-    public function store(StorePurchaseRequest $request): RedirectResponse
+    public function store(StorePurchaseRequest $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         return DB::transaction(function () use ($request) {
             $items = $request->validated('items');
@@ -80,6 +80,13 @@ class PurchaseController extends Controller
                 ]);
             }
 
+            // Return JSON for API requests
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'data' => $purchase->load('purchaseDetails.item'),
+                ], 201);
+            }
+
             return redirect()->route('purchases.show', $purchase)
                 ->with('success', 'Purchase created successfully.');
         });
@@ -100,7 +107,7 @@ class PurchaseController extends Controller
     /**
      * Receive the purchase goods.
      */
-    public function receive(Purchase $purchase, ReceivePurchaseRequest $request): RedirectResponse
+    public function receive(Purchase $purchase, ReceivePurchaseRequest $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $this->authorizeReceive($purchase);
 
@@ -122,6 +129,13 @@ class PurchaseController extends Controller
 
             $purchase->update(['status' => 'received']);
 
+            // Return JSON for API requests
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'data' => $purchase->fresh(),
+                ], 200);
+            }
+
             return redirect()->route('purchases.show', $purchase)
                 ->with('success', 'Goods received successfully.');
         });
@@ -130,11 +144,11 @@ class PurchaseController extends Controller
     /**
      * Complete the purchase and update stock.
      */
-    public function complete(Purchase $purchase): RedirectResponse
+    public function complete(Purchase $purchase, \Illuminate\Http\Request $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $this->authorizeComplete($purchase);
 
-        return DB::transaction(function () use ($purchase) {
+        return DB::transaction(function () use ($purchase, $request) {
             $purchase->load('purchaseDetails.item');
 
             foreach ($purchase->purchaseDetails as $detail) {
@@ -186,6 +200,13 @@ class PurchaseController extends Controller
             }
 
             $purchase->update(['status' => 'completed']);
+
+            // Return JSON for API requests
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'data' => $purchase->fresh(),
+                ], 200);
+            }
 
             return redirect()->route('purchases.show', $purchase)
                 ->with('success', 'Purchase completed and stock updated successfully.');

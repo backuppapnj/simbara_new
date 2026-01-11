@@ -14,6 +14,7 @@ use App\Models\RequestDetail;
 use App\Models\StockMutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class AtkRequestController extends Controller
@@ -118,8 +119,13 @@ class AtkRequestController extends Controller
         $atkRequest = DB::transaction(function () use ($validated) {
             $user = auth()->user();
 
+            // Generate request number
+            $count = AtkRequest::whereDate('created_at', today())->count() + 1;
+            $noPermintaan = 'REQ-'.date('Ymd').'-'.str_pad((string) $count, 4, '0', STR_PAD_LEFT);
+
             // Create the main request
             $atkRequest = AtkRequest::create([
+                'no_permintaan' => $noPermintaan,
                 'user_id' => $user->id,
                 'department_id' => $validated['department_id'],
                 'tanggal' => $validated['tanggal'],
@@ -130,6 +136,7 @@ class AtkRequestController extends Controller
             // Create request details
             foreach ($validated['items'] as $item) {
                 RequestDetail::create([
+                    'id' => (string) Str::ulid(),
                     'request_id' => $atkRequest->id,
                     'item_id' => $item['item_id'],
                     'jumlah_diminta' => $item['jumlah_diminta'],

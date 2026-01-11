@@ -18,6 +18,7 @@ class RequestDetail extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'request_id',
         'item_id',
         'jumlah_diminta',

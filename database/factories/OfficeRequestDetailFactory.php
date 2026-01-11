@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OfficeRequestDetail>
@@ -19,6 +20,7 @@ class OfficeRequestDetailFactory extends Factory
         $jumlah = fake()->numberBetween(1, 20);
 
         return [
+            'id' => (string) Str::ulid(),
             'request_id' => \App\Models\OfficeRequest::factory(),
             'supply_id' => \App\Models\OfficeSupply::factory(),
             'jumlah' => $jumlah,
