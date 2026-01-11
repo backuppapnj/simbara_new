@@ -100,24 +100,24 @@
 ## Phase 4: Permintaan & Direct Approval
 
 ### Task 4.1: Create Permintaan Form
-- [~] Create request form for Pegawai
-- [~] Add dynamic supply rows
-- [~] Validate stok tersedia (warning only)
-- [~] Create POST /office-requests route
-- [~] Save OfficeRequest + OfficeRequestDetails
-- [~] Set initial status to 'pending'
-- [~] Write tests for request creation
-- [~] Test form submission
+- [x] Create request form for Pegawai (6e5fcf2)
+- [x] Add dynamic supply rows (6e5fcf2)
+- [x] Validate stok tersedia (warning only) (6e5fcf2)
+- [x] Create POST /office-requests route (6e5fcf2)
+- [x] Save OfficeRequest + OfficeRequestDetails (6e5fcf2)
+- [x] Set initial status to 'pending' (6e5fcf2)
+- [x] Write tests for request creation (6e5fcf2)
+- [x] Test form submission (6e5fcf2)
 
 ### Task 4.2: Create Direct Approval System
-- [ ] Create approval component
-- [ ] Add POST /office-requests/{id}/approve route
-- [ ] Add POST /office-requests/{id}/reject route
-- [ ] Implement approval logic (Operator only)
-- [ ] On approve: auto-distribute & create mutations keluar
-- [ ] Update stok
-- [ ] Write tests for approval and rejection
-- [ ] Test stok reduction on approval
+- [x] Create approval component (6e5fcf2)
+- [x] Add POST /office-requests/{id}/approve route (6e5fcf2)
+- [x] Add POST /office-requests/{id}/reject route (6e5fcf2)
+- [x] Implement approval logic (Operator only) (6e5fcf2)
+- [x] On approve: auto-distribute & create mutations keluar (6e5fcf2)
+- [x] Update stok (6e5fcf2)
+- [x] Write tests for approval and rejection (6e5fcf2)
+- [x] Test stok reduction on approval (6e5fcf2)
 
 ### Task 4.3: Create Request List & Views
 - [ ] Create Index.tsx with request list
