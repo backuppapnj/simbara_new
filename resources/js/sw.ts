@@ -70,7 +70,9 @@ self.addEventListener('push', (event: PushEvent) => {
         ],
     };
 
-    event.waitUntil(self.registration.showNotification(notificationData.title, options));
+    event.waitUntil(
+        self.registration.showNotification(notificationData.title, options),
+    );
 });
 
 // Notification click event
@@ -79,7 +81,10 @@ self.addEventListener('notificationclick', (event: NotificationEvent) => {
 
     event.notification.close();
 
-    const notificationData = event.notification.data as { url?: string; timestamp?: number };
+    const notificationData = event.notification.data as {
+        url?: string;
+        timestamp?: number;
+    };
 
     // Handle action clicks
     if (event.action) {
@@ -104,13 +109,16 @@ self.addEventListener('notificationclick', (event: NotificationEvent) => {
                 if (clients.openWindow) {
                     return clients.openWindow(url);
                 }
-            })
+            }),
     );
 });
 
 // Notification close event
 self.addEventListener('notificationclose', (event: NotificationEvent) => {
-    console.log('[Service Worker] Notification closed', event.notification.data);
+    console.log(
+        '[Service Worker] Notification closed',
+        event.notification.data,
+    );
 });
 
 // Sync event for background sync
@@ -120,7 +128,7 @@ self.addEventListener('sync', (event: ExtendableEvent) => {
     if (event.tag === 'sync-forms') {
         event.waitUntil(
             // Handle form synchronization
-            Promise.resolve()
+            Promise.resolve(),
         );
     }
 });

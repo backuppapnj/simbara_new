@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\SyncRolePermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleUsersRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -200,5 +202,134 @@ class RoleController extends Controller
         }
 
         return redirect()->back()->with('success', 'Role assignments updated successfully.');
+    }
+
+    /**
+     * Display all permissions with role's permissions marked.
+     *
+     * Returns all available permissions grouped by module, with the role's
+     * current permissions marked. For super_admin role, this will show all
+     * permissions as assigned (via wildcard).
+     *
+     * @param  \Illuminate\Http\Request  $request  The incoming HTTP request
+     * @param  \Spatie\Permission\Models\Role  $role  The role to get permissions for
+     * @return \Inertia\Response|\Illuminate\Http\JsonResponse Returns Inertia view or JSON response
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException When user is not super_admin
+     */
+    public function permissions(Request $request, Role $role): \Inertia\Response|\Illuminate\Http\JsonResponse
+    {
+        $user = auth()->user();
+
+        // Only super_admin can access role permissions
+        if (! $user->hasRole('super_admin')) {
+            abort(403, 'Only super_admin can access role permissions.');
+        }
+
+        // Get all permissions and group by module
+        $allPermissions = Permission::orderBy('name')->get();
+
+        // Get role's current permissions
+        $rolePermissionIds = $role->permissions->pluck('id')->toArray();
+
+        // For super_admin, all permissions are considered assigned (wildcard)
+        $isSuperAdmin = $role->name === 'super_admin';
+
+        // Group permissions by module (extract module from permission name format: module.action)
+        $groupedPermissions = $allPermissions->groupBy(function ($permission) {
+            $parts = explode('.', $permission->name);
+
+            return $parts[0] ?? 'other';
+        })->map(function ($permissions, $module) use ($rolePermissionIds, $isSuperAdmin) {
+            return [
+                'module' => $module,
+                'permissions' => $permissions->map(function ($permission) use ($rolePermissionIds, $isSuperAdmin) {
+                    return [
+                        'id' => $permission->id,
+                        'name' => $permission->name,
+                        'assigned' => $isSuperAdmin || in_array($permission->id, $rolePermissionIds),
+                    ];
+                })->values(),
+            ];
+        })->values();
+
+        // Sort modules alphabetically
+        $groupedPermissions = $groupedPermissions->sortBy('module')->values();
+
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => [
+                    'role' => [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                    ],
+                    'permissions' => $groupedPermissions,
+                    'is_super_admin' => $isSuperAdmin,
+                ],
+            ]);
+        }
+
+        return Inertia::render('Admin/Roles/Permissions', [
+            'role' => [
+                'id' => $role->id,
+                'name' => $role->name,
+            ],
+            'permissions' => $groupedPermissions,
+            'is_super_admin' => $isSuperAdmin,
+        ]);
+    }
+
+    /**
+     * Sync permissions to a specific role.
+     *
+     * Handles super_admin wildcard permission logic:
+     * - super_admin automatically gets all permissions (cannot be modified)
+     * - For other roles, sync the provided permission IDs
+     *
+     * @param  \Illuminate\Http\Request  $request  The incoming request with permission_ids
+     * @param  \Spatie\Permission\Models\Role  $role  The role to sync permissions for
+     * @param  \App\Actions\SyncRolePermissions  $syncRolePermissions  The business logic action
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse Returns redirect or JSON response
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException When user is not super_admin
+     * @throws \Throwable When database transaction fails
+     */
+    public function syncPermissions(Request $request, Role $role, SyncRolePermissions $syncRolePermissions): \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+    {
+        $user = auth()->user();
+
+        // Only super_admin can sync role permissions
+        if (! $user->hasRole('super_admin')) {
+            abort(403, 'Only super_admin can sync role permissions.');
+        }
+
+        $validated = $request->validate([
+            'permission_ids' => ['present', 'array'],
+            'permission_ids.*' => ['exists:permissions,id'],
+        ], [
+            'permission_ids.present' => 'Permission wajib dipilih.',
+            'permission_ids.array' => 'Format permission tidak valid.',
+            'permission_ids.*.exists' => 'Permission tidak ditemukan.',
+        ]);
+
+        DB::transaction(function () use ($role, $validated, $syncRolePermissions) {
+            $syncRolePermissions->handle($role, $validated['permission_ids'] ?? []);
+        });
+
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => [
+                    'role' => [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                    ],
+                    'permission_ids' => $validated['permission_ids'] ?? [],
+                ],
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Role permissions updated successfully.');
     }
 }

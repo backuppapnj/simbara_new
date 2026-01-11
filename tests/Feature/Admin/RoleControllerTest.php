@@ -503,4 +503,301 @@ describe('RoleController', function () {
             expect($data['user_ids'])->toBe([$user1->id, $user2->id]);
         });
     });
+
+    describe('Permissions - View Role Permissions', function () {
+        it('requires authentication', function () {
+            $role = Role::where('name', 'pegawai')->first();
+
+            $response = $this->get(route('admin.roles.permissions', $role));
+
+            $response->assertRedirect(route('login'));
+        });
+
+        it('allows super admin to view role permissions', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'kpa')->first();
+
+            $response = $this->actingAs($superAdmin)
+                ->getJson(route('admin.roles.permissions', $role));
+
+            $response->assertSuccessful();
+        });
+
+        it('returns permissions grouped by module', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'pegawai')->first();
+
+            // Create test permissions
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.create', 'guard_name' => 'web']);
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.view', 'guard_name' => 'web']);
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.create', 'guard_name' => 'web']);
+
+            $response = $this->actingAs($superAdmin)
+                ->getJson(route('admin.roles.permissions', $role));
+
+            $response->assertSuccessful();
+
+            $data = $response->json('data');
+            expect($data)->toHaveKey('role');
+            expect($data)->toHaveKey('permissions');
+            expect($data)->toHaveKey('is_super_admin');
+
+            // Verify permissions are grouped by module
+            $permissions = $data['permissions'];
+            expect($permissions)->toBeArray();
+
+            // Check that modules exist
+            $modules = collect($permissions)->pluck('module');
+            expect($modules)->toContain('assets', 'atk');
+        });
+
+        it('marks role permissions as assigned', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'kpa')->first();
+
+            // Create test permissions
+            $permission1 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+            $permission2 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.view', 'guard_name' => 'web']);
+
+            // Assign one permission to the role
+            $role->givePermissionTo($permission1);
+
+            $response = $this->actingAs($superAdmin)
+                ->getJson(route('admin.roles.permissions', $role));
+
+            $response->assertSuccessful();
+
+            $permissions = $response->json('data.permissions');
+            $assetsModule = collect($permissions)->firstWhere('module', 'assets');
+
+            expect($assetsModule)->not->toBeNull();
+            expect($assetsModule['permissions'])->toBeArray();
+
+            $assetsViewPermission = collect($assetsModule['permissions'])->firstWhere('name', 'assets.view');
+            expect($assetsViewPermission['assigned'])->toBeTrue();
+
+            $atkModule = collect($permissions)->firstWhere('module', 'atk');
+            $atkViewPermission = collect($atkModule['permissions'])->firstWhere('name', 'atk.view');
+            expect($atkViewPermission['assigned'])->toBeFalse();
+        });
+
+        it('shows all permissions as assigned for super_admin role', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $superAdminRole = Role::where('name', 'super_admin')->first();
+
+            // Create test permissions
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.view', 'guard_name' => 'web']);
+
+            $response = $this->actingAs($superAdmin)
+                ->getJson(route('admin.roles.permissions', $superAdminRole));
+
+            $response->assertSuccessful();
+
+            $data = $response->json('data');
+            expect($data['is_super_admin'])->toBeTrue();
+
+            // All permissions should be marked as assigned for super_admin
+            $permissions = $data['permissions'];
+            foreach ($permissions as $module) {
+                foreach ($module['permissions'] as $permission) {
+                    expect($permission['assigned'])->toBeTrue();
+                }
+            }
+        });
+
+        it('forbids non super admin from viewing role permissions', function () {
+            $kpaUser = User::factory()->create();
+            $kpaUser->assignRole('kpa');
+
+            $role = Role::where('name', 'pegawai')->first();
+
+            $response = $this->actingAs($kpaUser)
+                ->get(route('admin.roles.permissions', $role));
+
+            $response->assertForbidden();
+        });
+    });
+
+    describe('Permissions - Sync Role Permissions', function () {
+        it('requires authentication', function () {
+            $role = Role::where('name', 'kpa')->first();
+
+            $response = $this->putJson(route('admin.roles.sync-permissions', $role), [
+                'permission_ids' => [],
+            ]);
+
+            $response->assertUnauthorized();
+        });
+
+        it('allows super admin to sync permissions to role', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'kpa')->first();
+
+            // Create test permissions
+            $permission1 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+            $permission2 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.view', 'guard_name' => 'web']);
+
+            $response = $this->actingAs($superAdmin)
+                ->putJson(route('admin.roles.sync-permissions', $role), [
+                    'permission_ids' => [$permission1->id, $permission2->id],
+                ]);
+
+            $response->assertSuccessful();
+
+            // Verify permissions are assigned
+            expect($role->fresh()->hasPermissionTo('assets.view'))->toBeTrue();
+            expect($role->fresh()->hasPermissionTo('atk.view'))->toBeTrue();
+        });
+
+        it('replaces existing permissions with new ones', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'pegawai')->first();
+
+            // Create test permissions
+            $permission1 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+            $permission2 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.view', 'guard_name' => 'web']);
+            $permission3 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'office.view', 'guard_name' => 'web']);
+
+            // Assign initial permissions
+            $role->givePermissionTo([$permission1, $permission2]);
+
+            // Sync with new permissions
+            $response = $this->actingAs($superAdmin)
+                ->putJson(route('admin.roles.sync-permissions', $role), [
+                    'permission_ids' => [$permission3->id],
+                ]);
+
+            $response->assertSuccessful();
+
+            // Verify only new permission is assigned
+            expect($role->fresh()->hasPermissionTo('office.view'))->toBeTrue();
+            expect($role->fresh()->hasPermissionTo('assets.view'))->toBeFalse();
+            expect($role->fresh()->hasPermissionTo('atk.view'))->toBeFalse();
+        });
+
+        it('removes all permissions when empty array is provided', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'kasubag_umum')->first();
+
+            // Create and assign permissions
+            $permission1 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+            $role->givePermissionTo($permission1);
+
+            expect($role->permissions)->toHaveCount(1);
+
+            // Sync with empty array
+            $response = $this->actingAs($superAdmin)
+                ->putJson(route('admin.roles.sync-permissions', $role), [
+                    'permission_ids' => [],
+                ]);
+
+            $response->assertSuccessful();
+
+            // Verify all permissions removed
+            expect($role->fresh()->permissions)->toHaveCount(0);
+        });
+
+        it('assigns wildcard permission to super_admin role', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $superAdminRole = Role::where('name', 'super_admin')->first();
+
+            // Sync with empty array should still assign wildcard
+            $response = $this->actingAs($superAdmin)
+                ->putJson(route('admin.roles.sync-permissions', $superAdminRole), [
+                    'permission_ids' => [],
+                ]);
+
+            $response->assertSuccessful();
+
+            // Verify wildcard permission is assigned
+            $superAdminRole->refresh();
+            expect($superAdminRole->permissions)->toHaveCount(1);
+            expect($superAdminRole->permissions->first()->name)->toBe('*');
+        });
+
+        it('validates permission_ids parameter is an array', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'kpa')->first();
+
+            $response = $this->actingAs($superAdmin)
+                ->putJson(route('admin.roles.sync-permissions', $role), [
+                    'permission_ids' => 'not-an-array',
+                ]);
+
+            $response->assertStatus(422);
+        });
+
+        it('validates permission_ids contains valid permission ids', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'kpa')->first();
+
+            $response = $this->actingAs($superAdmin)
+                ->putJson(route('admin.roles.sync-permissions', $role), [
+                    'permission_ids' => [99999, 88888],
+                ]);
+
+            $response->assertStatus(422);
+            $response->assertJsonValidationErrors(['permission_ids.0', 'permission_ids.1']);
+        });
+
+        it('forbids non super admin from syncing role permissions', function () {
+            $kpaUser = User::factory()->create();
+            $kpaUser->assignRole('kpa');
+
+            $role = Role::where('name', 'pegawai')->first();
+
+            $permission = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+
+            $response = $this->actingAs($kpaUser)
+                ->putJson(route('admin.roles.sync-permissions', $role), [
+                    'permission_ids' => [$permission->id],
+                ]);
+
+            $response->assertForbidden();
+        });
+
+        it('returns updated role info after successful sync', function () {
+            $superAdmin = User::factory()->create();
+            $superAdmin->assignRole('super_admin');
+
+            $role = Role::where('name', 'kpa')->first();
+
+            $permission1 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'assets.view', 'guard_name' => 'web']);
+            $permission2 = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.view', 'guard_name' => 'web']);
+
+            $response = $this->actingAs($superAdmin)
+                ->putJson(route('admin.roles.sync-permissions', $role), [
+                    'permission_ids' => [$permission1->id, $permission2->id],
+                ]);
+
+            $response->assertSuccessful();
+
+            $data = $response->json('data');
+            expect($data)->toHaveKey('role');
+            expect($data)->toHaveKey('permission_ids');
+            expect($data['permission_ids'])->toBe([$permission1->id, $permission2->id]);
+        });
+    });
 });

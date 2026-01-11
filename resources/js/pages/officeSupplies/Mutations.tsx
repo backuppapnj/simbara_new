@@ -1,7 +1,7 @@
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -46,7 +46,11 @@ interface MutationsProps {
     };
 }
 
-export default function OfficeSupplyMutations({ supply, mutations, filters }: MutationsProps) {
+export default function OfficeSupplyMutations({
+    supply,
+    mutations,
+    filters,
+}: MutationsProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Mutasi - ${supply.nama_barang}`} />
@@ -60,7 +64,9 @@ export default function OfficeSupplyMutations({ supply, mutations, filters }: Mu
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold">Mutasi Stok</h1>
-                        <p className="text-muted-foreground">{supply.nama_barang}</p>
+                        <p className="text-muted-foreground">
+                            {supply.nama_barang}
+                        </p>
                     </div>
                 </div>
 

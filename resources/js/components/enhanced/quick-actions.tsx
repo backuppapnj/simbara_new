@@ -1,7 +1,6 @@
-import * as React from 'react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { type LucideIcon } from 'lucide-react';
@@ -29,9 +28,12 @@ export interface QuickActionsProps {
 
 const variantStyles = {
     default: 'hover:bg-accent hover:text-accent-foreground border-border',
-    primary: 'bg-primary text-primary-foreground hover:bg-primary/90 border-primary/20',
-    success: 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 border-green-200 dark:border-green-800',
-    warning: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800',
+    primary:
+        'bg-primary text-primary-foreground hover:bg-primary/90 border-primary/20',
+    success:
+        'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 border-green-200 dark:border-green-800',
+    warning:
+        'bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800',
     danger: 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 border-red-200 dark:border-red-800',
 };
 
@@ -55,7 +57,9 @@ export function QuickActions({
                 <CardHeader>
                     <CardTitle>{title}</CardTitle>
                     {description && (
-                        <p className="text-sm text-muted-foreground">{description}</p>
+                        <p className="text-sm text-muted-foreground">
+                            {description}
+                        </p>
                     )}
                 </CardHeader>
                 <CardContent>
@@ -74,7 +78,9 @@ export function QuickActions({
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 {description && (
-                    <p className="text-sm text-muted-foreground">{description}</p>
+                    <p className="text-sm text-muted-foreground">
+                        {description}
+                    </p>
                 )}
             </CardHeader>
             <CardContent>
@@ -83,21 +89,23 @@ export function QuickActions({
                         const Icon = action.icon;
                         const buttonContent = (
                             <>
-                                <div className="flex items-start justify-between w-full">
+                                <div className="flex w-full items-start justify-between">
                                     <div className="flex items-start gap-3">
                                         <div
                                             className={cn(
                                                 'rounded-md p-2 transition-colors',
                                                 action.variant === 'primary'
                                                     ? 'bg-primary/20 text-primary-foreground'
-                                                    : 'bg-muted'
+                                                    : 'bg-muted',
                                             )}
                                         >
                                             <Icon className="size-5" />
                                         </div>
-                                        <div className="flex-1 text-left space-y-1">
+                                        <div className="flex-1 space-y-1 text-left">
                                             <div className="flex items-center gap-2">
-                                                <span className="font-medium">{action.label}</span>
+                                                <span className="font-medium">
+                                                    {action.label}
+                                                </span>
                                                 {action.badge && (
                                                     <Badge
                                                         variant="secondary"
@@ -125,9 +133,11 @@ export function QuickActions({
                                     href={action.href}
                                     className={cn(
                                         'group relative flex items-center gap-3 rounded-lg border p-4 transition-all duration-200',
-                                        variantStyles[action.variant || 'default'],
+                                        variantStyles[
+                                            action.variant || 'default'
+                                        ],
                                         action.disabled &&
-                                            'pointer-events-none opacity-50 cursor-not-allowed'
+                                            'pointer-events-none cursor-not-allowed opacity-50',
                                     )}
                                 >
                                     {buttonContent}
@@ -141,7 +151,7 @@ export function QuickActions({
                                 variant="outline"
                                 className={cn(
                                     'h-auto justify-start p-4 text-left transition-all duration-200',
-                                    variantStyles[action.variant || 'default']
+                                    variantStyles[action.variant || 'default'],
                                 )}
                                 onClick={action.onClick}
                                 disabled={action.disabled}

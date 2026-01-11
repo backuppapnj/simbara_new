@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { CameraCapture } from '@/components/camera/camera-capture';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { Camera, Loader2, Upload, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Camera, Upload, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export interface CapturedPhoto {
     dataUrl: string;
@@ -104,13 +104,13 @@ export function ItemPhotoCapture({
                                 type="button"
                                 onClick={() => handleRemovePhoto(index)}
                                 disabled={disabled}
-                                className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="absolute top-1 right-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <X className="h-3 w-3" />
                             </button>
 
                             {/* Photo Number Badge */}
-                            <div className="absolute left-1 top-1 rounded-full bg-black/50 px-2 py-0.5 text-xs font-medium text-white">
+                            <div className="absolute top-1 left-1 rounded-full bg-black/50 px-2 py-0.5 text-xs font-medium text-white">
                                 {index + 1}
                             </div>
                         </div>
@@ -154,9 +154,7 @@ export function ItemPhotoCapture({
                         disabled={disabled}
                     >
                         <Camera className="h-6 w-6" />
-                        <span className="text-xs font-medium">
-                            Buka Kamera
-                        </span>
+                        <span className="text-xs font-medium">Buka Kamera</span>
                     </Button>
                 </div>
             )}

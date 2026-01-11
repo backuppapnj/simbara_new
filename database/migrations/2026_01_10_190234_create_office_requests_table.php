@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('office_requests', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('no_permintaan', 50)->unique();
-            $table->ulid('user_id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->ulid('department_id');
             $table->date('tanggal');
             $table->enum('status', ['pending', 'approved', 'rejected', 'completed'])->default('pending');
-            $table->ulid('approved_by')->nullable();
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->text('keterangan')->nullable();
@@ -26,9 +26,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('restrict');
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

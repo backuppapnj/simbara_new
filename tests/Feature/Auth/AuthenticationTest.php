@@ -8,6 +8,12 @@ test('login screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
+test('home route displays login screen for guest users', function () {
+    $response = $this->get(route('home'));
+
+    $response->assertStatus(200);
+});
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
@@ -42,6 +48,14 @@ test('users can logout', function () {
 
     $this->assertGuest();
     $response->assertRedirect(route('home'));
+});
+
+test('authenticated users are redirected to dashboard when visiting home', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('home'));
+
+    $response->assertRedirect(route('dashboard', absolute: false));
 });
 
 test('users are rate limited', function () {

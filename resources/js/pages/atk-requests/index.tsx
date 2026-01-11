@@ -1,11 +1,10 @@
+import { Column, DataTable } from '@/components/enhanced/data-table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { DataTable, Column } from '@/components/enhanced/data-table';
-import { Badge } from '@/components/ui/badge';
-import { Eye, Plus, CheckCircle, XCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Eye, Plus } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -73,16 +72,48 @@ interface IndexProps {
 }
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-    pending: { label: 'Pending', className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-800' },
-    level1_approved: { label: 'Approved L1', className: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-800' },
-    level2_approved: { label: 'Approved L2', className: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-800' },
-    level3_approved: { label: 'Approved L3', className: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-800' },
-    rejected: { label: 'Rejected', className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-800' },
-    diserahkan: { label: 'Diserahkan', className: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-800' },
-    diterima: { label: 'Diterima', className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-800' },
+    pending: {
+        label: 'Pending',
+        className:
+            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-800',
+    },
+    level1_approved: {
+        label: 'Approved L1',
+        className:
+            'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-800',
+    },
+    level2_approved: {
+        label: 'Approved L2',
+        className:
+            'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-800',
+    },
+    level3_approved: {
+        label: 'Approved L3',
+        className:
+            'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-800',
+    },
+    rejected: {
+        label: 'Rejected',
+        className:
+            'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-800',
+    },
+    diserahkan: {
+        label: 'Diserahkan',
+        className:
+            'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-800',
+    },
+    diterima: {
+        label: 'Diterima',
+        className:
+            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-800',
+    },
 };
 
-export default function AtkRequestsIndex({ requests, filters, can }: IndexProps) {
+export default function AtkRequestsIndex({
+    requests,
+    filters,
+    can,
+}: IndexProps) {
     const columns: Column<AtkRequest>[] = [
         {
             id: 'no_permintaan',
@@ -113,11 +144,12 @@ export default function AtkRequestsIndex({ requests, filters, can }: IndexProps)
             id: 'status',
             header: 'Status',
             accessor: (row) => {
-                const config = statusConfig[row.status] || { label: row.status, className: 'bg-gray-100 text-gray-800' };
+                const config = statusConfig[row.status] || {
+                    label: row.status,
+                    className: 'bg-gray-100 text-gray-800',
+                };
                 return (
-                    <Badge className={config.className}>
-                        {config.label}
-                    </Badge>
+                    <Badge className={config.className}>{config.label}</Badge>
                 );
             },
             sortable: true,
@@ -125,7 +157,8 @@ export default function AtkRequestsIndex({ requests, filters, can }: IndexProps)
         {
             id: 'tanggal',
             header: 'Tanggal',
-            accessor: (row) => new Date(row.tanggal).toLocaleDateString('id-ID'),
+            accessor: (row) =>
+                new Date(row.tanggal).toLocaleDateString('id-ID'),
             sortable: true,
         },
         {
@@ -146,12 +179,16 @@ export default function AtkRequestsIndex({ requests, filters, can }: IndexProps)
     ];
 
     const handleFilterChange = (key: string, value: string) => {
-        router.get(route('atk-requests.index'), {
-            ...filters,
-            [key]: value,
-        }, {
-            preserveState: true,
-        });
+        router.get(
+            route('atk-requests.index'),
+            {
+                ...filters,
+                [key]: value,
+            },
+            {
+                preserveState: true,
+            },
+        );
     };
 
     return (
@@ -181,16 +218,20 @@ export default function AtkRequestsIndex({ requests, filters, can }: IndexProps)
                         <input
                             type="text"
                             placeholder="Cari berdasarkan nama pemohon atau no request..."
-                            className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
                             value={filters.search || ''}
-                            onChange={(e) => handleFilterChange('search', e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange('search', e.target.value)
+                            }
                         />
                     </div>
 
                     <select
-                        className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
                         value={filters.status || ''}
-                        onChange={(e) => handleFilterChange('status', e.target.value)}
+                        onChange={(e) =>
+                            handleFilterChange('status', e.target.value)
+                        }
                     >
                         <option value="">Semua Status</option>
                         <option value="pending">Pending</option>
@@ -202,11 +243,18 @@ export default function AtkRequestsIndex({ requests, filters, can }: IndexProps)
                         <option value="diterima">Diterima</option>
                     </select>
 
-                    {(can.approve_level1 || can.approve_level2 || can.approve_level3) && (
+                    {(can.approve_level1 ||
+                        can.approve_level2 ||
+                        can.approve_level3) && (
                         <select
-                            className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
                             value={filters.department_id || ''}
-                            onChange={(e) => handleFilterChange('department_id', e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange(
+                                    'department_id',
+                                    e.target.value,
+                                )
+                            }
                         >
                             <option value="">Semua Departemen</option>
                             {/* Add department options if needed */}

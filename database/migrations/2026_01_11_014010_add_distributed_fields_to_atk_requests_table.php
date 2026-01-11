@@ -12,11 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('atk_requests', function (Blueprint $table) {
-            $table->ulid('distributed_by')->nullable()->after('level3_approval_at');
+            $table->foreignId('distributed_by')->nullable()->constrained('users')->onDelete('set null')->after('level3_approval_at');
             $table->timestamp('distributed_at')->nullable()->after('distributed_by');
             $table->timestamp('received_at')->nullable()->after('distributed_at');
-
-            $table->foreign('distributed_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
     {
         Schema::table('atk_requests', function (Blueprint $table) {
             $table->dropForeign(['distributed_by']);
+        });
+        Schema::table('atk_requests', function (Blueprint $table) {
             $table->dropColumn(['distributed_by', 'distributed_at', 'received_at']);
         });
     }

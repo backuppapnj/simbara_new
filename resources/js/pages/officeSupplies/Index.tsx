@@ -1,16 +1,11 @@
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+    destroy,
+    index,
+    update,
+} from '@/actions/App/Http/Controllers/OfficeSupplyController';
+import { DataTable, type Column } from '@/components/enhanced/data-table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -25,10 +20,26 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DataTable, type Column } from '@/components/enhanced/data-table';
-import { Plus, MoreHorizontal, Pencil, Trash2, AlertTriangle, Package } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import {
+    AlertTriangle,
+    MoreHorizontal,
+    Package,
+    Pencil,
+    Plus,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
-import { index, update, destroy } from '@/actions/App/Http/Controllers/OfficeSupplyController';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -62,11 +73,17 @@ interface IndexProps {
 }
 
 export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
-    const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; supply: Supply | null }>({
+    const [deleteDialog, setDeleteDialog] = useState<{
+        open: boolean;
+        supply: Supply | null;
+    }>({
         open: false,
         supply: null,
     });
-    const [editDialog, setEditDialog] = useState<{ open: boolean; supply: Supply | null }>({
+    const [editDialog, setEditDialog] = useState<{
+        open: boolean;
+        supply: Supply | null;
+    }>({
         open: false,
         supply: null,
     });
@@ -82,11 +99,19 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
     });
 
     const handleSearch = (search: string) => {
-        router.get(index().url, { ...filters, search }, { preserveState: true });
+        router.get(
+            index().url,
+            { ...filters, search },
+            { preserveState: true },
+        );
     };
 
     const handleCategoryFilter = (kategori: string) => {
-        router.get(index().url, { ...filters, kategori }, { preserveState: true });
+        router.get(
+            index().url,
+            { ...filters, kategori },
+            { preserveState: true },
+        );
     };
 
     const handleDelete = () => {
@@ -149,7 +174,13 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
             accessor: 'kategori',
             sortable: true,
             cell: (supply) => (
-                <Badge variant={supply.kategori === 'Consumables' ? 'default' : 'secondary'}>
+                <Badge
+                    variant={
+                        supply.kategori === 'Consumables'
+                            ? 'default'
+                            : 'secondary'
+                    }
+                >
                     {supply.kategori}
                 </Badge>
             ),
@@ -160,7 +191,13 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
             accessor: 'stok',
             sortable: true,
             cell: (supply) => (
-                <span className={isLowStock(supply) ? 'text-destructive font-semibold' : ''}>
+                <span
+                    className={
+                        isLowStock(supply)
+                            ? 'font-semibold text-destructive'
+                            : ''
+                    }
+                >
                     {supply.stok} {supply.satuan}
                 </span>
             ),
@@ -183,12 +220,16 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openEditDialog(supply)}>
+                        <DropdownMenuItem
+                            onClick={() => openEditDialog(supply)}
+                        >
                             <Pencil className="mr-2 size-4" />
                             Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            onClick={() => setDeleteDialog({ open: true, supply })}
+                            onClick={() =>
+                                setDeleteDialog({ open: true, supply })
+                            }
                             className="text-destructive"
                         >
                             <Trash2 className="mr-2 size-4" />
@@ -208,8 +249,12 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">Bahan Keperluan Kantor</h1>
-                        <p className="text-muted-foreground">Kelola bahan keperluan kantor</p>
+                        <h1 className="text-2xl font-bold">
+                            Bahan Keperluan Kantor
+                        </h1>
+                        <p className="text-muted-foreground">
+                            Kelola bahan keperluan kantor
+                        </p>
                     </div>
                     <Button asChild>
                         <Link href={index().url}>
@@ -224,8 +269,12 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                     <div className="rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Total Item</p>
-                                <p className="text-2xl font-bold">{supplies.total}</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Total Item
+                                </p>
+                                <p className="text-2xl font-bold">
+                                    {supplies.total}
+                                </p>
                             </div>
                             <Package className="size-8 text-muted-foreground" />
                         </div>
@@ -233,9 +282,15 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                     <div className="rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Stok Rendah</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Stok Rendah
+                                </p>
                                 <p className="text-2xl font-bold text-destructive">
-                                    {supplies.data.filter((s) => isLowStock(s)).length}
+                                    {
+                                        supplies.data.filter((s) =>
+                                            isLowStock(s),
+                                        ).length
+                                    }
                                 </p>
                             </div>
                             <AlertTriangle className="size-8 text-destructive" />
@@ -244,7 +299,9 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                     <div className="rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Kategori</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Kategori
+                                </p>
                                 <p className="text-2xl font-bold">3</p>
                             </div>
                             <Package className="size-8 text-muted-foreground" />
@@ -269,9 +326,15 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="">Semua Kategori</SelectItem>
-                            <SelectItem value="Consumables">Consumables</SelectItem>
-                            <SelectItem value="Cleaning Supplies">Cleaning Supplies</SelectItem>
-                            <SelectItem value="Operational">Operational</SelectItem>
+                            <SelectItem value="Consumables">
+                                Consumables
+                            </SelectItem>
+                            <SelectItem value="Cleaning Supplies">
+                                Cleaning Supplies
+                            </SelectItem>
+                            <SelectItem value="Operational">
+                                Operational
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -289,21 +352,31 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                 {supplies.last_page > 1 && (
                     <div className="flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            Halaman {supplies.current_page} dari {supplies.last_page}
+                            Halaman {supplies.current_page} dari{' '}
+                            {supplies.last_page}
                         </p>
                         <div className="flex gap-2">
-                            {Array.from({ length: supplies.last_page }).map((_, i) => (
-                                <Button
-                                    key={i}
-                                    variant={supplies.current_page === i + 1 ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() =>
-                                        router.get(index().url, { ...filters, page: i + 1 })
-                                    }
-                                >
-                                    {i + 1}
-                                </Button>
-                            ))}
+                            {Array.from({ length: supplies.last_page }).map(
+                                (_, i) => (
+                                    <Button
+                                        key={i}
+                                        variant={
+                                            supplies.current_page === i + 1
+                                                ? 'default'
+                                                : 'outline'
+                                        }
+                                        size="sm"
+                                        onClick={() =>
+                                            router.get(index().url, {
+                                                ...filters,
+                                                page: i + 1,
+                                            })
+                                        }
+                                    >
+                                        {i + 1}
+                                    </Button>
+                                ),
+                            )}
                         </div>
                     </div>
                 )}
@@ -311,20 +384,28 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                 {/* Delete Confirmation Dialog */}
                 <Dialog
                     open={deleteDialog.open}
-                    onOpenChange={(open) => setDeleteDialog({ open, supply: null })}
+                    onOpenChange={(open) =>
+                        setDeleteDialog({ open, supply: null })
+                    }
                 >
                     <DialogContent>
                         <DialogHeader>
                             <DialogTitle>Hapus Bahan Kantor</DialogTitle>
                             <DialogDescription>
                                 Apakah Anda yakin ingin menghapus &quot;
-                                {deleteDialog.supply?.nama_barang}&quot;? Tindakan ini tidak dapat dibatalkan.
+                                {deleteDialog.supply?.nama_barang}&quot;?
+                                Tindakan ini tidak dapat dibatalkan.
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
                             <Button
                                 variant="outline"
-                                onClick={() => setDeleteDialog({ open: false, supply: null })}
+                                onClick={() =>
+                                    setDeleteDialog({
+                                        open: false,
+                                        supply: null,
+                                    })
+                                }
                             >
                                 Batal
                             </Button>
@@ -333,79 +414,139 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                                 disabled={deleteForm.processing}
                                 variant="destructive"
                             >
-                                {deleteForm.processing ? 'Menghapus...' : 'Hapus'}
+                                {deleteForm.processing
+                                    ? 'Menghapus...'
+                                    : 'Hapus'}
                             </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
 
                 {/* Edit Dialog */}
-                <Dialog open={editDialog.open} onOpenChange={(open) => setEditDialog({ open, supply: null })}>
+                <Dialog
+                    open={editDialog.open}
+                    onOpenChange={(open) =>
+                        setEditDialog({ open, supply: null })
+                    }
+                >
                     <DialogContent className="max-w-md">
                         <DialogHeader>
                             <DialogTitle>Edit Bahan Kantor</DialogTitle>
                             <DialogDescription>
-                                Edit informasi bahan kantor &quot;{editDialog.supply?.nama_barang}&quot;
+                                Edit informasi bahan kantor &quot;
+                                {editDialog.supply?.nama_barang}&quot;
                             </DialogDescription>
                         </DialogHeader>
-                        <form onSubmit={(e) => { e.preventDefault(); handleEdit(); }} className="space-y-4">
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleEdit();
+                            }}
+                            className="space-y-4"
+                        >
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Nama Barang</label>
+                                <label className="text-sm font-medium">
+                                    Nama Barang
+                                </label>
                                 <Input
                                     value={editForm.data.nama_barang}
-                                    onChange={(e) => editForm.setData('nama_barang', e.target.value)}
+                                    onChange={(e) =>
+                                        editForm.setData(
+                                            'nama_barang',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {editForm.errors.nama_barang && (
-                                    <p className="text-sm text-destructive">{editForm.errors.nama_barang}</p>
+                                    <p className="text-sm text-destructive">
+                                        {editForm.errors.nama_barang}
+                                    </p>
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Satuan</label>
+                                <label className="text-sm font-medium">
+                                    Satuan
+                                </label>
                                 <Input
                                     value={editForm.data.satuan}
-                                    onChange={(e) => editForm.setData('satuan', e.target.value)}
+                                    onChange={(e) =>
+                                        editForm.setData(
+                                            'satuan',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {editForm.errors.satuan && (
-                                    <p className="text-sm text-destructive">{editForm.errors.satuan}</p>
+                                    <p className="text-sm text-destructive">
+                                        {editForm.errors.satuan}
+                                    </p>
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Kategori</label>
+                                <label className="text-sm font-medium">
+                                    Kategori
+                                </label>
                                 <Select
                                     value={editForm.data.kategori}
-                                    onValueChange={(value) => editForm.setData('kategori', value)}
+                                    onValueChange={(value) =>
+                                        editForm.setData('kategori', value)
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Consumables">Consumables</SelectItem>
-                                        <SelectItem value="Cleaning Supplies">Cleaning Supplies</SelectItem>
-                                        <SelectItem value="Operational">Operational</SelectItem>
+                                        <SelectItem value="Consumables">
+                                            Consumables
+                                        </SelectItem>
+                                        <SelectItem value="Cleaning Supplies">
+                                            Cleaning Supplies
+                                        </SelectItem>
+                                        <SelectItem value="Operational">
+                                            Operational
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Stok</label>
+                                    <label className="text-sm font-medium">
+                                        Stok
+                                    </label>
                                     <Input
                                         type="number"
                                         value={editForm.data.stok}
-                                        onChange={(e) => editForm.setData('stok', parseInt(e.target.value) || 0)}
+                                        onChange={(e) =>
+                                            editForm.setData(
+                                                'stok',
+                                                parseInt(e.target.value) || 0,
+                                            )
+                                        }
                                     />
                                     {editForm.errors.stok && (
-                                        <p className="text-sm text-destructive">{editForm.errors.stok}</p>
+                                        <p className="text-sm text-destructive">
+                                            {editForm.errors.stok}
+                                        </p>
                                     )}
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Stok Minimal</label>
+                                    <label className="text-sm font-medium">
+                                        Stok Minimal
+                                    </label>
                                     <Input
                                         type="number"
                                         value={editForm.data.stok_minimal}
-                                        onChange={(e) => editForm.setData('stok_minimal', parseInt(e.target.value) || 0)}
+                                        onChange={(e) =>
+                                            editForm.setData(
+                                                'stok_minimal',
+                                                parseInt(e.target.value) || 0,
+                                            )
+                                        }
                                     />
                                     {editForm.errors.stok_minimal && (
-                                        <p className="text-sm text-destructive">{editForm.errors.stok_minimal}</p>
+                                        <p className="text-sm text-destructive">
+                                            {editForm.errors.stok_minimal}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -413,12 +554,22 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    onClick={() => setEditDialog({ open: false, supply: null })}
+                                    onClick={() =>
+                                        setEditDialog({
+                                            open: false,
+                                            supply: null,
+                                        })
+                                    }
                                 >
                                     Batal
                                 </Button>
-                                <Button type="submit" disabled={editForm.processing}>
-                                    {editForm.processing ? 'Menyimpan...' : 'Simpan'}
+                                <Button
+                                    type="submit"
+                                    disabled={editForm.processing}
+                                >
+                                    {editForm.processing
+                                        ? 'Menyimpan...'
+                                        : 'Simpan'}
                                 </Button>
                             </DialogFooter>
                         </form>

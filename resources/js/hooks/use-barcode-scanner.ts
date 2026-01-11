@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
 import { Html5Qrcode, Html5QrcodeError } from 'html5-qrcode';
+import { useRef, useState } from 'react';
 
 export interface BarcodeScannerError {
     message: string;
@@ -14,7 +14,7 @@ export interface BarcodeScannerConfig {
 
 export function useBarcodeScanner(
     onDetected: (decodedText: string, decodedResult?: any) => void,
-    config: BarcodeScannerConfig = {}
+    config: BarcodeScannerConfig = {},
 ) {
     const {
         fps = 10,
@@ -63,7 +63,7 @@ export function useBarcodeScanner(
                     if (process.env.NODE_ENV === 'development') {
                         console.debug('Scan error:', errorMessage);
                     }
-                }
+                },
             );
 
             setIsScanning(true);
@@ -87,7 +87,9 @@ export function useBarcodeScanner(
                 setError(null);
             } catch (err) {
                 const errorMessage =
-                    err instanceof Error ? err.message : 'Failed to stop scanner';
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to stop scanner';
                 setError({
                     message: errorMessage,
                     code: 'STOP_ERROR',
@@ -103,7 +105,9 @@ export function useBarcodeScanner(
                 setIsScanning(false);
             } catch (err) {
                 const errorMessage =
-                    err instanceof Error ? err.message : 'Failed to pause scanner';
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to pause scanner';
                 setError({
                     message: errorMessage,
                     code: 'PAUSE_ERROR',
@@ -119,7 +123,9 @@ export function useBarcodeScanner(
                 setIsScanning(true);
             } catch (err) {
                 const errorMessage =
-                    err instanceof Error ? err.message : 'Failed to resume scanner';
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to resume scanner';
                 setError({
                     message: errorMessage,
                     code: 'RESUME_ERROR',

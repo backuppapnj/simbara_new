@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { BarcodeScanner } from '@/components/scanner/barcode-scanner';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Scan, X } from 'lucide-react';
 import { useState } from 'react';
@@ -48,11 +48,7 @@ export function ScannerInput({
 
     return (
         <div className={cn('space-y-2', className)}>
-            {label && (
-                <label className="text-sm font-medium">
-                    {label}
-                </label>
-            )}
+            {label && <label className="text-sm font-medium">{label}</label>}
 
             <div className="flex gap-2">
                 {/* Input Field */}
@@ -71,7 +67,7 @@ export function ScannerInput({
                         <button
                             type="button"
                             onClick={handleClear}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={disabled}
                         >
                             <X className="h-4 w-4" />
@@ -93,9 +89,7 @@ export function ScannerInput({
             </div>
 
             {helpText && (
-                <p className="text-xs text-muted-foreground">
-                    {helpText}
-                </p>
+                <p className="text-xs text-muted-foreground">{helpText}</p>
             )}
 
             {/* Scanner Modal */}

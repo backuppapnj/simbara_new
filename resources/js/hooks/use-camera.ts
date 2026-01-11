@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 type FacingMode = 'user' | 'environment';
 
@@ -13,7 +13,9 @@ export function useCamera() {
     const [isLoading, setIsLoading] = useState(false);
     const [facingMode, setFacingMode] = useState<FacingMode>('environment');
 
-    const startCamera = async (preferredFacingMode: FacingMode = 'environment') => {
+    const startCamera = async (
+        preferredFacingMode: FacingMode = 'environment',
+    ) => {
         setIsLoading(true);
         setError(null);
 
@@ -32,7 +34,8 @@ export function useCamera() {
                 audio: false,
             };
 
-            const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+            const mediaStream =
+                await navigator.mediaDevices.getUserMedia(constraints);
             setStream(mediaStream);
             setFacingMode(preferredFacingMode);
         } catch (err) {
@@ -56,11 +59,14 @@ export function useCamera() {
     };
 
     const switchCamera = () => {
-        const newFacingMode: FacingMode = facingMode === 'user' ? 'environment' : 'user';
+        const newFacingMode: FacingMode =
+            facingMode === 'user' ? 'environment' : 'user';
         startCamera(newFacingMode);
     };
 
-    const capturePhoto = (videoRef: React.RefObject<HTMLVideoElement>): string | null => {
+    const capturePhoto = (
+        videoRef: React.RefObject<HTMLVideoElement>,
+    ): string | null => {
         const video = videoRef.current;
         if (!video || !stream) {
             return null;

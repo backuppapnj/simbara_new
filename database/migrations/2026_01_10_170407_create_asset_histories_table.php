@@ -16,14 +16,13 @@ return new class extends Migration
             $table->ulid('asset_id');
             $table->ulid('lokasi_id_lama')->nullable();
             $table->ulid('lokasi_id_baru')->nullable();
-            $table->ulid('user_id')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->text('keterangan')->nullable();
             $table->timestamps();
 
             $table->foreign('asset_id')->references('id')->on('assets')->onDelete('cascade');
             $table->foreign('lokasi_id_lama')->references('id')->on('locations')->onDelete('set null');
             $table->foreign('lokasi_id_baru')->references('id')->on('locations')->onDelete('set null');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

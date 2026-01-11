@@ -1,0 +1,8 @@
+{
+  "track_id": "multi-role_20260111",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-11T14:15:00Z",
+  "updated_at": "2026-01-11T14:15:00Z",
+  "description": "Tambah fitur multi-role untuk user agar 1 pegawai bisa memiliki lebih dari satu role"
+}

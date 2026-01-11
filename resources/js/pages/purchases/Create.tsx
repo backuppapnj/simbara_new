@@ -1,17 +1,17 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
-import { useState } from 'react';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     ArrowLeft,
-    Plus,
-    Trash2,
-    Save,
-    Package,
-    Calendar,
     Building2,
+    Calendar,
     FileText,
+    Package,
+    Plus,
+    Save,
+    Trash2,
 } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -57,7 +57,9 @@ const formatCurrency = (amount: number): string => {
 };
 
 export default function PurchaseCreate({ items }: CreateProps) {
-    const [tanggal, setTanggal] = useState(new Date().toISOString().split('T')[0]);
+    const [tanggal, setTanggal] = useState(
+        new Date().toISOString().split('T')[0],
+    );
     const [supplier, setSupplier] = useState('');
     const [keterangan, setKeterangan] = useState('');
     const [purchaseItems, setPurchaseItems] = useState<PurchaseItem[]>([]);
@@ -78,7 +80,11 @@ export default function PurchaseCreate({ items }: CreateProps) {
         setPurchaseItems(purchaseItems.filter((_, i) => i !== index));
     };
 
-    const updateItem = (index: number, field: keyof PurchaseItem, value: string | number) => {
+    const updateItem = (
+        index: number,
+        field: keyof PurchaseItem,
+        value: string | number,
+    ) => {
         const updatedItems = [...purchaseItems];
         const item = updatedItems[index];
 
@@ -96,7 +102,10 @@ export default function PurchaseCreate({ items }: CreateProps) {
         setPurchaseItems(updatedItems);
     };
 
-    const totalNilai = purchaseItems.reduce((sum, item) => sum + item.subtotal, 0);
+    const totalNilai = purchaseItems.reduce(
+        (sum, item) => sum + item.subtotal,
+        0,
+    );
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -115,9 +124,14 @@ export default function PurchaseCreate({ items }: CreateProps) {
             return;
         }
 
-        const invalidItems = purchaseItems.filter((item) => !item.item_id || item.jumlah <= 0 || item.harga_satuan <= 0);
+        const invalidItems = purchaseItems.filter(
+            (item) =>
+                !item.item_id || item.jumlah <= 0 || item.harga_satuan <= 0,
+        );
         if (invalidItems.length > 0) {
-            alert('Pastikan semua barang terisi dengan benar (item, jumlah, dan harga)');
+            alert(
+                'Pastikan semua barang terisi dengan benar (item, jumlah, dan harga)',
+            );
             return;
         }
 
@@ -141,7 +155,7 @@ export default function PurchaseCreate({ items }: CreateProps) {
                     console.error('Validation errors:', errors);
                     alert('Terjadi kesalahan saat menyimpan pembelian.');
                 },
-            }
+            },
         );
     };
 
@@ -161,8 +175,12 @@ export default function PurchaseCreate({ items }: CreateProps) {
                             Kembali
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight">Buat Pembelian Baru</h1>
-                            <p className="text-muted-foreground">Input pembelian ATK dari supplier</p>
+                            <h1 className="text-2xl font-bold tracking-tight">
+                                Buat Pembelian Baru
+                            </h1>
+                            <p className="text-muted-foreground">
+                                Input pembelian ATK dari supplier
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -176,8 +194,12 @@ export default function PurchaseCreate({ items }: CreateProps) {
                         </h2>
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="tanggal" className="text-sm font-medium">
-                                    Tanggal <span className="text-red-500">*</span>
+                                <label
+                                    htmlFor="tanggal"
+                                    className="text-sm font-medium"
+                                >
+                                    Tanggal{' '}
+                                    <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex items-center gap-2">
                                     <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -185,7 +207,9 @@ export default function PurchaseCreate({ items }: CreateProps) {
                                         id="tanggal"
                                         type="date"
                                         value={tanggal}
-                                        onChange={(e) => setTanggal(e.target.value)}
+                                        onChange={(e) =>
+                                            setTanggal(e.target.value)
+                                        }
                                         required
                                         className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                     />
@@ -193,8 +217,12 @@ export default function PurchaseCreate({ items }: CreateProps) {
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="supplier" className="text-sm font-medium">
-                                    Supplier <span className="text-red-500">*</span>
+                                <label
+                                    htmlFor="supplier"
+                                    className="text-sm font-medium"
+                                >
+                                    Supplier{' '}
+                                    <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex items-center gap-2">
                                     <Building2 className="h-4 w-4 text-muted-foreground" />
@@ -202,7 +230,9 @@ export default function PurchaseCreate({ items }: CreateProps) {
                                         id="supplier"
                                         type="text"
                                         value={supplier}
-                                        onChange={(e) => setSupplier(e.target.value)}
+                                        onChange={(e) =>
+                                            setSupplier(e.target.value)
+                                        }
                                         placeholder="Nama supplier"
                                         required
                                         className="w-full rounded-md border bg-background px-3 py-2 text-sm"
@@ -211,13 +241,18 @@ export default function PurchaseCreate({ items }: CreateProps) {
                             </div>
 
                             <div className="flex flex-col gap-2 md:col-span-2">
-                                <label htmlFor="keterangan" className="text-sm font-medium">
+                                <label
+                                    htmlFor="keterangan"
+                                    className="text-sm font-medium"
+                                >
                                     Keterangan
                                 </label>
                                 <textarea
                                     id="keterangan"
                                     value={keterangan}
-                                    onChange={(e) => setKeterangan(e.target.value)}
+                                    onChange={(e) =>
+                                        setKeterangan(e.target.value)
+                                    }
                                     placeholder="Catatan tambahan (opsional)"
                                     rows={2}
                                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
@@ -246,9 +281,12 @@ export default function PurchaseCreate({ items }: CreateProps) {
                         {purchaseItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-12 text-center">
                                 <Package className="mb-4 h-12 w-12 text-muted-foreground" />
-                                <p className="text-lg font-medium">Belum ada barang</p>
+                                <p className="text-lg font-medium">
+                                    Belum ada barang
+                                </p>
                                 <p className="text-sm text-muted-foreground">
-                                    Klik tombol &quot;Tambah Barang&quot; untuk memulai
+                                    Klik tombol &quot;Tambah Barang&quot; untuk
+                                    memulai
                                 </p>
                             </div>
                         ) : (
@@ -260,18 +298,33 @@ export default function PurchaseCreate({ items }: CreateProps) {
                                     >
                                         <div className="flex-1">
                                             <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                                                Barang <span className="text-red-500">*</span>
+                                                Barang{' '}
+                                                <span className="text-red-500">
+                                                    *
+                                                </span>
                                             </label>
                                             <select
                                                 value={item.item_id}
-                                                onChange={(e) => updateItem(index, 'item_id', e.target.value)}
+                                                onChange={(e) =>
+                                                    updateItem(
+                                                        index,
+                                                        'item_id',
+                                                        e.target.value,
+                                                    )
+                                                }
                                                 className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                                 required
                                             >
-                                                <option value="">Pilih barang...</option>
+                                                <option value="">
+                                                    Pilih barang...
+                                                </option>
                                                 {items.map((i) => (
-                                                    <option key={i.id} value={i.id}>
-                                                        {i.kode_barang} - {i.nama_barang}
+                                                    <option
+                                                        key={i.id}
+                                                        value={i.id}
+                                                    >
+                                                        {i.kode_barang} -{' '}
+                                                        {i.nama_barang}
                                                     </option>
                                                 ))}
                                             </select>
@@ -279,13 +332,22 @@ export default function PurchaseCreate({ items }: CreateProps) {
 
                                         <div className="w-full md:w-32">
                                             <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                                                Jumlah <span className="text-red-500">*</span>
+                                                Jumlah{' '}
+                                                <span className="text-red-500">
+                                                    *
+                                                </span>
                                             </label>
                                             <input
                                                 type="number"
                                                 min={1}
                                                 value={item.jumlah}
-                                                onChange={(e) => updateItem(index, 'jumlah', e.target.value)}
+                                                onChange={(e) =>
+                                                    updateItem(
+                                                        index,
+                                                        'jumlah',
+                                                        e.target.value,
+                                                    )
+                                                }
                                                 className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                                 required
                                             />
@@ -293,14 +355,23 @@ export default function PurchaseCreate({ items }: CreateProps) {
 
                                         <div className="w-full md:w-40">
                                             <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                                                Harga Satuan <span className="text-red-500">*</span>
+                                                Harga Satuan{' '}
+                                                <span className="text-red-500">
+                                                    *
+                                                </span>
                                             </label>
                                             <input
                                                 type="number"
                                                 min={0}
                                                 step={0.01}
                                                 value={item.harga_satuan}
-                                                onChange={(e) => updateItem(index, 'harga_satuan', e.target.value)}
+                                                onChange={(e) =>
+                                                    updateItem(
+                                                        index,
+                                                        'harga_satuan',
+                                                        e.target.value,
+                                                    )
+                                                }
                                                 className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                                 required
                                             />
@@ -318,7 +389,9 @@ export default function PurchaseCreate({ items }: CreateProps) {
                                         <div className="flex items-end">
                                             <button
                                                 type="button"
-                                                onClick={() => removeItem(index)}
+                                                onClick={() =>
+                                                    removeItem(index)
+                                                }
                                                 className="rounded-md border border-red-200 bg-red-50 p-2 text-red-600 hover:bg-red-100 dark:border-red-900 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900"
                                             >
                                                 <Trash2 className="h-4 w-4" />
@@ -335,9 +408,12 @@ export default function PurchaseCreate({ items }: CreateProps) {
                         <div className="rounded-xl border bg-card p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-lg font-semibold">Total Nilai Pembelian</h3>
+                                    <h3 className="text-lg font-semibold">
+                                        Total Nilai Pembelian
+                                    </h3>
                                     <p className="text-sm text-muted-foreground">
-                                        {purchaseItems.length} barang dengan total nilai
+                                        {purchaseItems.length} barang dengan
+                                        total nilai
                                     </p>
                                 </div>
                                 <div className="text-right">

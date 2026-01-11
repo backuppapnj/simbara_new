@@ -24,7 +24,7 @@ export interface CompressedImageResult {
  */
 export async function compressImage(
     dataUrl: string,
-    options: CompressImageOptions = {}
+    options: CompressImageOptions = {},
 ): Promise<CompressedImageResult> {
     const {
         maxWidth = 1920,
@@ -43,7 +43,7 @@ export async function compressImage(
                     img.width,
                     img.height,
                     maxWidth,
-                    maxHeight
+                    maxHeight,
                 );
 
                 // Create canvas for resizing
@@ -66,9 +66,10 @@ export async function compressImage(
                 // Calculate sizes
                 const originalSize = dataUrlToSize(dataUrl);
                 const compressedSize = dataUrlToSize(compressedDataUrl);
-                const compressionRatio = originalSize > 0
-                    ? ((originalSize - compressedSize) / originalSize) * 100
-                    : 0;
+                const compressionRatio =
+                    originalSize > 0
+                        ? ((originalSize - compressedSize) / originalSize) * 100
+                        : 0;
 
                 resolve({
                     dataUrl: compressedDataUrl,
@@ -101,7 +102,7 @@ function calculateDimensions(
     width: number,
     height: number,
     maxWidth: number,
-    maxHeight: number
+    maxHeight: number,
 ): { width: number; height: number } {
     // If image is already smaller than max dimensions, return original
     if (width <= maxWidth && height <= maxHeight) {
@@ -136,7 +137,7 @@ function dataUrlToSize(dataUrl: string): number {
  */
 export async function rotateImage(
     dataUrl: string,
-    times: number = 1
+    times: number = 1,
 ): Promise<string> {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -196,7 +197,7 @@ export async function cropImage(
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
 ): Promise<string> {
     return new Promise((resolve, reject) => {
         const img = new Image();

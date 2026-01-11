@@ -19,11 +19,10 @@ return new class extends Migration
             $table->string('ur_kondisi_lama', 50)->nullable();
             $table->string('ur_kondisi_baru', 50)->nullable();
             $table->text('alasan')->nullable();
-            $table->ulid('user_id')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
 
             $table->foreign('asset_id')->references('id')->on('assets')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

@@ -1,13 +1,13 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
 import {
-    FileText,
-    Plus,
-    Eye,
-    PackageCheck,
     CheckCircle,
+    Eye,
+    FileText,
     Filter,
+    PackageCheck,
+    Plus,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -75,7 +75,8 @@ interface IndexProps {
 const statusColors = {
     draft: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     received: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    completed:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
 };
 
 const statusLabels = {
@@ -98,7 +99,7 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
         router.get(
             route('purchases.index'),
             { ...filters, [key]: value },
-            { preserveState: true }
+            { preserveState: true },
         );
     };
 
@@ -110,20 +111,25 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
     };
 
     const handleReceive = (purchase: Purchase) => {
-        if (!confirm(`Apakah Anda yakin ingin menerima barang dari pembelian ${purchase.no_pembelian}?`)) {
+        if (
+            !confirm(
+                `Apakah Anda yakin ingin menerima barang dari pembelian ${purchase.no_pembelian}?`,
+            )
+        ) {
             return;
         }
 
-        router.visit(
-            route('purchases.show', purchase),
-            {
-                method: 'get',
-            }
-        );
+        router.visit(route('purchases.show', purchase), {
+            method: 'get',
+        });
     };
 
     const handleComplete = (purchase: Purchase) => {
-        if (!confirm(`Apakah Anda yakin ingin menyelesaikan pembelian ${purchase.no_pembelian} dan mengupdate stok?`)) {
+        if (
+            !confirm(
+                `Apakah Anda yakin ingin menyelesaikan pembelian ${purchase.no_pembelian} dan mengupdate stok?`,
+            )
+        ) {
             return;
         }
 
@@ -132,9 +138,11 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
             {},
             {
                 onSuccess: () => {
-                    alert('Pembelian berhasil diselesaikan dan stok telah diupdate.');
+                    alert(
+                        'Pembelian berhasil diselesaikan dan stok telah diupdate.',
+                    );
                 },
-            }
+            },
         );
     };
 
@@ -146,7 +154,9 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Pembelian ATK</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Pembelian ATK
+                        </h1>
                         <p className="text-muted-foreground">
                             Kelola pembelian ATK dan penerimaan barang
                         </p>
@@ -168,13 +178,18 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="status" className="text-xs text-muted-foreground">
+                        <label
+                            htmlFor="status"
+                            className="text-xs text-muted-foreground"
+                        >
                             Status
                         </label>
                         <select
                             id="status"
                             value={filters.status ?? ''}
-                            onChange={(e) => handleFilterChange('status', e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange('status', e.target.value)
+                            }
                             className="rounded-md border bg-background px-3 py-1.5 text-sm"
                         >
                             <option value="">Semua Status</option>
@@ -184,8 +199,14 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                         </select>
                     </div>
 
-                    <form onSubmit={handleSearch} className="flex flex-col gap-1">
-                        <label htmlFor="search" className="text-xs text-muted-foreground">
+                    <form
+                        onSubmit={handleSearch}
+                        className="flex flex-col gap-1"
+                    >
+                        <label
+                            htmlFor="search"
+                            className="text-xs text-muted-foreground"
+                        >
                             Cari Supplier
                         </label>
                         <div className="flex gap-2">
@@ -209,7 +230,9 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                     {(filters.status || filters.search || filters.supplier) && (
                         <div className="flex items-end">
                             <button
-                                onClick={() => router.get(route('purchases.index'))}
+                                onClick={() =>
+                                    router.get(route('purchases.index'))
+                                }
                                 className="rounded-md border border-input bg-background px-3 py-1.5 text-sm hover:bg-muted"
                             >
                                 Reset Filter
@@ -224,13 +247,27 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                         <table className="w-full text-sm">
                             <thead className="border-b bg-muted/50">
                                 <tr>
-                                    <th className="px-4 py-3 text-left font-medium">No. Pembelian</th>
-                                    <th className="px-4 py-3 text-left font-medium">Tanggal</th>
-                                    <th className="px-4 py-3 text-left font-medium">Supplier</th>
-                                    <th className="px-4 py-3 text-center font-medium">Total Item</th>
-                                    <th className="px-4 py-3 text-right font-medium">Total Nilai</th>
-                                    <th className="px-4 py-3 text-left font-medium">Status</th>
-                                    <th className="px-4 py-3 text-right font-medium">Aksi</th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        No. Pembelian
+                                    </th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Tanggal
+                                    </th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Supplier
+                                    </th>
+                                    <th className="px-4 py-3 text-center font-medium">
+                                        Total Item
+                                    </th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Total Nilai
+                                    </th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Status
+                                    </th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Aksi
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -246,40 +283,68 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                                     </tr>
                                 ) : (
                                     purchases.data.map((purchase) => (
-                                        <tr key={purchase.id} className="border-b hover:bg-muted/50">
-                                            <td className="px-4 py-3 font-medium">{purchase.no_pembelian}</td>
-                                            <td className="px-4 py-3">
-                                                {new Date(purchase.tanggal).toLocaleDateString('id-ID')}
+                                        <tr
+                                            key={purchase.id}
+                                            className="border-b hover:bg-muted/50"
+                                        >
+                                            <td className="px-4 py-3 font-medium">
+                                                {purchase.no_pembelian}
                                             </td>
-                                            <td className="px-4 py-3">{purchase.supplier}</td>
+                                            <td className="px-4 py-3">
+                                                {new Date(
+                                                    purchase.tanggal,
+                                                ).toLocaleDateString('id-ID')}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                {purchase.supplier}
+                                            </td>
                                             <td className="px-4 py-3 text-center">
-                                                {purchase.purchase_details.length}
+                                                {
+                                                    purchase.purchase_details
+                                                        .length
+                                                }
                                             </td>
                                             <td className="px-4 py-3 text-right font-medium">
-                                                {formatCurrency(purchase.total_nilai)}
+                                                {formatCurrency(
+                                                    purchase.total_nilai,
+                                                )}
                                             </td>
                                             <td className="px-4 py-3">
                                                 <span
                                                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                                        statusColors[purchase.status]
+                                                        statusColors[
+                                                            purchase.status
+                                                        ]
                                                     }`}
                                                 >
-                                                    {statusLabels[purchase.status]}
+                                                    {
+                                                        statusLabels[
+                                                            purchase.status
+                                                        ]
+                                                    }
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
-                                                        href={route('purchases.show', purchase)}
+                                                        href={route(
+                                                            'purchases.show',
+                                                            purchase,
+                                                        )}
                                                         className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                                                         title="Lihat Detail"
                                                     >
                                                         <Eye className="h-3 w-3" />
                                                     </Link>
 
-                                                    {purchase.status === 'draft' && (
+                                                    {purchase.status ===
+                                                        'draft' && (
                                                         <button
-                                                            onClick={() => handleReceive(purchase)}
+                                                            onClick={() =>
+                                                                handleReceive(
+                                                                    purchase,
+                                                                )
+                                                            }
                                                             className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
                                                             title="Terima Barang"
                                                         >
@@ -287,9 +352,14 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                                                         </button>
                                                     )}
 
-                                                    {purchase.status === 'received' && (
+                                                    {purchase.status ===
+                                                        'received' && (
                                                         <button
-                                                            onClick={() => handleComplete(purchase)}
+                                                            onClick={() =>
+                                                                handleComplete(
+                                                                    purchase,
+                                                                )
+                                                            }
                                                             className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700"
                                                             title="Selesaikan & Update Stok"
                                                         >
@@ -309,20 +379,32 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                     {purchases.links.length > 3 && (
                         <div className="flex items-center justify-between border-t px-4 py-3">
                             <div className="text-sm text-muted-foreground">
-                                Menampilkan {purchases.data.length} dari {purchases.links[0].url ? new URLSearchParams(purchases.links.last_page_url.split('?')[1]).get('per_page') : '-'} data
+                                Menampilkan {purchases.data.length} dari{' '}
+                                {purchases.links[0].url
+                                    ? new URLSearchParams(
+                                          purchases.links.last_page_url.split(
+                                              '?',
+                                          )[1],
+                                      ).get('per_page')
+                                    : '-'}{' '}
+                                data
                             </div>
                             <div className="flex gap-2">
                                 {purchases.links.map((link, index) => (
                                     <button
                                         key={index}
-                                        onClick={() => link.url && router.get(link.url)}
+                                        onClick={() =>
+                                            link.url && router.get(link.url)
+                                        }
                                         disabled={!link.url}
                                         className={`rounded-md px-3 py-1.5 text-sm ${
                                             link.active
                                                 ? 'bg-primary text-primary-foreground'
                                                 : 'bg-muted hover:bg-muted/70'
                                         } ${!link.url && 'cursor-not-allowed opacity-50'}`}
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
                                     />
                                 ))}
                             </div>

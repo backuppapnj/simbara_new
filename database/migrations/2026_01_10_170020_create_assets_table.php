@@ -41,12 +41,11 @@ return new class extends Migration
             $table->string('ur_satker', 100)->nullable();
             $table->integer('jml_photo')->nullable();
             $table->integer('umur_sisa')->nullable();
-            $table->ulid('penanggung_jawab_id')->nullable();
+            $table->foreignId('penanggung_jawab_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('lokasi_id')->references('id')->on('locations')->onDelete('set null');
-            $table->foreign('penanggung_jawab_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

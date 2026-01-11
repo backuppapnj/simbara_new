@@ -18,13 +18,11 @@ return new class extends Migration
             $table->string('periode_bulan', 20);
             $table->integer('periode_tahun');
             $table->enum('status', ['draft', 'completed', 'approved'])->default('draft');
-            $table->ulid('approved_by')->nullable();
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('approved_at')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

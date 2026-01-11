@@ -1,13 +1,13 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
 import {
-    ArrowLeft,
-    Check,
-    FileCheck,
-    Download,
     AlertTriangle,
+    ArrowLeft,
     Camera,
+    Check,
+    Download,
+    FileCheck,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -71,7 +71,8 @@ interface ShowProps {
 const statusColors = {
     draft: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     completed: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    approved: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    approved:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
 };
 
 const statusLabels = {
@@ -81,11 +82,19 @@ const statusLabels = {
 };
 
 export default function Show({ stockOpname }: ShowProps) {
-    const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
-    const [selectedDetailPhotos, setSelectedDetailPhotos] = useState<StockOpnameDetail['photos']>([]);
+    const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(
+        null,
+    );
+    const [selectedDetailPhotos, setSelectedDetailPhotos] = useState<
+        StockOpnameDetail['photos']
+    >([]);
 
     const handleStatusChange = (action: 'submit' | 'approve') => {
-        if (!confirm(`Apakah Anda yakin ingin ${action === 'submit' ? 'mensubmit' : 'mengapprove'} stock opname ini?`)) {
+        if (
+            !confirm(
+                `Apakah Anda yakin ingin ${action === 'submit' ? 'mensubmit' : 'mengapprove'} stock opname ini?`,
+            )
+        ) {
             return;
         }
 
@@ -94,13 +103,18 @@ export default function Show({ stockOpname }: ShowProps) {
             {},
             {
                 onSuccess: () => {
-                    alert(`Stock opname berhasil ${action === 'submit' ? 'disubmit' : 'diapprove'}`);
+                    alert(
+                        `Stock opname berhasil ${action === 'submit' ? 'disubmit' : 'diapprove'}`,
+                    );
                 },
-            }
+            },
         );
     };
 
-    const openPhotoGallery = (photos: StockOpnameDetail['photos'], index: number) => {
+    const openPhotoGallery = (
+        photos: StockOpnameDetail['photos'],
+        index: number,
+    ) => {
         if (photos && photos.length > 0) {
             setSelectedDetailPhotos(photos);
             setSelectedPhotoIndex(index);
@@ -121,7 +135,9 @@ export default function Show({ stockOpname }: ShowProps) {
     };
 
     const totalItems = stockOpname.stock_opname_details.length;
-    const itemsWithSelisih = stockOpname.stock_opname_details.filter((detail) => detail.selisih !== 0);
+    const itemsWithSelisih = stockOpname.stock_opname_details.filter(
+        (detail) => detail.selisih !== 0,
+    );
     const selisihPositif = stockOpname.stock_opname_details
         .filter((detail) => detail.selisih > 0)
         .reduce((sum, detail) => sum + detail.selisih, 0);
@@ -132,7 +148,7 @@ export default function Show({ stockOpname }: ShowProps) {
 
     const hasSelisih = itemsWithSelisih.length > 0;
     const hasPhotos = stockOpname.stock_opname_details.some(
-        (detail) => detail.photos && detail.photos.length > 0
+        (detail) => detail.photos && detail.photos.length > 0,
     );
 
     return (
@@ -154,7 +170,9 @@ export default function Show({ stockOpname }: ShowProps) {
                             <h1 className="text-2xl font-bold tracking-tight">
                                 {stockOpname.no_so}
                             </h1>
-                            <p className="text-muted-foreground">Detail Stock Opname</p>
+                            <p className="text-muted-foreground">
+                                Detail Stock Opname
+                            </p>
                         </div>
                     </div>
 
@@ -201,18 +219,28 @@ export default function Show({ stockOpname }: ShowProps) {
 
                 {/* Informasi Stock Opname */}
                 <div className="rounded-xl border bg-card p-6">
-                    <h2 className="mb-4 text-lg font-semibold">Informasi Stock Opname</h2>
+                    <h2 className="mb-4 text-lg font-semibold">
+                        Informasi Stock Opname
+                    </h2>
 
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         <div>
-                            <div className="text-sm text-muted-foreground">Nomor SO</div>
-                            <div className="font-medium">{stockOpname.no_so}</div>
+                            <div className="text-sm text-muted-foreground">
+                                Nomor SO
+                            </div>
+                            <div className="font-medium">
+                                {stockOpname.no_so}
+                            </div>
                         </div>
 
                         <div>
-                            <div className="text-sm text-muted-foreground">Tanggal</div>
+                            <div className="text-sm text-muted-foreground">
+                                Tanggal
+                            </div>
                             <div className="font-medium">
-                                {new Date(stockOpname.tanggal).toLocaleDateString('id-ID', {
+                                {new Date(
+                                    stockOpname.tanggal,
+                                ).toLocaleDateString('id-ID', {
                                     day: 'numeric',
                                     month: 'long',
                                     year: 'numeric',
@@ -221,22 +249,33 @@ export default function Show({ stockOpname }: ShowProps) {
                         </div>
 
                         <div>
-                            <div className="text-sm text-muted-foreground">Periode</div>
+                            <div className="text-sm text-muted-foreground">
+                                Periode
+                            </div>
                             <div className="font-medium">
-                                {stockOpname.periode_bulan} {stockOpname.periode_tahun}
+                                {stockOpname.periode_bulan}{' '}
+                                {stockOpname.periode_tahun}
                             </div>
                         </div>
 
                         <div>
-                            <div className="text-sm text-muted-foreground">Status</div>
-                            <div className="font-medium">{statusLabels[stockOpname.status]}</div>
+                            <div className="text-sm text-muted-foreground">
+                                Status
+                            </div>
+                            <div className="font-medium">
+                                {statusLabels[stockOpname.status]}
+                            </div>
                         </div>
 
                         {stockOpname.approver && (
                             <>
                                 <div>
-                                    <div className="text-sm text-muted-foreground">Disetujui Oleh</div>
-                                    <div className="font-medium">{stockOpname.approver.name}</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        Disetujui Oleh
+                                    </div>
+                                    <div className="font-medium">
+                                        {stockOpname.approver.name}
+                                    </div>
                                 </div>
 
                                 <div>
@@ -245,7 +284,9 @@ export default function Show({ stockOpname }: ShowProps) {
                                     </div>
                                     <div className="font-medium">
                                         {stockOpname.approved_at &&
-                                            new Date(stockOpname.approved_at).toLocaleDateString('id-ID', {
+                                            new Date(
+                                                stockOpname.approved_at,
+                                            ).toLocaleDateString('id-ID', {
                                                 day: 'numeric',
                                                 month: 'long',
                                                 year: 'numeric',
@@ -259,8 +300,12 @@ export default function Show({ stockOpname }: ShowProps) {
 
                         {stockOpname.keterangan && (
                             <div className="md:col-span-2">
-                                <div className="text-sm text-muted-foreground">Keterangan</div>
-                                <div className="font-medium">{stockOpname.keterangan}</div>
+                                <div className="text-sm text-muted-foreground">
+                                    Keterangan
+                                </div>
+                                <div className="font-medium">
+                                    {stockOpname.keterangan}
+                                </div>
                             </div>
                         )}
                     </div>
@@ -269,12 +314,18 @@ export default function Show({ stockOpname }: ShowProps) {
                 {/* Summary */}
                 <div className="grid gap-4 md:grid-cols-4">
                     <div className="rounded-xl border bg-card p-6">
-                        <div className="text-sm text-muted-foreground">Total Barang</div>
-                        <div className="mt-2 text-2xl font-bold">{totalItems}</div>
+                        <div className="text-sm text-muted-foreground">
+                            Total Barang
+                        </div>
+                        <div className="mt-2 text-2xl font-bold">
+                            {totalItems}
+                        </div>
                     </div>
 
                     <div className="rounded-xl border bg-card p-6">
-                        <div className="text-sm text-muted-foreground">Selisih Positif</div>
+                        <div className="text-sm text-muted-foreground">
+                            Selisih Positif
+                        </div>
                         <div className="mt-2 text-2xl font-bold text-green-600 dark:text-green-400">
                             {selisihPositif > 0 && '+'}
                             {selisihPositif}
@@ -282,7 +333,9 @@ export default function Show({ stockOpname }: ShowProps) {
                     </div>
 
                     <div className="rounded-xl border bg-card p-6">
-                        <div className="text-sm text-muted-foreground">Selisih Negatif</div>
+                        <div className="text-sm text-muted-foreground">
+                            Selisih Negatif
+                        </div>
                         <div className="mt-2 text-2xl font-bold text-red-600 dark:text-red-400">
                             {selisihNegatif < 0 && ''}
                             {selisihNegatif}
@@ -290,11 +343,17 @@ export default function Show({ stockOpname }: ShowProps) {
                     </div>
 
                     <div className="rounded-xl border bg-card p-6">
-                        <div className="text-sm text-muted-foreground">Dengan Foto</div>
+                        <div className="text-sm text-muted-foreground">
+                            Dengan Foto
+                        </div>
                         <div className="mt-2 text-2xl font-bold">
-                            {stockOpname.stock_opname_details.filter(
-                                (detail) => detail.photos && detail.photos.length > 0
-                            ).length}
+                            {
+                                stockOpname.stock_opname_details.filter(
+                                    (detail) =>
+                                        detail.photos &&
+                                        detail.photos.length > 0,
+                                ).length
+                            }
                         </div>
                     </div>
                 </div>
@@ -304,7 +363,8 @@ export default function Show({ stockOpname }: ShowProps) {
                         <div className="flex items-center gap-2">
                             <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                             <h3 className="font-semibold text-yellow-900 dark:text-yellow-100">
-                                Terdapat {itemsWithSelisih.length} Barang dengan Selisih
+                                Terdapat {itemsWithSelisih.length} Barang dengan
+                                Selisih
                             </h3>
                         </div>
                         <div className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -334,7 +394,8 @@ export default function Show({ stockOpname }: ShowProps) {
                     <div className="border-b p-6">
                         <h2 className="text-lg font-semibold">Detail Barang</h2>
                         <p className="text-sm text-muted-foreground">
-                            Total {stockOpname.stock_opname_details.length} barang
+                            Total {stockOpname.stock_opname_details.length}{' '}
+                            barang
                         </p>
                     </div>
 
@@ -342,157 +403,206 @@ export default function Show({ stockOpname }: ShowProps) {
                         <table className="w-full text-sm">
                             <thead className="bg-muted/50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left font-medium">Barang</th>
-                                    <th className="px-6 py-3 text-center font-medium">Stok Sistem</th>
-                                    <th className="px-6 py-3 text-center font-medium">Stok Fisik</th>
-                                    <th className="px-6 py-3 text-center font-medium">Selisih</th>
-                                    <th className="px-6 py-3 text-left font-medium">Keterangan</th>
+                                    <th className="px-6 py-3 text-left font-medium">
+                                        Barang
+                                    </th>
+                                    <th className="px-6 py-3 text-center font-medium">
+                                        Stok Sistem
+                                    </th>
+                                    <th className="px-6 py-3 text-center font-medium">
+                                        Stok Fisik
+                                    </th>
+                                    <th className="px-6 py-3 text-center font-medium">
+                                        Selisih
+                                    </th>
+                                    <th className="px-6 py-3 text-left font-medium">
+                                        Keterangan
+                                    </th>
                                     {hasPhotos && (
-                                        <th className="px-6 py-3 text-center font-medium">Foto</th>
+                                        <th className="px-6 py-3 text-center font-medium">
+                                            Foto
+                                        </th>
                                     )}
                                 </tr>
                             </thead>
                             <tbody>
-                                {stockOpname.stock_opname_details.map((detail) => (
-                                    <tr key={detail.id} className="border-t">
-                                        <td className="px-6 py-3">
-                                            <div className="font-medium">{detail.item?.nama_barang}</div>
-                                            <div className="text-xs text-muted-foreground">
-                                                {detail.item?.kode_barang}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-3 text-center">
-                                            {detail.stok_sistem} {detail.item?.satuan}
-                                        </td>
-                                        <td className="px-6 py-3 text-center">
-                                            {detail.stok_fisik} {detail.item?.satuan}
-                                        </td>
-                                        <td className="px-6 py-3 text-center">
-                                            <span
-                                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                                    detail.selisih > 0
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                                        : detail.selisih < 0
-                                                          ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                                                          : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-                                                }`}
-                                            >
-                                                {detail.selisih > 0 && '+'}
-                                                {detail.selisih}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-3 text-muted-foreground">
-                                            {detail.keterangan || '-'}
-                                        </td>
-                                        {hasPhotos && (
-                                            <td className="px-6 py-3 text-center">
-                                                {detail.photos && detail.photos.length > 0 ? (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => openPhotoGallery(detail.photos, 0)}
-                                                        className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
-                                                    >
-                                                        <Camera className="h-3 w-3" />
-                                                        {detail.photos.length}
-                                                    </button>
-                                                ) : (
-                                                    <span className="text-muted-foreground">-</span>
-                                                )}
+                                {stockOpname.stock_opname_details.map(
+                                    (detail) => (
+                                        <tr
+                                            key={detail.id}
+                                            className="border-t"
+                                        >
+                                            <td className="px-6 py-3">
+                                                <div className="font-medium">
+                                                    {detail.item?.nama_barang}
+                                                </div>
+                                                <div className="text-xs text-muted-foreground">
+                                                    {detail.item?.kode_barang}
+                                                </div>
                                             </td>
-                                        )}
-                                    </tr>
-                                ))}
+                                            <td className="px-6 py-3 text-center">
+                                                {detail.stok_sistem}{' '}
+                                                {detail.item?.satuan}
+                                            </td>
+                                            <td className="px-6 py-3 text-center">
+                                                {detail.stok_fisik}{' '}
+                                                {detail.item?.satuan}
+                                            </td>
+                                            <td className="px-6 py-3 text-center">
+                                                <span
+                                                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                                                        detail.selisih > 0
+                                                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                                            : detail.selisih < 0
+                                                              ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                                              : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                                                    }`}
+                                                >
+                                                    {detail.selisih > 0 && '+'}
+                                                    {detail.selisih}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-3 text-muted-foreground">
+                                                {detail.keterangan || '-'}
+                                            </td>
+                                            {hasPhotos && (
+                                                <td className="px-6 py-3 text-center">
+                                                    {detail.photos &&
+                                                    detail.photos.length > 0 ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                openPhotoGallery(
+                                                                    detail.photos,
+                                                                    0,
+                                                                )
+                                                            }
+                                                            className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
+                                                        >
+                                                            <Camera className="h-3 w-3" />
+                                                            {
+                                                                detail.photos
+                                                                    .length
+                                                            }
+                                                        </button>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">
+                                                            -
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            )}
+                                        </tr>
+                                    ),
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 {/* Photo Gallery Modal */}
-                {selectedPhotoIndex !== null && selectedDetailPhotos.length > 0 && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-                        <div className="relative max-h-full max-w-full">
-                            <button
-                                onClick={closePhotoGallery}
-                                className="absolute -right-12 -top-12 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 focus:ring-2 focus:ring-white focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
+                {selectedPhotoIndex !== null &&
+                    selectedDetailPhotos.length > 0 && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+                            <div className="relative max-h-full max-w-full">
+                                <button
+                                    onClick={closePhotoGallery}
+                                    className="absolute -top-12 -right-12 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 focus:ring-2 focus:ring-white focus:outline-none"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-
-                            <img
-                                src={getPhotoUrl(selectedDetailPhotos[selectedPhotoIndex])}
-                                alt={`Photo ${selectedPhotoIndex + 1}`}
-                                className="max-h-[80vh] max-w-full rounded-lg object-contain"
-                            />
-
-                            {/* Photo Navigation */}
-                            {selectedDetailPhotos.length > 1 && (
-                                <div className="mt-4 flex items-center justify-center gap-4">
-                                    <button
-                                        onClick={() =>
-                                            setSelectedPhotoIndex((prev) =>
-                                                prev === null ? 0 : prev > 0 ? prev - 1 : selectedDetailPhotos.length - 1
-                                            )
-                                        }
-                                        className="rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                                    <svg
+                                        className="h-6 w-6"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            className="h-6 w-6"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M15 19l-7-7 7-7"
-                                            />
-                                        </svg>
-                                    </button>
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M6 18L18 6M6 6l12 12"
+                                        />
+                                    </svg>
+                                </button>
 
-                                    <span className="text-sm font-medium text-white">
-                                        {selectedPhotoIndex + 1} / {selectedDetailPhotos.length}
-                                    </span>
+                                <img
+                                    src={getPhotoUrl(
+                                        selectedDetailPhotos[
+                                            selectedPhotoIndex
+                                        ],
+                                    )}
+                                    alt={`Photo ${selectedPhotoIndex + 1}`}
+                                    className="max-h-[80vh] max-w-full rounded-lg object-contain"
+                                />
 
-                                    <button
-                                        onClick={() =>
-                                            setSelectedPhotoIndex((prev) =>
-                                                prev === null ? 0 : prev < selectedDetailPhotos.length - 1 ? prev + 1 : 0
-                                            )
-                                        }
-                                        className="rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
-                                    >
-                                        <svg
-                                            className="h-6 w-6"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
+                                {/* Photo Navigation */}
+                                {selectedDetailPhotos.length > 1 && (
+                                    <div className="mt-4 flex items-center justify-center gap-4">
+                                        <button
+                                            onClick={() =>
+                                                setSelectedPhotoIndex((prev) =>
+                                                    prev === null
+                                                        ? 0
+                                                        : prev > 0
+                                                          ? prev - 1
+                                                          : selectedDetailPhotos.length -
+                                                            1,
+                                                )
+                                            }
+                                            className="rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
                                         >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M9 5l7 7-7 7"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                            )}
+                                            <svg
+                                                className="h-6 w-6"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M15 19l-7-7 7-7"
+                                                />
+                                            </svg>
+                                        </button>
+
+                                        <span className="text-sm font-medium text-white">
+                                            {selectedPhotoIndex + 1} /{' '}
+                                            {selectedDetailPhotos.length}
+                                        </span>
+
+                                        <button
+                                            onClick={() =>
+                                                setSelectedPhotoIndex((prev) =>
+                                                    prev === null
+                                                        ? 0
+                                                        : prev <
+                                                            selectedDetailPhotos.length -
+                                                                1
+                                                          ? prev + 1
+                                                          : 0,
+                                                )
+                                            }
+                                            className="rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                                        >
+                                            <svg
+                                                className="h-6 w-6"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M9 5l7 7-7 7"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
             </div>
         </AppLayout>
     );

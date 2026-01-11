@@ -1,21 +1,5 @@
-import * as React from 'react';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import {
     Pagination,
     PaginationContent,
@@ -25,7 +9,23 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 import {
     ChevronDown,
     ChevronUp,
@@ -34,7 +34,7 @@ import {
     Search,
     X,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
 
 export interface Column<T> {
     id: string;
@@ -79,7 +79,8 @@ export function DataTable<T extends Record<string, any>>({
 }: DataTableProps<T>) {
     const [searchQuery, setSearchQuery] = React.useState('');
     const [sortColumn, setSortColumn] = React.useState<string | null>(null);
-    const [sortDirection, setSortDirection] = React.useState<SortDirection>(null);
+    const [sortDirection, setSortDirection] =
+        React.useState<SortDirection>(null);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [rowsPerPage, setRowsPerPage] = React.useState(pageSize);
 
@@ -229,10 +230,10 @@ export function DataTable<T extends Record<string, any>>({
         <div className={cn('space-y-4', className)}>
             {/* Header */}
             <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2 flex-1">
+                <div className="flex flex-1 items-center gap-2">
                     {searchable && (
-                        <div className="relative flex-1 max-w-sm">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                        <div className="relative max-w-sm flex-1">
+                            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
                                 placeholder="Cari..."
                                 value={searchQuery}
@@ -243,7 +244,7 @@ export function DataTable<T extends Record<string, any>>({
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                                    className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 p-0"
                                     onClick={() => setSearchQuery('')}
                                 >
                                     <X className="size-4" />
@@ -291,14 +292,18 @@ export function DataTable<T extends Record<string, any>>({
                                 <TableHead
                                     key={column.id}
                                     className={cn(
-                                        column.sortable && 'cursor-pointer hover:bg-muted/50 select-none',
-                                        column.className
+                                        column.sortable &&
+                                            'cursor-pointer select-none hover:bg-muted/50',
+                                        column.className,
                                     )}
-                                    onClick={() => column.sortable && handleSort(column.id)}
+                                    onClick={() =>
+                                        column.sortable && handleSort(column.id)
+                                    }
                                 >
                                     <div className="flex items-center">
                                         {column.header}
-                                        {column.sortable && getSortIcon(column.id)}
+                                        {column.sortable &&
+                                            getSortIcon(column.id)}
                                     </div>
                                 </TableHead>
                             ))}
@@ -318,11 +323,16 @@ export function DataTable<T extends Record<string, any>>({
                             paginatedData.map((row, rowIndex) => (
                                 <TableRow
                                     key={rowIndex}
-                                    className={cn(onRowClick && 'cursor-pointer')}
+                                    className={cn(
+                                        onRowClick && 'cursor-pointer',
+                                    )}
                                     onClick={() => onRowClick?.(row)}
                                 >
                                     {columns.map((column) => (
-                                        <TableCell key={column.id} className={column.className}>
+                                        <TableCell
+                                            key={column.id}
+                                            className={column.className}
+                                        >
                                             {renderCell(column, row)}
                                         </TableCell>
                                     ))}
@@ -337,19 +347,27 @@ export function DataTable<T extends Record<string, any>>({
             {pagination && totalPages > 1 && (
                 <div className="flex items-center justify-between">
                     <div className="text-sm text-muted-foreground">
-                        Menampilkan {startIndex} sampai {endIndex} dari {sortedData.length} data
+                        Menampilkan {startIndex} sampai {endIndex} dari{' '}
+                        {sortedData.length} data
                     </div>
                     <Pagination>
                         <PaginationContent>
                             <PaginationItem>
                                 <PaginationPrevious
-                                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                    onClick={() =>
+                                        setCurrentPage((p) =>
+                                            Math.max(1, p - 1),
+                                        )
+                                    }
                                     className={cn(
-                                        currentPage === 1 && 'pointer-events-none opacity-50'
+                                        currentPage === 1 &&
+                                            'pointer-events-none opacity-50',
                                     )}
                                 />
                             </PaginationItem>
-                            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+                            {Array.from({
+                                length: Math.min(5, totalPages),
+                            }).map((_, i) => {
                                 let pageNum;
                                 if (totalPages <= 5) {
                                     pageNum = i + 1;
@@ -364,7 +382,9 @@ export function DataTable<T extends Record<string, any>>({
                                 return (
                                     <PaginationItem key={i}>
                                         <PaginationLink
-                                            onClick={() => setCurrentPage(pageNum)}
+                                            onClick={() =>
+                                                setCurrentPage(pageNum)
+                                            }
                                             isActive={currentPage === pageNum}
                                             className="cursor-pointer"
                                         >
@@ -380,9 +400,14 @@ export function DataTable<T extends Record<string, any>>({
                             )}
                             <PaginationItem>
                                 <PaginationNext
-                                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                    onClick={() =>
+                                        setCurrentPage((p) =>
+                                            Math.min(totalPages, p + 1),
+                                        )
+                                    }
                                     className={cn(
-                                        currentPage === totalPages && 'pointer-events-none opacity-50'
+                                        currentPage === totalPages &&
+                                            'pointer-events-none opacity-50',
                                     )}
                                 />
                             </PaginationItem>

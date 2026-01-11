@@ -1,18 +1,18 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { CameraCapture } from '@/components/camera/camera-capture';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { router } from '@inertiajs/react';
 import { Camera, Loader2, Upload, X } from 'lucide-react';
 import { useState } from 'react';
-import { router } from '@inertiajs/react';
 
 interface AssetPhotoUploadProps {
     assetId: string;
     onUploadSuccess?: () => void;
-    className?:string;
+    className?: string;
 }
 
 export function AssetPhotoUpload({
@@ -58,24 +58,20 @@ export function AssetPhotoUpload({
                 formData.append('caption', caption);
             }
 
-            await router.post(
-                route('assets.photos.store', assetId),
-                formData,
-                {
-                    onSuccess: () => {
-                        setPhotoData(null);
-                        setCaption('');
-                        onUploadSuccess?.();
-                    },
-                    onError: (errors) => {
-                        console.error('Upload failed:', errors);
-                        alert('Gagal mengunggah foto');
-                    },
-                    onFinish: () => {
-                        setIsUploading(false);
-                    },
+            await router.post(route('assets.photos.store', assetId), formData, {
+                onSuccess: () => {
+                    setPhotoData(null);
+                    setCaption('');
+                    onUploadSuccess?.();
                 },
-            );
+                onError: (errors) => {
+                    console.error('Upload failed:', errors);
+                    alert('Gagal mengunggah foto');
+                },
+                onFinish: () => {
+                    setIsUploading(false);
+                },
+            });
         } catch (error) {
             console.error('Upload error:', error);
             setIsUploading(false);
@@ -144,7 +140,7 @@ export function AssetPhotoUpload({
                         {/* Cancel Button */}
                         <button
                             onClick={handleCancel}
-                            className="absolute right-2 top-2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                            className="absolute top-2 right-2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
                         >
                             <X className="h-4 w-4" />
                         </button>
@@ -152,7 +148,9 @@ export function AssetPhotoUpload({
 
                     {/* Caption Input */}
                     <div className="space-y-2">
-                        <Label htmlFor="caption">Keterangan Foto (Opsional)</Label>
+                        <Label htmlFor="caption">
+                            Keterangan Foto (Opsional)
+                        </Label>
                         <Textarea
                             id="caption"
                             value={caption}

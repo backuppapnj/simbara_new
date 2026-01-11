@@ -10,13 +10,14 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Eye, Users } from 'lucide-react';
+import { Eye, Shield, Users } from 'lucide-react';
 import { useState } from 'react';
 
 interface Role {
     id: number;
     name: string;
     users_count: number;
+    permissions_count?: number;
 }
 
 interface IndexProps {
@@ -92,75 +93,130 @@ export default function RolesIndex({ roles }: IndexProps) {
                     role="list"
                     aria-label="Roles list"
                 >
-                    {isLoading ? (
-                        // Show skeleton loaders while loading
-                        Array.from({ length: 6 }).map((_, i) => (
-                            <RoleCardSkeleton key={i} />
-                        ))
-                    ) : (
-                        roles.map((role) => (
-                            <Card
-                                key={role.id}
-                                className="transition-shadow hover:shadow-md focus-within:ring-2 focus-within:ring-ring"
-                                role="listitem"
-                            >
-                                <CardHeader>
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <CardTitle className="flex items-center gap-2">
-                                                <Users
-                                                    className="h-5 w-5"
-                                                    aria-hidden="true"
-                                                />
-                                                <span>
-                                                    {roleDisplayNames[role.name] ||
-                                                        role.name}
-                                                </span>
-                                            </CardTitle>
-                                            <CardDescription className="mt-1">
-                                                {role.name}
-                                            </CardDescription>
-                                        </div>
-                                        <Badge
-                                            variant="secondary"
-                                            className="text-sm"
-                                            aria-label={`${role.users_count} users assigned`}
-                                        >
-                                            {role.users_count}
-                                        </Badge>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex items-center justify-between">
-                                        <p className="text-sm text-muted-foreground">
-                                            {role.users_count} user
-                                            {role.users_count !== 1 ? 's' : ''}{' '}
-                                            assigned
-                                        </p>
-                                        <Link
-                                            href={route(
-                                                'admin.roles.show',
-                                                role.id,
-                                            )}
-                                            className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                        >
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                aria-label={`Manage users for ${roleDisplayNames[role.name] || role.name} role`}
-                                            >
-                                                <Eye
-                                                    className="mr-2 h-4 w-4"
-                                                    aria-hidden="true"
-                                                />
-                                                <span>Manage Users</span>
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))
-                    )}
+                    {isLoading
+                        ? // Show skeleton loaders while loading
+                          Array.from({ length: 6 }).map((_, i) => (
+                              <RoleCardSkeleton key={i} />
+                          ))
+                        : roles.map((role) => (
+                              <Card
+                                  key={role.id}
+                                  className="transition-shadow focus-within:ring-2 focus-within:ring-ring hover:shadow-md"
+                                  role="listitem"
+                              >
+                                  <CardHeader>
+                                      <div className="flex items-start justify-between">
+                                          <div className="flex-1">
+                                              <CardTitle className="flex items-center gap-2">
+                                                  <Users
+                                                      className="h-5 w-5"
+                                                      aria-hidden="true"
+                                                  />
+                                                  <span>
+                                                      {roleDisplayNames[
+                                                          role.name
+                                                      ] || role.name}
+                                                  </span>
+                                              </CardTitle>
+                                              <CardDescription className="mt-1">
+                                                  {role.name}
+                                              </CardDescription>
+                                          </div>
+                                          <Badge
+                                              variant="secondary"
+                                              className="text-sm"
+                                              aria-label={`${role.users_count} users assigned`}
+                                          >
+                                              {role.users_count}
+                                          </Badge>
+                                      </div>
+                                  </CardHeader>
+                                  <CardContent>
+                                      <div className="space-y-3">
+                                          <div className="flex items-center justify-between">
+                                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                                  <span className="flex items-center gap-1.5">
+                                                      <Users
+                                                          className="h-3.5 w-3.5"
+                                                          aria-hidden="true"
+                                                      />
+                                                      {role.users_count} user
+                                                      {role.users_count !== 1
+                                                          ? 's'
+                                                          : ''}{' '}
+                                                      assigned
+                                                  </span>
+                                                  {role.permissions_count !==
+                                                      undefined && (
+                                                      <span className="flex items-center gap-1.5">
+                                                          <Shield
+                                                              className="h-3.5 w-3.5"
+                                                              aria-hidden="true"
+                                                          />
+                                                          {
+                                                              role.permissions_count
+                                                          }{' '}
+                                                          permission
+                                                          {role.permissions_count !==
+                                                          1
+                                                              ? 's'
+                                                              : ''}
+                                                      </span>
+                                                  )}
+                                              </div>
+                                          </div>
+                                          <div className="flex gap-2">
+                                              <Link
+                                                  href={route(
+                                                      'admin.roles.show',
+                                                      {
+                                                          id: role.id,
+                                                          tab: 'users',
+                                                      },
+                                                  )}
+                                                  className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                              >
+                                                  <Button
+                                                      variant="outline"
+                                                      size="sm"
+                                                      className="flex-1"
+                                                      aria-label={`Manage users for ${roleDisplayNames[role.name] || role.name} role`}
+                                                  >
+                                                      <Eye
+                                                          className="mr-2 h-4 w-4"
+                                                          aria-hidden="true"
+                                                      />
+                                                      <span>Users</span>
+                                                  </Button>
+                                              </Link>
+                                              <Link
+                                                  href={route(
+                                                      'admin.roles.show',
+                                                      {
+                                                          id: role.id,
+                                                          tab: 'permissions',
+                                                      },
+                                                  )}
+                                                  className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                              >
+                                                  <Button
+                                                      variant="outline"
+                                                      size="sm"
+                                                      className="flex-1"
+                                                      aria-label={`Manage permissions for ${roleDisplayNames[role.name] || role.name} role`}
+                                                  >
+                                                      <Shield
+                                                          className="mr-2 h-4 w-4"
+                                                          aria-hidden="true"
+                                                      />
+                                                      <span>Permissions</span>
+                                                  </Button>
+                                              </Link>
+                                          </div>
+                                      </div>
+                                  </CardContent>
+                              </Card>
+                          ))}
                 </div>
 
                 {/* Summary */}

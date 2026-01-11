@@ -6,7 +6,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## 🚧 Active Tracks
 
-### [ ] RBAC Management
+### [~] RBAC Management
 **Description:** Role-Based Access Control dengan permission dinamis, granular, dan lengkap
 **Location:** [./conductor/tracks/rbac_20260111/](./conductor/tracks/rbac_20260111/)
 

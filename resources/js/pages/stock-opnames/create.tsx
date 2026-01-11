@@ -1,9 +1,12 @@
+import {
+    ItemPhotoCapture,
+    type CapturedPhoto,
+} from '@/components/stock-opname/item-photo-capture';
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, useForm } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
-import { ArrowLeft, Camera, Save, Plus, Trash2 } from 'lucide-react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, Camera, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { ItemPhotoCapture, type CapturedPhoto } from '@/components/stock-opname/item-photo-capture';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -83,7 +86,11 @@ export default function Create({ items }: CreateProps) {
         });
     };
 
-    const handleDetailChange = (index: number, field: string, value: string | number | CapturedPhoto[]) => {
+    const handleDetailChange = (
+        index: number,
+        field: string,
+        value: string | number | CapturedPhoto[],
+    ) => {
         const newDetails = [...data.details];
         newDetails[index] = { ...newDetails[index], [field]: value };
         setData('details', newDetails);
@@ -123,15 +130,24 @@ export default function Create({ items }: CreateProps) {
 
         data.details.forEach((detail, index) => {
             formData.append(`details[${index}][item_id]`, detail.item_id);
-            formData.append(`details[${index}][stok_sistem]`, detail.stok_sistem.toString());
-            formData.append(`details[${index}][stok_fisik]`, detail.stok_fisik.toString());
+            formData.append(
+                `details[${index}][stok_sistem]`,
+                detail.stok_sistem.toString(),
+            );
+            formData.append(
+                `details[${index}][stok_fisik]`,
+                detail.stok_fisik.toString(),
+            );
             formData.append(`details[${index}][keterangan]`, detail.keterangan);
 
             // Attach photos if any
             if (detail.photos && detail.photos.length > 0) {
                 detail.photos.forEach((photo) => {
                     if (photo.file instanceof File) {
-                        formData.append(`details[${index}][photos][]`, photo.file);
+                        formData.append(
+                            `details[${index}][photos][]`,
+                            photo.file,
+                        );
                     }
                 });
             }
@@ -163,48 +179,71 @@ export default function Create({ items }: CreateProps) {
                         Kembali
                     </Link>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Buat Stock Opname</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Buat Stock Opname
+                        </h1>
                         <p className="text-muted-foreground">
                             Input hasil hitung fisik barang
                         </p>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-1 flex-col gap-6">
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-1 flex-col gap-6"
+                >
                     {/* Informasi Stock Opname */}
                     <div className="rounded-xl border bg-card p-6">
-                        <h2 className="mb-4 text-lg font-semibold">Informasi Stock Opname</h2>
+                        <h2 className="mb-4 text-lg font-semibold">
+                            Informasi Stock Opname
+                        </h2>
 
                         <div className="grid gap-4 md:grid-cols-3">
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="tanggal" className="text-sm font-medium">
-                                    Tanggal Stock Opname <span className="text-red-500">*</span>
+                                <label
+                                    htmlFor="tanggal"
+                                    className="text-sm font-medium"
+                                >
+                                    Tanggal Stock Opname{' '}
+                                    <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="tanggal"
                                     type="date"
                                     value={data.tanggal}
-                                    onChange={(e) => setData('tanggal', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('tanggal', e.target.value)
+                                    }
                                     className={`rounded-md border bg-background px-3 py-2 ${
                                         errors.tanggal ? 'border-red-500' : ''
                                     }`}
                                     required
                                 />
                                 {errors.tanggal && (
-                                    <p className="text-xs text-red-500">{errors.tanggal}</p>
+                                    <p className="text-xs text-red-500">
+                                        {errors.tanggal}
+                                    </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="bulan" className="text-sm font-medium">
-                                    Periode Bulan <span className="text-red-500">*</span>
+                                <label
+                                    htmlFor="bulan"
+                                    className="text-sm font-medium"
+                                >
+                                    Periode Bulan{' '}
+                                    <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     id="bulan"
                                     value={data.periode_bulan}
-                                    onChange={(e) => setData('periode_bulan', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('periode_bulan', e.target.value)
+                                    }
                                     className={`rounded-md border bg-background px-3 py-2 ${
-                                        errors.periode_bulan ? 'border-red-500' : ''
+                                        errors.periode_bulan
+                                            ? 'border-red-500'
+                                            : ''
                                     }`}
                                     required
                                 >
@@ -222,39 +261,59 @@ export default function Create({ items }: CreateProps) {
                                     <option value="Desember">Desember</option>
                                 </select>
                                 {errors.periode_bulan && (
-                                    <p className="text-xs text-red-500">{errors.periode_bulan}</p>
+                                    <p className="text-xs text-red-500">
+                                        {errors.periode_bulan}
+                                    </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="tahun" className="text-sm font-medium">
-                                    Periode Tahun <span className="text-red-500">*</span>
+                                <label
+                                    htmlFor="tahun"
+                                    className="text-sm font-medium"
+                                >
+                                    Periode Tahun{' '}
+                                    <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     id="tahun"
                                     type="number"
                                     value={data.periode_tahun}
-                                    onChange={(e) => setData('periode_tahun', parseInt(e.target.value))}
+                                    onChange={(e) =>
+                                        setData(
+                                            'periode_tahun',
+                                            parseInt(e.target.value),
+                                        )
+                                    }
                                     min="2020"
                                     max="2100"
                                     className={`rounded-md border bg-background px-3 py-2 ${
-                                        errors.periode_tahun ? 'border-red-500' : ''
+                                        errors.periode_tahun
+                                            ? 'border-red-500'
+                                            : ''
                                     }`}
                                     required
                                 />
                                 {errors.periode_tahun && (
-                                    <p className="text-xs text-red-500">{errors.periode_tahun}</p>
+                                    <p className="text-xs text-red-500">
+                                        {errors.periode_tahun}
+                                    </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-2 md:col-span-3">
-                                <label htmlFor="keterangan" className="text-sm font-medium">
+                                <label
+                                    htmlFor="keterangan"
+                                    className="text-sm font-medium"
+                                >
                                     Keterangan
                                 </label>
                                 <textarea
                                     id="keterangan"
                                     value={data.keterangan}
-                                    onChange={(e) => setData('keterangan', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('keterangan', e.target.value)
+                                    }
                                     rows={3}
                                     className="rounded-md border bg-background px-3 py-2"
                                     placeholder="Catatan tambahan..."
@@ -265,17 +324,29 @@ export default function Create({ items }: CreateProps) {
 
                     {/* Pilih Barang */}
                     <div className="rounded-xl border bg-card p-6">
-                        <h2 className="mb-4 text-lg font-semibold">Tambah Barang</h2>
+                        <h2 className="mb-4 text-lg font-semibold">
+                            Tambah Barang
+                        </h2>
 
                         <div className="mb-4 max-h-64 overflow-y-auto rounded-md border">
                             <table className="w-full text-sm">
                                 <thead className="bg-muted/50">
                                     <tr>
-                                        <th className="px-4 py-2 text-left font-medium">Kode</th>
-                                        <th className="px-4 py-2 text-left font-medium">Nama Barang</th>
-                                        <th className="px-4 py-2 text-left font-medium">Kategori</th>
-                                        <th className="px-4 py-2 text-center font-medium">Stok</th>
-                                        <th className="px-4 py-2 text-center font-medium">Aksi</th>
+                                        <th className="px-4 py-2 text-left font-medium">
+                                            Kode
+                                        </th>
+                                        <th className="px-4 py-2 text-left font-medium">
+                                            Nama Barang
+                                        </th>
+                                        <th className="px-4 py-2 text-left font-medium">
+                                            Kategori
+                                        </th>
+                                        <th className="px-4 py-2 text-center font-medium">
+                                            Stok
+                                        </th>
+                                        <th className="px-4 py-2 text-center font-medium">
+                                            Aksi
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -290,15 +361,30 @@ export default function Create({ items }: CreateProps) {
                                         </tr>
                                     ) : (
                                         availableItems.map((item) => (
-                                            <tr key={item.id} className="border-t">
-                                                <td className="px-4 py-2">{item.kode_barang}</td>
-                                                <td className="px-4 py-2">{item.nama_barang}</td>
-                                                <td className="px-4 py-2">{item.kategori}</td>
-                                                <td className="px-4 py-2 text-center">{item.stok}</td>
+                                            <tr
+                                                key={item.id}
+                                                className="border-t"
+                                            >
+                                                <td className="px-4 py-2">
+                                                    {item.kode_barang}
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    {item.nama_barang}
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    {item.kategori}
+                                                </td>
+                                                <td className="px-4 py-2 text-center">
+                                                    {item.stok}
+                                                </td>
                                                 <td className="px-4 py-2 text-center">
                                                     <button
                                                         type="button"
-                                                        onClick={() => handleAddItem(item.id)}
+                                                        onClick={() =>
+                                                            handleAddItem(
+                                                                item.id,
+                                                            )
+                                                        }
                                                         className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                                                     >
                                                         <Plus className="h-3 w-3" />
@@ -316,45 +402,74 @@ export default function Create({ items }: CreateProps) {
                     {/* Daftar Barang Stock Opname */}
                     {data.details.length > 0 && (
                         <div className="rounded-xl border bg-card p-6">
-                            <h2 className="mb-4 text-lg font-semibold">Daftar Barang</h2>
+                            <h2 className="mb-4 text-lg font-semibold">
+                                Daftar Barang
+                            </h2>
 
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead className="bg-muted/50">
                                         <tr>
-                                            <th className="px-4 py-2 text-left font-medium">Barang</th>
+                                            <th className="px-4 py-2 text-left font-medium">
+                                                Barang
+                                            </th>
                                             <th className="px-4 py-2 text-center font-medium">
                                                 Stok Sistem
                                             </th>
                                             <th className="px-4 py-2 text-center font-medium">
                                                 Stok Fisik
                                             </th>
-                                            <th className="px-4 py-2 text-center font-medium">Selisih</th>
-                                            <th className="px-4 py-2 text-left font-medium">Keterangan</th>
-                                            <th className="px-4 py-2 text-center font-medium">Foto</th>
-                                            <th className="px-4 py-2 text-center font-medium">Aksi</th>
+                                            <th className="px-4 py-2 text-center font-medium">
+                                                Selisih
+                                            </th>
+                                            <th className="px-4 py-2 text-left font-medium">
+                                                Keterangan
+                                            </th>
+                                            <th className="px-4 py-2 text-center font-medium">
+                                                Foto
+                                            </th>
+                                            <th className="px-4 py-2 text-center font-medium">
+                                                Aksi
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.details.map((detail, index) => {
-                                            const item = items.find((i) => i.id === detail.item_id);
-                                            const selisih = calculateSelisih(index);
-                                            const isExpanded = expandedItems.has(index);
-                                            const hasPhotos = detail.photos && detail.photos.length > 0;
+                                            const item = items.find(
+                                                (i) => i.id === detail.item_id,
+                                            );
+                                            const selisih =
+                                                calculateSelisih(index);
+                                            const isExpanded =
+                                                expandedItems.has(index);
+                                            const hasPhotos =
+                                                detail.photos &&
+                                                detail.photos.length > 0;
 
                                             return (
                                                 <>
-                                                    <tr key={index} className="border-t">
+                                                    <tr
+                                                        key={index}
+                                                        className="border-t"
+                                                    >
                                                         <td className="px-4 py-2">
-                                                            <div className="font-medium">{item?.nama_barang}</div>
+                                                            <div className="font-medium">
+                                                                {
+                                                                    item?.nama_barang
+                                                                }
+                                                            </div>
                                                             <div className="text-xs text-muted-foreground">
-                                                                {item?.kode_barang}
+                                                                {
+                                                                    item?.kode_barang
+                                                                }
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-2 text-center">
                                                             <input
                                                                 type="number"
-                                                                value={detail.stok_sistem}
+                                                                value={
+                                                                    detail.stok_sistem
+                                                                }
                                                                 readOnly
                                                                 className="w-20 rounded-md border bg-muted px-2 py-1 text-center"
                                                             />
@@ -362,12 +477,18 @@ export default function Create({ items }: CreateProps) {
                                                         <td className="px-4 py-2 text-center">
                                                             <input
                                                                 type="number"
-                                                                value={detail.stok_fisik}
+                                                                value={
+                                                                    detail.stok_fisik
+                                                                }
                                                                 onChange={(e) =>
                                                                     handleDetailChange(
                                                                         index,
                                                                         'stok_fisik',
-                                                                        parseInt(e.target.value) || 0
+                                                                        parseInt(
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        ) || 0,
                                                                     )
                                                                 }
                                                                 className="w-20 rounded-md border bg-background px-2 py-1 text-center"
@@ -380,21 +501,30 @@ export default function Create({ items }: CreateProps) {
                                                                 className={
                                                                     selisih > 0
                                                                         ? 'text-green-600 dark:text-green-400'
-                                                                        : selisih < 0
+                                                                        : selisih <
+                                                                            0
                                                                           ? 'text-red-600 dark:text-red-400'
                                                                           : ''
                                                                 }
                                                             >
-                                                                {selisih > 0 && '+'}
+                                                                {selisih > 0 &&
+                                                                    '+'}
                                                                 {selisih}
                                                             </span>
                                                         </td>
                                                         <td className="px-4 py-2">
                                                             <input
                                                                 type="text"
-                                                                value={detail.keterangan}
+                                                                value={
+                                                                    detail.keterangan
+                                                                }
                                                                 onChange={(e) =>
-                                                                    handleDetailChange(index, 'keterangan', e.target.value)
+                                                                    handleDetailChange(
+                                                                        index,
+                                                                        'keterangan',
+                                                                        e.target
+                                                                            .value,
+                                                                    )
                                                                 }
                                                                 className="w-full rounded-md border bg-background px-2 py-1"
                                                                 placeholder="Keterangan selisih..."
@@ -403,17 +533,27 @@ export default function Create({ items }: CreateProps) {
                                                         <td className="px-4 py-2 text-center">
                                                             <button
                                                                 type="button"
-                                                                onClick={() => toggleItemExpanded(index)}
+                                                                onClick={() =>
+                                                                    toggleItemExpanded(
+                                                                        index,
+                                                                    )
+                                                                }
                                                                 className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
                                                             >
                                                                 <Camera className="h-3 w-3" />
-                                                                {hasPhotos ? `(${detail.photos.length})` : 'Tambah'}
+                                                                {hasPhotos
+                                                                    ? `(${detail.photos.length})`
+                                                                    : 'Tambah'}
                                                             </button>
                                                         </td>
                                                         <td className="px-4 py-2 text-center">
                                                             <button
                                                                 type="button"
-                                                                onClick={() => handleRemoveItem(index)}
+                                                                onClick={() =>
+                                                                    handleRemoveItem(
+                                                                        index,
+                                                                    )
+                                                                }
                                                                 className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700"
                                                             >
                                                                 <Trash2 className="h-3 w-3" />
@@ -424,17 +564,32 @@ export default function Create({ items }: CreateProps) {
                                                     {/* Expandable Photo Row */}
                                                     {isExpanded && (
                                                         <tr className="border-t bg-muted/30">
-                                                            <td colSpan={7} className="px-4 py-4">
+                                                            <td
+                                                                colSpan={7}
+                                                                className="px-4 py-4"
+                                                            >
                                                                 <div className="max-w-2xl">
                                                                     <h4 className="mb-3 text-sm font-medium">
-                                                                        Foto Dokumentasi Barang
+                                                                        Foto
+                                                                        Dokumentasi
+                                                                        Barang
                                                                     </h4>
                                                                     <ItemPhotoCapture
-                                                                        photos={detail.photos}
-                                                                        onPhotosChange={(photos) =>
-                                                                            handleDetailChange(index, 'photos', photos)
+                                                                        photos={
+                                                                            detail.photos
                                                                         }
-                                                                        maxPhotos={3}
+                                                                        onPhotosChange={(
+                                                                            photos,
+                                                                        ) =>
+                                                                            handleDetailChange(
+                                                                                index,
+                                                                                'photos',
+                                                                                photos,
+                                                                            )
+                                                                        }
+                                                                        maxPhotos={
+                                                                            3
+                                                                        }
                                                                     />
                                                                 </div>
                                                             </td>
@@ -467,7 +622,9 @@ export default function Create({ items }: CreateProps) {
                             className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             <Save className="h-4 w-4" />
-                            {processing ? 'Menyimpan...' : 'Simpan Stock Opname'}
+                            {processing
+                                ? 'Menyimpan...'
+                                : 'Simpan Stock Opname'}
                         </button>
                     </div>
                 </form>

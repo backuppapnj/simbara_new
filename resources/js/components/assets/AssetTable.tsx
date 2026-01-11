@@ -1,8 +1,8 @@
 import { DataTable, type Column } from '@/components/enhanced/data-table';
-import { Link } from '@inertiajs/react';
 import { Badge } from '@/components/ui/badge';
-import { Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from '@inertiajs/react';
+import { Eye } from 'lucide-react';
 
 interface Location {
     id: string;
@@ -58,9 +58,11 @@ const columns: Column<Asset>[] = [
         sortable: true,
         cell: (asset) => (
             <div className="max-w-md">
-                <div className="font-medium truncate">{asset.nama || '-'}</div>
+                <div className="truncate font-medium">{asset.nama || '-'}</div>
                 {asset.merk && (
-                    <div className="text-xs text-muted-foreground truncate">{asset.merk}</div>
+                    <div className="truncate text-xs text-muted-foreground">
+                        {asset.merk}
+                    </div>
                 )}
             </div>
         ),
@@ -71,16 +73,23 @@ const columns: Column<Asset>[] = [
         accessor: 'location',
         cell: (asset) => {
             if (!asset.location) {
-                return <span className="text-muted-foreground">{asset.lokasi_ruang || '-'}</span>;
+                return (
+                    <span className="text-muted-foreground">
+                        {asset.lokasi_ruang || '-'}
+                    </span>
+                );
             }
 
             return (
                 <div className="text-sm">
-                    <div className="font-medium">{asset.location.nama_ruangan}</div>
+                    <div className="font-medium">
+                        {asset.location.nama_ruangan}
+                    </div>
                     {asset.location.gedung && (
                         <div className="text-xs text-muted-foreground">
                             {asset.location.gedung}
-                            {asset.location.lantai !== null && ` - Lantai ${asset.location.lantai}`}
+                            {asset.location.lantai !== null &&
+                                ` - Lantai ${asset.location.lantai}`}
                         </div>
                     )}
                 </div>
@@ -93,12 +102,18 @@ const columns: Column<Asset>[] = [
         accessor: 'kd_kondisi',
         sortable: true,
         cell: (asset) => {
-            if (!asset.kd_kondisi) return <span className="text-muted-foreground">-</span>;
+            if (!asset.kd_kondisi)
+                return <span className="text-muted-foreground">-</span>;
 
-            const colorClass = conditionColors[asset.kd_kondisi] || 'bg-gray-100 text-gray-800 border-gray-200';
+            const colorClass =
+                conditionColors[asset.kd_kondisi] ||
+                'bg-gray-100 text-gray-800 border-gray-200';
 
             return (
-                <Badge variant="outline" className={cn('font-normal', colorClass)}>
+                <Badge
+                    variant="outline"
+                    className={cn('font-normal', colorClass)}
+                >
                     {asset.ur_kondisi || asset.kd_kondisi}
                 </Badge>
             );
@@ -110,7 +125,9 @@ const columns: Column<Asset>[] = [
         accessor: 'rph_aset',
         sortable: true,
         cell: (asset) => (
-            <span className="font-medium tabular-nums">{formatRupiah(asset.rph_aset)}</span>
+            <span className="font-medium tabular-nums">
+                {formatRupiah(asset.rph_aset)}
+            </span>
         ),
     },
     {
@@ -120,7 +137,7 @@ const columns: Column<Asset>[] = [
         cell: (asset) => (
             <Link
                 href={route('assets.show', asset.id)}
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
             >
                 <Eye className="h-4 w-4" />
                 <span className="sr-only">Lihat Detail</span>
@@ -130,7 +147,11 @@ const columns: Column<Asset>[] = [
     },
 ];
 
-export default function AssetTable({ assets, isLoading, onRowClick }: AssetTableProps) {
+export default function AssetTable({
+    assets,
+    isLoading,
+    onRowClick,
+}: AssetTableProps) {
     return (
         <DataTable
             data={assets}

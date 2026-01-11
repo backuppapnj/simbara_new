@@ -1,3 +1,4 @@
+import PermissionList from '@/components/Admin/Roles/PermissionList';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,23 +21,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import {
-    Head,
-    Link,
-    router,
-    useForm,
-    usePage,
-}from '@inertiajs/react';
-import {
+    AlertTriangle,
     ArrowLeft,
     CheckCircle2,
     Loader2,
     Save,
     Search,
+    Shield,
     Users,
-    AlertTriangle,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
+type TabValue = 'users' | 'permissions';
 
 interface User {
     id: number;
@@ -50,6 +48,20 @@ interface Role {
     id: number;
     name: string;
     users_count: number;
+    permissions_count?: number;
+}
+
+interface Permission {
+    id: number;
+    name: string;
+    module: string;
+    description: string | null;
+    assigned: boolean;
+}
+
+interface PermissionGroup {
+    module: string;
+    permissions: Permission[];
 }
 
 interface PaginatedUsers {
@@ -63,20 +75,36 @@ interface PaginatedUsers {
 interface Filters {
     search?: string;
     is_active?: string;
+    tab?: string;
 }
 
 interface ShowProps {
     role: Role;
     users: PaginatedUsers;
+    permissions?: {
+        groups: PermissionGroup[];
+        all: Permission[];
+    };
     filters: Filters;
 }
 
-export default function RoleShow({ role, users, filters }: ShowProps) {
+export default function RoleShow({
+    role,
+    users,
+    permissions,
+    filters,
+}: ShowProps) {
     const { props } = usePage();
+    const [activeTab, setActiveTab] = useState<TabValue>(
+        (filters.tab as TabValue) || 'users',
+    );
     const [searchQuery, setSearchQuery] = useState(filters.search || '');
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>(
         users.data.filter((u) => u.has_role).map((u) => u.id),
     );
+    const [selectedPermissionIds, setSelectedPermissionIds] = useState<
+        number[]
+    >(permissions?.all.filter((p) => p.assigned).map((p) => p.id) || []);
     const [showSuccessToast, setShowSuccessToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -86,6 +114,7 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
     // Initialize form with Inertia's useForm
     const form = useForm({
         user_ids: selectedUserIds,
+        permission_ids: selectedPermissionIds,
     });
 
     // Update form when selection changes
@@ -93,12 +122,29 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
         form.setData('user_ids', selectedUserIds);
     }, [selectedUserIds]);
 
+    useEffect(() => {
+        form.setData('permission_ids', selectedPermissionIds);
+    }, [selectedPermissionIds]);
+
+    // Handle tab change
+    const handleTabChange = (tab: TabValue) => {
+        setActiveTab(tab);
+        router.get(
+            route('admin.roles.show', role.id),
+            { ...filters, tab },
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
+    };
+
     // Handle search debouncing
     useEffect(() => {
         const timer = setTimeout(() => {
             router.get(
                 route('admin.roles.show', role.id),
-                { ...filters, search: searchQuery },
+                { ...filters, tab: activeTab, search: searchQuery },
                 {
                     preserveState: true,
                     preserveScroll: true,
@@ -153,6 +199,40 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
         setUsersToRemove([]);
     };
 
+    // Handle permission toggle
+    const handleTogglePermission = (permissionId: number, checked: boolean) => {
+        if (checked) {
+            setSelectedPermissionIds((prev) => [...prev, permissionId]);
+        } else {
+            setSelectedPermissionIds((prev) =>
+                prev.filter((id) => id !== permissionId),
+            );
+        }
+    };
+
+    // Handle module toggle
+    const handleToggleModule = (module: string, checked: boolean) => {
+        if (!permissions) return;
+
+        const modulePermissions = permissions.groups.find(
+            (g) => g.module === module,
+        )?.permissions;
+
+        if (!modulePermissions) return;
+
+        if (checked) {
+            const moduleIds = modulePermissions.map((p) => p.id);
+            setSelectedPermissionIds((prev) => [
+                ...new Set([...prev, ...moduleIds]),
+            ]);
+        } else {
+            const moduleIds = modulePermissions.map((p) => p.id);
+            setSelectedPermissionIds((prev) =>
+                prev.filter((id) => !moduleIds.includes(id)),
+            );
+        }
+    };
+
     // Check if all users on current page are selected
     const allSelected =
         users.data.length > 0 &&
@@ -164,9 +244,15 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
         e.preventDefault();
         setIsLoading(true);
 
-        form.put(route('admin.roles.update-users', role.id), {
+        const routeName =
+            activeTab === 'users'
+                ? 'admin.roles.update-users'
+                : 'admin.roles.sync-permissions';
+
+        form.put(route(routeName, role.id), {
             onSuccess: () => {
-                setToastMessage('Role assignments updated successfully!');
+                const tabName = activeTab === 'users' ? 'User' : 'Permission';
+                setToastMessage(`${tabName} assignments updated successfully!`);
                 setShowSuccessToast(true);
                 setIsLoading(false);
                 setTimeout(() => setShowSuccessToast(false), 3000);
@@ -184,7 +270,7 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
     function UserRowSkeleton() {
         return (
             <div
-                className="flex items-center space-x-3 rounded-md border p-3 animate-pulse"
+                className="flex animate-pulse items-center space-x-3 rounded-md border p-3"
                 aria-hidden="true"
             >
                 <div className="h-4 w-4 rounded bg-muted" />
@@ -232,9 +318,11 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
                             </Button>
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold">Role: {role.name}</h1>
+                            <h1 className="text-2xl font-bold">
+                                Role: {role.name}
+                            </h1>
                             <p className="text-sm text-muted-foreground">
-                                Manage users assigned to this role
+                                Manage users and permissions for this role
                             </p>
                         </div>
                     </div>
@@ -246,202 +334,360 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="flex items-center gap-2">
-                                    <Users className="h-5 w-5" aria-hidden="true" />
+                                    <Users
+                                        className="h-5 w-5"
+                                        aria-hidden="true"
+                                    />
                                     <span>{role.name}</span>
                                 </CardTitle>
-                                <CardDescription>
-                                    {role.users_count} user
-                                    {role.users_count !== 1 ? 's' : ''}{' '}
-                                    currently assigned
+                                <CardDescription className="mt-2 flex items-center gap-4">
+                                    <span className="flex items-center gap-1.5">
+                                        <Users
+                                            className="h-3.5 w-3.5"
+                                            aria-hidden="true"
+                                        />
+                                        {role.users_count} user
+                                        {role.users_count !== 1 ? 's' : ''}{' '}
+                                        assigned
+                                    </span>
+                                    {role.permissions_count !== undefined && (
+                                        <span className="flex items-center gap-1.5">
+                                            <Shield
+                                                className="h-3.5 w-3.5"
+                                                aria-hidden="true"
+                                            />
+                                            {role.permissions_count} permission
+                                            {role.permissions_count !== 1
+                                                ? 's'
+                                                : ''}
+                                        </span>
+                                    )}
                                 </CardDescription>
                             </div>
                             <Badge
                                 variant="secondary"
                                 className="text-sm"
-                                aria-label={`${selectedUserIds.length} users selected`}
+                                aria-label={`${
+                                    activeTab === 'users'
+                                        ? selectedUserIds.length
+                                        : selectedPermissionIds.length
+                                } ${activeTab} selected`}
                             >
-                                {selectedUserIds.length} selected
+                                {activeTab === 'users'
+                                    ? `${selectedUserIds.length} users`
+                                    : `${selectedPermissionIds.length} permissions`}{' '}
+                                selected
                             </Badge>
                         </div>
                     </CardHeader>
                 </Card>
 
-                {/* User Management Form */}
-                <form onSubmit={handleSubmit}>
-                    <Card>
-                        <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <CardTitle>User Assignments</CardTitle>
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        type="submit"
-                                        disabled={form.processing || isLoading}
-                                        aria-busy={form.processing || isLoading}
-                                    >
-                                        {form.processing || isLoading ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                Saving...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Save
-                                                    className="mr-2 h-4 w-4"
-                                                    aria-hidden="true"
-                                                />
-                                                <span>Save Changes</span>
-                                            </>
-                                        )}
-                                    </Button>
-                                </div>
-                            </div>
-                            <CardDescription>
-                                Select users to assign this role. Changes will be
-                                saved immediately.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            {/* Search */}
-                            <div className="mb-4">
-                                <div className="relative">
-                                    <Search
-                                        className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                                        aria-hidden="true"
-                                    />
-                                    <Input
-                                        type="search"
-                                        id="user-search"
-                                        placeholder="Search by name, email, or NIP..."
-                                        value={searchQuery}
-                                        onChange={(e) =>
-                                            setSearchQuery(e.target.value)
-                                        }
-                                        className="pl-10"
-                                        aria-label="Search users by name, email, or NIP"
-                                    />
-                                </div>
-                            </div>
+                {/* Tabs */}
+                <div className="border-b">
+                    <div className="flex gap-4" role="tablist">
+                        <button
+                            type="button"
+                            role="tab"
+                            aria-selected={activeTab === 'users'}
+                            aria-controls="users-panel"
+                            id="users-tab"
+                            className={`-mb-px border-b-2 px-4 py-2 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                                activeTab === 'users'
+                                    ? 'border-primary text-primary'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                            }`}
+                            onClick={() => handleTabChange('users')}
+                        >
+                            <Users
+                                className="mr-2 inline h-4 w-4"
+                                aria-hidden="true"
+                            />
+                            Users
+                        </button>
+                        <button
+                            type="button"
+                            role="tab"
+                            aria-selected={activeTab === 'permissions'}
+                            aria-controls="permissions-panel"
+                            id="permissions-tab"
+                            className={`-mb-px border-b-2 px-4 py-2 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                                activeTab === 'permissions'
+                                    ? 'border-primary text-primary'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                            }`}
+                            onClick={() => handleTabChange('permissions')}
+                        >
+                            <Shield
+                                className="mr-2 inline h-4 w-4"
+                                aria-hidden="true"
+                            />
+                            Permissions
+                        </button>
+                    </div>
+                </div>
 
-                            {/* Select All Checkbox */}
-                            <div
-                                className="mb-4 flex items-center space-x-2 rounded-md border p-3"
-                                role="region"
-                                aria-label="Select all users"
-                            >
-                                <Checkbox
-                                    id="select-all"
-                                    checked={allSelected}
-                                    onCheckedChange={(checked) =>
-                                        handleSelectAll(checked === true)
-                                    }
-                                    className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-                                    aria-label={
-                                        allSelected
-                                            ? 'Deselect all users'
-                                            : 'Select all users'
-                                    }
-                                />
-                                <Label
-                                    htmlFor="select-all"
-                                    className="cursor-pointer font-medium"
-                                >
-                                    {allSelected
-                                        ? 'Deselect All'
-                                        : someSelected
-                                          ? 'Select All (Partial)'
-                                          : 'Select All'}
-                                </Label>
-                                <span className="ml-auto text-sm text-muted-foreground">
-                                    {selectedUserIds.length} of {users.total}{' '}
-                                    users selected
-                                </span>
-                            </div>
-
-                            {/* User List */}
-                            <div
-                                className="space-y-2"
-                                role="listbox"
-                                aria-label="Users list"
-                            >
-                                {isLoading ? (
-                                    // Show skeleton loaders while loading
-                                    Array.from({ length: 5 }).map((_, i) => (
-                                        <UserRowSkeleton key={i} />
-                                    ))
-                                ) : users.data.length === 0 ? (
-                                    <div className="flex items-center justify-center rounded-md border border-dashed p-8">
-                                        <div className="text-center">
-                                            <p className="text-sm text-muted-foreground">
-                                                {searchQuery
-                                                    ? 'No users found matching your search.'
-                                                    : 'No users available.'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    users.data.map((user) => (
-                                        <div
-                                            key={user.id}
-                                            className="flex items-center space-x-3 rounded-md border p-3 transition-colors hover:bg-muted/50 focus-within:ring-2 focus-within:ring-ring"
-                                            role="option"
-                                            aria-selected={selectedUserIds.includes(
-                                                user.id,
-                                            )}
+                {/* Tab Panels */}
+                {activeTab === 'users' ? (
+                    <form
+                        onSubmit={handleSubmit}
+                        role="tabpanel"
+                        id="users-panel"
+                        aria-labelledby="users-tab"
+                    >
+                        <Card>
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <CardTitle>User Assignments</CardTitle>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            type="submit"
+                                            disabled={
+                                                form.processing || isLoading
+                                            }
+                                            aria-busy={
+                                                form.processing || isLoading
+                                            }
                                         >
-                                            <Checkbox
-                                                id={`user-${user.id}`}
-                                                checked={selectedUserIds.includes(
+                                            {form.processing || isLoading ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                    Saving...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Save
+                                                        className="mr-2 h-4 w-4"
+                                                        aria-hidden="true"
+                                                    />
+                                                    <span>Save Changes</span>
+                                                </>
+                                            )}
+                                        </Button>
+                                    </div>
+                                </div>
+                                <CardDescription>
+                                    Select users to assign this role. Changes
+                                    will be saved immediately.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {/* Search */}
+                                <div className="mb-4">
+                                    <div className="relative">
+                                        <Search
+                                            className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                            aria-hidden="true"
+                                        />
+                                        <Input
+                                            type="search"
+                                            id="user-search"
+                                            placeholder="Search by name, email, or NIP..."
+                                            value={searchQuery}
+                                            onChange={(e) =>
+                                                setSearchQuery(e.target.value)
+                                            }
+                                            className="pl-10"
+                                            aria-label="Search users by name, email, or NIP"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Select All Checkbox */}
+                                <div
+                                    className="mb-4 flex items-center space-x-2 rounded-md border p-3"
+                                    role="region"
+                                    aria-label="Select all users"
+                                >
+                                    <Checkbox
+                                        id="select-all"
+                                        checked={allSelected}
+                                        onCheckedChange={(checked) =>
+                                            handleSelectAll(checked === true)
+                                        }
+                                        className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                                        aria-label={
+                                            allSelected
+                                                ? 'Deselect all users'
+                                                : 'Select all users'
+                                        }
+                                    />
+                                    <Label
+                                        htmlFor="select-all"
+                                        className="cursor-pointer font-medium"
+                                    >
+                                        {allSelected
+                                            ? 'Deselect All'
+                                            : someSelected
+                                              ? 'Select All (Partial)'
+                                              : 'Select All'}
+                                    </Label>
+                                    <span className="ml-auto text-sm text-muted-foreground">
+                                        {selectedUserIds.length} of{' '}
+                                        {users.total} users selected
+                                    </span>
+                                </div>
+
+                                {/* User List */}
+                                <div
+                                    className="space-y-2"
+                                    role="listbox"
+                                    aria-label="Users list"
+                                >
+                                    {isLoading ? (
+                                        // Show skeleton loaders while loading
+                                        Array.from({ length: 5 }).map(
+                                            (_, i) => (
+                                                <UserRowSkeleton key={i} />
+                                            ),
+                                        )
+                                    ) : users.data.length === 0 ? (
+                                        <div className="flex items-center justify-center rounded-md border border-dashed p-8">
+                                            <div className="text-center">
+                                                <p className="text-sm text-muted-foreground">
+                                                    {searchQuery
+                                                        ? 'No users found matching your search.'
+                                                        : 'No users available.'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        users.data.map((user) => (
+                                            <div
+                                                key={user.id}
+                                                className="flex items-center space-x-3 rounded-md border p-3 transition-colors focus-within:ring-2 focus-within:ring-ring hover:bg-muted/50"
+                                                role="option"
+                                                aria-selected={selectedUserIds.includes(
                                                     user.id,
                                                 )}
-                                                onCheckedChange={(checked) =>
-                                                    handleToggleUser(
+                                            >
+                                                <Checkbox
+                                                    id={`user-${user.id}`}
+                                                    checked={selectedUserIds.includes(
                                                         user.id,
-                                                        checked === true,
-                                                    )
-                                                }
-                                                className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-                                                aria-label={`Toggle ${role.name} role for ${user.name}`}
-                                            />
-                                            <div className="flex-1 min-w-0">
-                                                <Label
-                                                    htmlFor={`user-${user.id}`}
-                                                    className="cursor-pointer font-medium truncate block"
-                                                >
-                                                    {user.name}
-                                                </Label>
-                                                <div className="flex flex-col gap-1 text-sm text-muted-foreground sm:flex-row sm:gap-4">
-                                                    <span className="truncate">{user.email}</span>
-                                                    {user.nip && (
-                                                        <span>
-                                                            NIP: {user.nip}
-                                                        </span>
                                                     )}
-                                                </div>
-                                            </div>
-                                            {selectedUserIds.includes(
-                                                user.id,
-                                            ) && (
-                                                <CheckCircle2
-                                                    className="h-5 w-5 text-green-500 shrink-0"
-                                                    aria-hidden="true"
+                                                    onCheckedChange={(
+                                                        checked,
+                                                    ) =>
+                                                        handleToggleUser(
+                                                            user.id,
+                                                            checked === true,
+                                                        )
+                                                    }
+                                                    className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                                                    aria-label={`Toggle ${role.name} role for ${user.name}`}
                                                 />
-                                            )}
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-
-                            {/* Pagination Info */}
-                            {users.total > users.per_page && (
-                                <div className="mt-4 rounded-md border p-3 text-center text-sm text-muted-foreground">
-                                    Showing {users.data.length} of {users.total}{' '}
-                                    users (Page {users.current_page} of{' '}
-                                    {users.last_page})
+                                                <div className="min-w-0 flex-1">
+                                                    <Label
+                                                        htmlFor={`user-${user.id}`}
+                                                        className="block cursor-pointer truncate font-medium"
+                                                    >
+                                                        {user.name}
+                                                    </Label>
+                                                    <div className="flex flex-col gap-1 text-sm text-muted-foreground sm:flex-row sm:gap-4">
+                                                        <span className="truncate">
+                                                            {user.email}
+                                                        </span>
+                                                        {user.nip && (
+                                                            <span>
+                                                                NIP: {user.nip}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {selectedUserIds.includes(
+                                                    user.id,
+                                                ) && (
+                                                    <CheckCircle2
+                                                        className="h-5 w-5 shrink-0 text-green-500"
+                                                        aria-hidden="true"
+                                                    />
+                                                )}
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                </form>
+
+                                {/* Pagination Info */}
+                                {users.total > users.per_page && (
+                                    <div className="mt-4 rounded-md border p-3 text-center text-sm text-muted-foreground">
+                                        Showing {users.data.length} of{' '}
+                                        {users.total} users (Page{' '}
+                                        {users.current_page} of{' '}
+                                        {users.last_page})
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </form>
+                ) : (
+                    <form
+                        onSubmit={handleSubmit}
+                        role="tabpanel"
+                        id="permissions-panel"
+                        aria-labelledby="permissions-tab"
+                    >
+                        <Card>
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <CardTitle>
+                                        Permission Assignments
+                                    </CardTitle>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            type="submit"
+                                            disabled={
+                                                form.processing || isLoading
+                                            }
+                                            aria-busy={
+                                                form.processing || isLoading
+                                            }
+                                        >
+                                            {form.processing || isLoading ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                    Saving...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Save
+                                                        className="mr-2 h-4 w-4"
+                                                        aria-hidden="true"
+                                                    />
+                                                    <span>Save Changes</span>
+                                                </>
+                                            )}
+                                        </Button>
+                                    </div>
+                                </div>
+                                <CardDescription>
+                                    Select permissions to grant to this role.
+                                    Changes will be saved immediately.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {permissions ? (
+                                    <PermissionList
+                                        groups={permissions.groups}
+                                        selectedPermissionIds={
+                                            selectedPermissionIds
+                                        }
+                                        onPermissionToggle={
+                                            handleTogglePermission
+                                        }
+                                        onModuleToggle={handleToggleModule}
+                                        readOnly={false}
+                                    />
+                                ) : (
+                                    <div className="flex items-center justify-center rounded-md border border-dashed p-8">
+                                        <p className="text-sm text-muted-foreground">
+                                            No permissions available.
+                                        </p>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </form>
+                )}
 
                 {/* Success/Error Toast */}
                 {showSuccessToast && (
@@ -526,6 +772,15 @@ export default function RoleShow({ role, users, filters }: ShowProps) {
                         aria-live="assertive"
                     >
                         {form.errors.user_ids}
+                    </div>
+                )}
+                {form.errors.permission_ids && (
+                    <div
+                        className="rounded-md border border-red-500 bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950 dark:text-red-200"
+                        role="alert"
+                        aria-live="assertive"
+                    >
+                        {form.errors.permission_ids}
                     </div>
                 )}
             </div>

@@ -1,11 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { usePageProps } from '@/hooks/use-page-props';
 import { cn } from '@/lib/utils';
-import { Trash2, Star, X } from 'lucide-react';
-import { useState } from 'react';
 import { router } from '@inertiajs/react';
+import { Star, Trash2, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface AssetPhoto {
     id: string;
@@ -42,7 +41,9 @@ export function AssetPhotoGallery({
                 route('assets.photos.destroy', [assetId, photoId]),
                 {
                     onSuccess: () => {
-                        setPhotos((prev) => prev.filter((p) => p.id !== photoId));
+                        setPhotos((prev) =>
+                            prev.filter((p) => p.id !== photoId),
+                        );
                         if (selectedPhoto?.id === photoId) {
                             setSelectedPhoto(null);
                         }
@@ -126,7 +127,7 @@ export function AssetPhotoGallery({
 
                         {/* Primary Badge */}
                         {photo.is_primary && (
-                            <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-yellow-500 px-2 py-1 text-xs font-medium text-white">
+                            <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-yellow-500 px-2 py-1 text-xs font-medium text-white">
                                 <Star className="h-3 w-3 fill-current" />
                                 Utama
                             </div>
@@ -178,7 +179,7 @@ export function AssetPhotoGallery({
                         {/* Close Button */}
                         <button
                             onClick={() => setSelectedPhoto(null)}
-                            className="absolute right-0 top-0 -mr-12 -mt-12 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                            className="absolute top-0 right-0 -mt-12 -mr-12 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
                         >
                             <X className="h-6 w-6" />
                         </button>
@@ -186,14 +187,18 @@ export function AssetPhotoGallery({
                         {/* Photo */}
                         <img
                             src={getPhotoUrl(selectedPhoto)}
-                            alt={selectedPhoto.caption || selectedPhoto.file_name}
+                            alt={
+                                selectedPhoto.caption || selectedPhoto.file_name
+                            }
                             className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
                         />
 
                         {/* Caption */}
                         {selectedPhoto.caption && (
                             <div className="mt-4 text-center text-white">
-                                <p className="text-lg">{selectedPhoto.caption}</p>
+                                <p className="text-lg">
+                                    {selectedPhoto.caption}
+                                </p>
                             </div>
                         )}
 
@@ -202,7 +207,9 @@ export function AssetPhotoGallery({
                             {!selectedPhoto.is_primary && (
                                 <Button
                                     variant="secondary"
-                                    onClick={() => handleSetPrimary(selectedPhoto.id)}
+                                    onClick={() =>
+                                        handleSetPrimary(selectedPhoto.id)
+                                    }
                                     disabled={isDeleting}
                                 >
                                     <Star className="mr-2 h-4 w-4" />

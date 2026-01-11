@@ -6,7 +6,8 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function useInstallPWA() {
-    const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+    const [deferredPrompt, setDeferredPrompt] =
+        useState<BeforeInstallPromptEvent | null>(null);
     const [isInstalled, setIsInstalled] = useState(false);
     const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
@@ -20,9 +21,13 @@ export function useInstallPWA() {
         window.addEventListener('beforeinstallprompt', handler);
 
         // Check if already installed
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        const isStandalone = window.matchMedia(
+            '(display-mode: standalone)',
+        ).matches;
         const isInWebAppiOS = (window.navigator as any).standalone === true;
-        const isInWebAppChrome = window.matchMedia('(display-mode: minimal-ui)').matches;
+        const isInWebAppChrome = window.matchMedia(
+            '(display-mode: minimal-ui)',
+        ).matches;
 
         if (isStandalone || isInWebAppiOS || isInWebAppChrome) {
             setIsInstalled(true);

@@ -1,5 +1,16 @@
+import {
+    monthlyExcel,
+    monthlyPdf,
+    stockCardPdf,
+} from '@/actions/App/Http/Controllers/AtkReportController';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import {
     Select,
     SelectContent,
@@ -7,26 +18,27 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { toast } from 'sonner';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
 import {
     Download,
     FileDown,
     FileText,
     Filter,
     RefreshCw,
-    Package,
     TrendingDown,
 } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
-import {
-    stockCardPdf,
-    monthlyPdf,
-    monthlyExcel,
-} from '@/actions/App/Http/Controllers/AtkReportController';
-import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -68,7 +80,12 @@ interface PreviewData {
     total?: number;
 }
 
-const reportTypes: Array<{ value: ReportType; label: string; description: string; format: string }> = [
+const reportTypes: Array<{
+    value: ReportType;
+    label: string;
+    description: string;
+    format: string;
+}> = [
     {
         value: 'stock_card',
         label: 'Kartu Stok',
@@ -124,7 +141,9 @@ export default function AtkReports() {
         setPreviewData(null);
         try {
             let url = '';
-            const queryParams = new URLSearchParams(filters as Record<string, string>).toString();
+            const queryParams = new URLSearchParams(
+                filters as Record<string, string>,
+            ).toString();
 
             switch (reportType) {
                 case 'stock_card':
@@ -154,7 +173,7 @@ export default function AtkReports() {
 
             const response = await fetch(url, {
                 headers: {
-                    'Accept': 'application/json',
+                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
             });
@@ -172,7 +191,9 @@ export default function AtkReports() {
         setIsExporting(true);
         try {
             let url = '';
-            const queryParams = new URLSearchParams(filters as Record<string, string>).toString();
+            const queryParams = new URLSearchParams(
+                filters as Record<string, string>,
+            ).toString();
 
             switch (reportType) {
                 case 'stock_card':
@@ -234,17 +255,21 @@ export default function AtkReports() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {previewData.data.slice(0, 10).map((row: any, idx: number) => (
-                            <TableRow key={idx}>
-                                {columns.map((col: string) => (
-                                    <TableCell key={col}>
-                                        {typeof row[col] === 'number' && (col.includes('nilai') || col.includes('total'))
-                                            ? `Rp ${row[col].toLocaleString('id-ID')}`
-                                            : row[col]?.toString() || '-'}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
+                        {previewData.data
+                            .slice(0, 10)
+                            .map((row: any, idx: number) => (
+                                <TableRow key={idx}>
+                                    {columns.map((col: string) => (
+                                        <TableCell key={col}>
+                                            {typeof row[col] === 'number' &&
+                                            (col.includes('nilai') ||
+                                                col.includes('total'))
+                                                ? `Rp ${row[col].toLocaleString('id-ID')}`
+                                                : row[col]?.toString() || '-'}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             );
@@ -266,15 +291,17 @@ export default function AtkReports() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {previewData.mutations.slice(0, 10).map((row: any, idx: number) => (
-                            <TableRow key={idx}>
-                                {columns.map((col: string) => (
-                                    <TableCell key={col}>
-                                        {row[col]?.toString() || '-'}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
+                        {previewData.mutations
+                            .slice(0, 10)
+                            .map((row: any, idx: number) => (
+                                <TableRow key={idx}>
+                                    {columns.map((col: string) => (
+                                        <TableCell key={col}>
+                                            {row[col]?.toString() || '-'}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             );
@@ -294,9 +321,12 @@ export default function AtkReports() {
             <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Laporan ATK</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Laporan ATK
+                    </h1>
                     <p className="text-muted-foreground">
-                        Generate dan unduh berbagai laporan ATK dalam format CSV atau PDF
+                        Generate dan unduh berbagai laporan ATK dalam format CSV
+                        atau PDF
                     </p>
                 </div>
 
@@ -309,23 +339,33 @@ export default function AtkReports() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Select value={reportType} onValueChange={(value) => {
-                            setReportType(value as ReportType);
-                            setPreviewData(null);
-                        }}>
+                        <Select
+                            value={reportType}
+                            onValueChange={(value) => {
+                                setReportType(value as ReportType);
+                                setPreviewData(null);
+                            }}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Pilih jenis laporan" />
                             </SelectTrigger>
                             <SelectContent>
                                 {reportTypes.map((type) => (
-                                    <SelectItem key={type.value} value={type.value}>
+                                    <SelectItem
+                                        key={type.value}
+                                        value={type.value}
+                                    >
                                         <div className="flex items-center gap-2">
                                             <FileText className="h-4 w-4" />
                                             <div>
-                                                <div className="font-medium">{type.label}</div>
-                                                <div className="text-sm text-muted-foreground">{type.description}</div>
+                                                <div className="font-medium">
+                                                    {type.label}
+                                                </div>
+                                                <div className="text-sm text-muted-foreground">
+                                                    {type.description}
+                                                </div>
                                             </div>
-                                            <div className="ml-auto text-xs bg-muted px-2 py-1 rounded">
+                                            <div className="ml-auto rounded bg-muted px-2 py-1 text-xs">
                                                 {type.format}
                                             </div>
                                         </div>
@@ -335,11 +375,18 @@ export default function AtkReports() {
                         </Select>
 
                         {selectedReport && (
-                            <div className="rounded-lg border p-4 bg-muted/50">
-                                <p className="text-sm font-medium">{selectedReport.label}</p>
-                                <p className="text-sm text-muted-foreground mt-1">{selectedReport.description}</p>
+                            <div className="rounded-lg border bg-muted/50 p-4">
+                                <p className="text-sm font-medium">
+                                    {selectedReport.label}
+                                </p>
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                    {selectedReport.description}
+                                </p>
                                 <div className="mt-2 text-xs">
-                                    Format: <span className="font-semibold">{selectedReport.format}</span>
+                                    Format:{' '}
+                                    <span className="font-semibold">
+                                        {selectedReport.format}
+                                    </span>
                                 </div>
                             </div>
                         )}
@@ -354,17 +401,25 @@ export default function AtkReports() {
                             Filter Laporan
                         </CardTitle>
                         <CardDescription>
-                            Atur filter untuk mempersempit data laporan (opsional)
+                            Atur filter untuk mempersempit data laporan
+                            (opsional)
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {reportType === 'stock_card' && (
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Pilih Item</label>
+                                <label className="text-sm font-medium">
+                                    Pilih Item
+                                </label>
                                 <select
-                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                     value={filters.item_id || ''}
-                                    onChange={(e) => setFilters({ ...filters, item_id: e.target.value })}
+                                    onChange={(e) =>
+                                        setFilters({
+                                            ...filters,
+                                            item_id: e.target.value,
+                                        })
+                                    }
                                 >
                                     <option value="">Pilih Item</option>
                                     {/* This should be populated from items list */}
@@ -378,11 +433,18 @@ export default function AtkReports() {
                         {reportType === 'monthly' && (
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Bulan</label>
+                                    <label className="text-sm font-medium">
+                                        Bulan
+                                    </label>
                                     <select
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         value={filters.bulan || ''}
-                                        onChange={(e) => setFilters({ ...filters, bulan: e.target.value })}
+                                        onChange={(e) =>
+                                            setFilters({
+                                                ...filters,
+                                                bulan: e.target.value,
+                                            })
+                                        }
                                     >
                                         <option value="1">Januari</option>
                                         <option value="2">Februari</option>
@@ -399,12 +461,19 @@ export default function AtkReports() {
                                     </select>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Tahun</label>
+                                    <label className="text-sm font-medium">
+                                        Tahun
+                                    </label>
                                     <input
                                         type="number"
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         value={filters.tahun || ''}
-                                        onChange={(e) => setFilters({ ...filters, tahun: e.target.value })}
+                                        onChange={(e) =>
+                                            setFilters({
+                                                ...filters,
+                                                tahun: e.target.value,
+                                            })
+                                        }
                                         min="2020"
                                         max="2030"
                                     />
@@ -415,21 +484,35 @@ export default function AtkReports() {
                         {reportType === 'requests' && (
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Tanggal Mulai</label>
+                                    <label className="text-sm font-medium">
+                                        Tanggal Mulai
+                                    </label>
                                     <input
                                         type="date"
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         value={filters.start_date || ''}
-                                        onChange={(e) => setFilters({ ...filters, start_date: e.target.value })}
+                                        onChange={(e) =>
+                                            setFilters({
+                                                ...filters,
+                                                start_date: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Tanggal Akhir</label>
+                                    <label className="text-sm font-medium">
+                                        Tanggal Akhir
+                                    </label>
                                     <input
                                         type="date"
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         value={filters.end_date || ''}
-                                        onChange={(e) => setFilters({ ...filters, end_date: e.target.value })}
+                                        onChange={(e) =>
+                                            setFilters({
+                                                ...filters,
+                                                end_date: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                             </div>
@@ -438,37 +521,53 @@ export default function AtkReports() {
                         {reportType === 'purchases' && (
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Tanggal Mulai</label>
+                                    <label className="text-sm font-medium">
+                                        Tanggal Mulai
+                                    </label>
                                     <input
                                         type="date"
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         value={filters.start_date || ''}
-                                        onChange={(e) => setFilters({ ...filters, start_date: e.target.value })}
+                                        onChange={(e) =>
+                                            setFilters({
+                                                ...filters,
+                                                start_date: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Tanggal Akhir</label>
+                                    <label className="text-sm font-medium">
+                                        Tanggal Akhir
+                                    </label>
                                     <input
                                         type="date"
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         value={filters.end_date || ''}
-                                        onChange={(e) => setFilters({ ...filters, end_date: e.target.value })}
+                                        onChange={(e) =>
+                                            setFilters({
+                                                ...filters,
+                                                end_date: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                             </div>
                         )}
 
                         {reportType === 'low_stock' && (
-                            <div className="rounded-lg border p-4 bg-yellow-50 dark:bg-yellow-950">
+                            <div className="rounded-lg border bg-yellow-50 p-4 dark:bg-yellow-950">
                                 <div className="flex items-start gap-3">
-                                    <TrendingDown className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                                    <TrendingDown className="mt-0.5 h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                                     <div>
                                         <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
                                             Laporan Stok Menipis
                                         </p>
-                                        <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                                            Laporan ini menampilkan semua item ATK dengan stok di bawah stok minimal.
-                                            Tidak perlu filter tambahan.
+                                        <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+                                            Laporan ini menampilkan semua item
+                                            ATK dengan stok di bawah stok
+                                            minimal. Tidak perlu filter
+                                            tambahan.
                                         </p>
                                     </div>
                                 </div>
@@ -476,7 +575,11 @@ export default function AtkReports() {
                         )}
 
                         <div className="flex gap-2">
-                            <Button onClick={handlePreview} disabled={isLoading} className="flex-1">
+                            <Button
+                                onClick={handlePreview}
+                                disabled={isLoading}
+                                className="flex-1"
+                            >
                                 {isLoading ? (
                                     <>
                                         <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
@@ -510,7 +613,11 @@ export default function AtkReports() {
                                 <div>
                                     <CardTitle>Preview Laporan</CardTitle>
                                     <CardDescription>
-                                        {selectedReport?.label} - Menampilkan {previewData.data?.length || previewData.mutations?.length || 0} data
+                                        {selectedReport?.label} - Menampilkan{' '}
+                                        {previewData.data?.length ||
+                                            previewData.mutations?.length ||
+                                            0}{' '}
+                                        data
                                     </CardDescription>
                                 </div>
                                 <div className="flex gap-2">

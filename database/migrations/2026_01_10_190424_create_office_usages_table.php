@@ -17,11 +17,10 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->date('tanggal');
             $table->text('keperluan');
-            $table->ulid('user_id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
 
             $table->foreign('supply_id')->references('id')->on('office_supplies')->onDelete('restrict');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
     }
 

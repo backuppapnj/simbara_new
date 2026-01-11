@@ -1,6 +1,6 @@
-import { Head } from '@inertiajs/react'
-import AppLayout from '@/layouts/app-layout'
-import { type BreadcrumbItem } from '@/types'
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
 
 export default function WhatsAppSettings() {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -12,7 +12,7 @@ export default function WhatsAppSettings() {
             title: 'WhatsApp Settings',
             href: '',
         },
-    ]
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -27,5 +27,5 @@ export default function WhatsAppSettings() {
                 </div>
             </div>
         </AppLayout>
-    )
+    );
 }

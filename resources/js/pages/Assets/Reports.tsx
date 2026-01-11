@@ -1,5 +1,20 @@
+import {
+    exportByCategory,
+    exportByCondition,
+    exportByLocation,
+    exportMaintenanceHistory,
+    exportSaktiSiman,
+    exportValueSummary,
+    preview,
+} from '@/actions/App/Http/Controllers/AssetReportController';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import {
     Select,
     SelectContent,
@@ -7,28 +22,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { toast } from 'sonner';
 import {
-    Download,
-    FileDown,
-    FileText,
-    Filter,
-    RefreshCw,
-} from 'lucide-react';
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import {
-    exportSaktiSiman,
-    exportByLocation,
-    exportByCategory,
-    exportByCondition,
-    exportMaintenanceHistory,
-    exportValueSummary,
-    preview,
-} from '@/actions/App/Http/Controllers/AssetReportController';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
+import { FileDown, FileText, Filter, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -72,13 +79,15 @@ const reportOptions: ReportOption[] = [
     {
         id: 'by_category',
         label: 'Per Kategori',
-        description: 'Laporan aset dikelompokkan berdasarkan klasifikasi 14 digit',
+        description:
+            'Laporan aset dikelompokkan berdasarkan klasifikasi 14 digit',
         format: 'CSV',
     },
     {
         id: 'by_condition',
         label: 'Per Kondisi',
-        description: 'Laporan aset dikelompokkan berdasarkan kondisi (Baik, Rusak, dll)',
+        description:
+            'Laporan aset dikelompokkan berdasarkan kondisi (Baik, Rusak, dll)',
         format: 'CSV',
     },
     {
@@ -96,7 +105,8 @@ const reportOptions: ReportOption[] = [
 ];
 
 export default function AssetReports() {
-    const [selectedReport, setSelectedReport] = useState<ReportType>('sakti_siman');
+    const [selectedReport, setSelectedReport] =
+        useState<ReportType>('sakti_siman');
     const [previewData, setPreviewData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
     const [exporting, setExporting] = useState(false);
@@ -137,7 +147,10 @@ export default function AssetReports() {
     const handleExport = () => {
         setExporting(true);
         try {
-            const exportActions: Record<ReportType, () => { url: string; method: string }> = {
+            const exportActions: Record<
+                ReportType,
+                () => { url: string; method: string }
+            > = {
                 sakti_siman: exportSaktiSiman,
                 by_location: exportByLocation,
                 by_category: exportByCategory,
@@ -185,10 +198,12 @@ export default function AssetReports() {
                             <TableRow key={idx}>
                                 {columns.map((col: string) => (
                                     <TableCell key={col}>
-                                        {typeof row[col] === 'number' && (col.includes('nilai') || col.includes('value'))
+                                        {typeof row[col] === 'number' &&
+                                        (col.includes('nilai') ||
+                                            col.includes('value'))
                                             ? `Rp ${row[col].toLocaleString('id-ID')}`
                                             : row[col]}
-                                        </TableCell>
+                                    </TableCell>
                                 ))}
                             </TableRow>
                         ))}
@@ -213,17 +228,22 @@ export default function AssetReports() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {previewData.data.slice(0, 10).map((row: any, idx: number) => (
-                            <TableRow key={idx}>
-                                {columns.map((col: string) => (
-                                    <TableCell key={col}>
-                                        {typeof row[col] === 'number' && (col.includes('nilai') || col.includes('value') || col.includes('rph'))
-                                            ? `Rp ${row[col].toLocaleString('id-ID')}`
-                                            : row[col]?.toString() || '-'}
+                        {previewData.data
+                            .slice(0, 10)
+                            .map((row: any, idx: number) => (
+                                <TableRow key={idx}>
+                                    {columns.map((col: string) => (
+                                        <TableCell key={col}>
+                                            {typeof row[col] === 'number' &&
+                                            (col.includes('nilai') ||
+                                                col.includes('value') ||
+                                                col.includes('rph'))
+                                                ? `Rp ${row[col].toLocaleString('id-ID')}`
+                                                : row[col]?.toString() || '-'}
                                         </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
+                                    ))}
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             );
@@ -243,9 +263,12 @@ export default function AssetReports() {
             <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Laporan Aset</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Laporan Aset
+                    </h1>
                     <p className="text-muted-foreground">
-                        Generate dan unduh berbagai laporan aset dalam format CSV
+                        Generate dan unduh berbagai laporan aset dalam format
+                        CSV
                     </p>
                 </div>
 
@@ -258,20 +281,32 @@ export default function AssetReports() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Select value={selectedReport} onValueChange={(value) => setSelectedReport(value as ReportType)}>
+                        <Select
+                            value={selectedReport}
+                            onValueChange={(value) =>
+                                setSelectedReport(value as ReportType)
+                            }
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Pilih jenis laporan" />
                             </SelectTrigger>
                             <SelectContent>
                                 {reportOptions.map((option) => (
-                                    <SelectItem key={option.id} value={option.id}>
+                                    <SelectItem
+                                        key={option.id}
+                                        value={option.id}
+                                    >
                                         <div className="flex items-center gap-2">
                                             <FileText className="h-4 w-4" />
                                             <div>
-                                                <div className="font-medium">{option.label}</div>
-                                                <div className="text-sm text-muted-foreground">{option.description}</div>
+                                                <div className="font-medium">
+                                                    {option.label}
+                                                </div>
+                                                <div className="text-sm text-muted-foreground">
+                                                    {option.description}
+                                                </div>
                                             </div>
-                                            <div className="ml-auto text-xs bg-muted px-2 py-1 rounded">
+                                            <div className="ml-auto rounded bg-muted px-2 py-1 text-xs">
                                                 {option.format}
                                             </div>
                                         </div>
@@ -290,27 +325,42 @@ export default function AssetReports() {
                             Filter Laporan
                         </CardTitle>
                         <CardDescription>
-                            Atur filter untuk mempersempit data laporan (opsional)
+                            Atur filter untuk mempersempit data laporan
+                            (opsional)
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Tanggal Mulai</label>
+                                <label className="text-sm font-medium">
+                                    Tanggal Mulai
+                                </label>
                                 <input
                                     type="date"
-                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                     value={filterForm.data('start_date')}
-                                    onChange={(e) => filterForm.setData('start_date', e.target.value)}
+                                    onChange={(e) =>
+                                        filterForm.setData(
+                                            'start_date',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Tanggal Akhir</label>
+                                <label className="text-sm font-medium">
+                                    Tanggal Akhir
+                                </label>
                                 <input
                                     type="date"
-                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                     value={filterForm.data('end_date')}
-                                    onChange={(e) => filterForm.setData('end_date', e.target.value)}
+                                    onChange={(e) =>
+                                        filterForm.setData(
+                                            'end_date',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                             </div>
                         </div>
@@ -318,43 +368,72 @@ export default function AssetReports() {
                         {selectedReport !== 'maintenance_history' && (
                             <div className="grid gap-4 md:grid-cols-3">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Lokasi</label>
+                                    <label className="text-sm font-medium">
+                                        Lokasi
+                                    </label>
                                     <input
                                         type="text"
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         placeholder="Cth: Ruang Aula"
                                         value={filterForm.data('location')}
-                                        onChange={(e) => filterForm.setData('location', e.target.value)}
+                                        onChange={(e) =>
+                                            filterForm.setData(
+                                                'location',
+                                                e.target.value,
+                                            )
+                                        }
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Kategori (Kode Barang)</label>
+                                    <label className="text-sm font-medium">
+                                        Kategori (Kode Barang)
+                                    </label>
                                     <input
                                         type="text"
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         placeholder="Cth: 1.3.2.01.01.001"
                                         value={filterForm.data('category')}
-                                        onChange={(e) => filterForm.setData('category', e.target.value)}
+                                        onChange={(e) =>
+                                            filterForm.setData(
+                                                'category',
+                                                e.target.value,
+                                            )
+                                        }
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Kondisi</label>
+                                    <label className="text-sm font-medium">
+                                        Kondisi
+                                    </label>
                                     <select
-                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         value={filterForm.data('condition')}
-                                        onChange={(e) => filterForm.setData('condition', e.target.value)}
+                                        onChange={(e) =>
+                                            filterForm.setData(
+                                                'condition',
+                                                e.target.value,
+                                            )
+                                        }
                                     >
                                         <option value="">Semua Kondisi</option>
                                         <option value="Baik">Baik</option>
-                                        <option value="Rusak Ringan">Rusak Ringan</option>
-                                        <option value="Rusak Berat">Rusak Berat</option>
+                                        <option value="Rusak Ringan">
+                                            Rusak Ringan
+                                        </option>
+                                        <option value="Rusak Berat">
+                                            Rusak Berat
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                         )}
 
                         <div className="flex gap-2">
-                            <Button onClick={handlePreview} disabled={loading} className="flex-1">
+                            <Button
+                                onClick={handlePreview}
+                                disabled={loading}
+                                className="flex-1"
+                            >
                                 {loading ? (
                                     <>
                                         <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
@@ -388,7 +467,15 @@ export default function AssetReports() {
                                 <div>
                                     <CardTitle>Preview Laporan</CardTitle>
                                     <CardDescription>
-                                        {previewData.report_type} - Menampilkan {previewData.data?.length || previewData.summary?.length || 0} dari {previewData.total || previewData.total_assets || 0} data
+                                        {previewData.report_type} - Menampilkan{' '}
+                                        {previewData.data?.length ||
+                                            previewData.summary?.length ||
+                                            0}{' '}
+                                        dari{' '}
+                                        {previewData.total ||
+                                            previewData.total_assets ||
+                                            0}{' '}
+                                        data
                                     </CardDescription>
                                 </div>
                                 <Button

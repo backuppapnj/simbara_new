@@ -1,14 +1,14 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
 import {
-    FileText,
-    Plus,
-    Eye,
     Check,
-    FileCheck,
     Download,
+    Eye,
+    FileCheck,
+    FileText,
     Filter,
+    Plus,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -81,7 +81,8 @@ interface IndexProps {
 const statusColors = {
     draft: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     completed: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    approved: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    approved:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
 };
 
 const statusLabels = {
@@ -95,12 +96,19 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
         router.get(
             route('stock-opnames.index'),
             { ...filters, [key]: value },
-            { preserveState: true }
+            { preserveState: true },
         );
     };
 
-    const handleStatusChange = (stockOpname: StockOpname, action: 'submit' | 'approve') => {
-        if (!confirm(`Apakah Anda yakin ingin ${action === 'submit' ? 'mensubmit' : 'mengapprove'} stock opname ini?`)) {
+    const handleStatusChange = (
+        stockOpname: StockOpname,
+        action: 'submit' | 'approve',
+    ) => {
+        if (
+            !confirm(
+                `Apakah Anda yakin ingin ${action === 'submit' ? 'mensubmit' : 'mengapprove'} stock opname ini?`,
+            )
+        ) {
             return;
         }
 
@@ -109,9 +117,11 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
             {},
             {
                 onSuccess: () => {
-                    alert(`Stock opname berhasil ${action === 'submit' ? 'disubmit' : 'diapprove'}`);
+                    alert(
+                        `Stock opname berhasil ${action === 'submit' ? 'disubmit' : 'diapprove'}`,
+                    );
                 },
-            }
+            },
         );
     };
 
@@ -127,7 +137,9 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Stock Opname</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Stock Opname
+                        </h1>
                         <p className="text-muted-foreground">
                             Kelola stock opname dan berita acara
                         </p>
@@ -149,13 +161,18 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="status" className="text-xs text-muted-foreground">
+                        <label
+                            htmlFor="status"
+                            className="text-xs text-muted-foreground"
+                        >
                             Status
                         </label>
                         <select
                             id="status"
                             value={filters.status ?? ''}
-                            onChange={(e) => handleFilterChange('status', e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange('status', e.target.value)
+                            }
                             className="rounded-md border bg-background px-3 py-1.5 text-sm"
                         >
                             <option value="">Semua Status</option>
@@ -166,13 +183,21 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="bulan" className="text-xs text-muted-foreground">
+                        <label
+                            htmlFor="bulan"
+                            className="text-xs text-muted-foreground"
+                        >
                             Bulan
                         </label>
                         <select
                             id="bulan"
                             value={filters.periode_bulan ?? ''}
-                            onChange={(e) => handleFilterChange('periode_bulan', e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange(
+                                    'periode_bulan',
+                                    e.target.value,
+                                )
+                            }
                             className="rounded-md border bg-background px-3 py-1.5 text-sm"
                         >
                             <option value="">Semua Bulan</option>
@@ -192,14 +217,22 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="tahun" className="text-xs text-muted-foreground">
+                        <label
+                            htmlFor="tahun"
+                            className="text-xs text-muted-foreground"
+                        >
                             Tahun
                         </label>
                         <input
                             id="tahun"
                             type="number"
                             value={filters.periode_tahun ?? ''}
-                            onChange={(e) => handleFilterChange('periode_tahun', e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange(
+                                    'periode_tahun',
+                                    e.target.value,
+                                )
+                            }
                             placeholder="2024"
                             className="w-24 rounded-md border bg-background px-3 py-1.5 text-sm"
                         />
@@ -212,13 +245,27 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                         <table className="w-full text-sm">
                             <thead className="border-b bg-muted/50">
                                 <tr>
-                                    <th className="px-4 py-3 text-left font-medium">No. SO</th>
-                                    <th className="px-4 py-3 text-left font-medium">Tanggal</th>
-                                    <th className="px-4 py-3 text-left font-medium">Periode</th>
-                                    <th className="px-4 py-3 text-left font-medium">Status</th>
-                                    <th className="px-4 py-3 text-center font-medium">Jumlah Item</th>
-                                    <th className="px-4 py-3 text-center font-medium">Selisih</th>
-                                    <th className="px-4 py-3 text-right font-medium">Aksi</th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        No. SO
+                                    </th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Tanggal
+                                    </th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Periode
+                                    </th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Status
+                                    </th>
+                                    <th className="px-4 py-3 text-center font-medium">
+                                        Jumlah Item
+                                    </th>
+                                    <th className="px-4 py-3 text-center font-medium">
+                                        Selisih
+                                    </th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Aksi
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -234,59 +281,91 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                                     </tr>
                                 ) : (
                                     stockOpnames.data.map((so) => {
-                                        const totalSelisih = so.stock_opname_details.reduce(
-                                            (sum, detail) => sum + detail.selisih,
-                                            0
-                                        );
+                                        const totalSelisih =
+                                            so.stock_opname_details.reduce(
+                                                (sum, detail) =>
+                                                    sum + detail.selisih,
+                                                0,
+                                            );
 
                                         return (
-                                            <tr key={so.id} className="border-b hover:bg-muted/50">
-                                                <td className="px-4 py-3 font-medium">{so.no_so}</td>
-                                                <td className="px-4 py-3">
-                                                    {new Date(so.tanggal).toLocaleDateString('id-ID')}
+                                            <tr
+                                                key={so.id}
+                                                className="border-b hover:bg-muted/50"
+                                            >
+                                                <td className="px-4 py-3 font-medium">
+                                                    {so.no_so}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    {so.periode_bulan} {so.periode_tahun}
+                                                    {new Date(
+                                                        so.tanggal,
+                                                    ).toLocaleDateString(
+                                                        'id-ID',
+                                                    )}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {so.periode_bulan}{' '}
+                                                    {so.periode_tahun}
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <span
                                                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                                            statusColors[so.status]
+                                                            statusColors[
+                                                                so.status
+                                                            ]
                                                         }`}
                                                     >
-                                                        {statusLabels[so.status]}
+                                                        {
+                                                            statusLabels[
+                                                                so.status
+                                                            ]
+                                                        }
                                                     </span>
                                                 </td>
                                                 <td className="px-4 py-3 text-center">
-                                                    {so.stock_opname_details.length}
+                                                    {
+                                                        so.stock_opname_details
+                                                            .length
+                                                    }
                                                 </td>
                                                 <td className="px-4 py-3 text-center">
                                                     <span
                                                         className={
                                                             totalSelisih > 0
                                                                 ? 'text-green-600 dark:text-green-400'
-                                                                : totalSelisih < 0
+                                                                : totalSelisih <
+                                                                    0
                                                                   ? 'text-red-600 dark:text-red-400'
                                                                   : ''
                                                         }
                                                     >
-                                                        {totalSelisih > 0 && '+'}
+                                                        {totalSelisih > 0 &&
+                                                            '+'}
                                                         {totalSelisih}
                                                     </span>
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Link
-                                                            href={route('stock-opnames.show', so)}
+                                                            href={route(
+                                                                'stock-opnames.show',
+                                                                so,
+                                                            )}
                                                             className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                                                             title="Lihat Detail"
                                                         >
                                                             <Eye className="h-3 w-3" />
                                                         </Link>
 
-                                                        {so.status === 'draft' && (
+                                                        {so.status ===
+                                                            'draft' && (
                                                             <button
-                                                                onClick={() => handleStatusChange(so, 'submit')}
+                                                                onClick={() =>
+                                                                    handleStatusChange(
+                                                                        so,
+                                                                        'submit',
+                                                                    )
+                                                                }
                                                                 className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
                                                                 title="Submit"
                                                             >
@@ -294,9 +373,15 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                                                             </button>
                                                         )}
 
-                                                        {so.status === 'completed' && (
+                                                        {so.status ===
+                                                            'completed' && (
                                                             <button
-                                                                onClick={() => handleStatusChange(so, 'approve')}
+                                                                onClick={() =>
+                                                                    handleStatusChange(
+                                                                        so,
+                                                                        'approve',
+                                                                    )
+                                                                }
                                                                 className="inline-flex items-center gap-1 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700"
                                                                 title="Approve"
                                                             >
@@ -304,9 +389,14 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                                                             </button>
                                                         )}
 
-                                                        {so.status === 'approved' && (
+                                                        {so.status ===
+                                                            'approved' && (
                                                             <button
-                                                                onClick={() => handleDownloadBa(so)}
+                                                                onClick={() =>
+                                                                    handleDownloadBa(
+                                                                        so,
+                                                                    )
+                                                                }
                                                                 className="inline-flex items-center gap-1 rounded-md bg-gray-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-700"
                                                                 title="Download Berita Acara"
                                                             >
@@ -327,20 +417,25 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                     {stockOpnames.links.length > 3 && (
                         <div className="flex items-center justify-between border-t px-4 py-3">
                             <div className="text-sm text-muted-foreground">
-                                Halaman {stockOpnames.current_page} dari {stockOpnames.last_page_url?.split('=').pop()}
+                                Halaman {stockOpnames.current_page} dari{' '}
+                                {stockOpnames.last_page_url?.split('=').pop()}
                             </div>
                             <div className="flex gap-2">
                                 {stockOpnames.links.map((link, index) => (
                                     <button
                                         key={index}
-                                        onClick={() => link.url && router.get(link.url)}
+                                        onClick={() =>
+                                            link.url && router.get(link.url)
+                                        }
                                         disabled={!link.url}
                                         className={`rounded-md px-3 py-1.5 text-sm ${
                                             link.active
                                                 ? 'bg-primary text-primary-foreground'
                                                 : 'bg-muted hover:bg-muted/70'
                                         } ${!link.url && 'cursor-not-allowed opacity-50'}`}
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
                                     />
                                 ))}
                             </div>

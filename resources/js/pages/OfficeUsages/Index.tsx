@@ -1,14 +1,11 @@
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head, router, useForm } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import {
+    index,
+    quickDeduct,
+    store,
+} from '@/actions/App/Http/Controllers/OfficeUsageController';
 import { DataTable, type Column } from '@/components/enhanced/data-table';
-import { Calendar, Package, User, MinusCircle, Plus } from 'lucide-react';
-import { useState } from 'react';
-import { index, store, quickDeduct } from '@/actions/App/Http/Controllers/OfficeUsageController';
-import { index as supplyIndex } from '@/actions/App/Http/Controllers/OfficeSupplyController';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -17,6 +14,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -24,8 +23,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head, router, useForm } from '@inertiajs/react';
+import { Calendar, MinusCircle, Package, Plus, User } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -82,8 +85,15 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
         keterangan: '',
     });
 
-    const handleDateFilter = (field: 'date_from' | 'date_to', value: string) => {
-        router.get(index().url, { ...filters, [field]: value || null }, { preserveState: true });
+    const handleDateFilter = (
+        field: 'date_from' | 'date_to',
+        value: string,
+    ) => {
+        router.get(
+            index().url,
+            { ...filters, [field]: value || null },
+            { preserveState: true },
+        );
     };
 
     const handleUsageSubmit = (e: React.FormEvent) => {
@@ -136,8 +146,12 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                 <div className="flex items-center gap-2">
                     <Package className="size-4 text-muted-foreground" />
                     <div>
-                        <div className="font-medium">{usage.supply.nama_barang}</div>
-                        <div className="text-sm text-muted-foreground">{usage.supply.satuan}</div>
+                        <div className="font-medium">
+                            {usage.supply.nama_barang}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                            {usage.supply.satuan}
+                        </div>
                     </div>
                 </div>
             ),
@@ -183,11 +197,18 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">Pemakaian Bahan Kantor</h1>
-                        <p className="text-muted-foreground">Riwayat pemakaian bahan kantor</p>
+                        <h1 className="text-2xl font-bold">
+                            Pemakaian Bahan Kantor
+                        </h1>
+                        <p className="text-muted-foreground">
+                            Riwayat pemakaian bahan kantor
+                        </p>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" onClick={() => setQuickDeductDialog(true)}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setQuickDeductDialog(true)}
+                        >
                             <MinusCircle className="mr-2 size-4" />
                             Quick Deduct
                         </Button>
@@ -203,8 +224,12 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                     <div className="rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Total Pemakaian</p>
-                                <p className="text-2xl font-bold">{usages.total}</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Total Pemakaian
+                                </p>
+                                <p className="text-2xl font-bold">
+                                    {usages.total}
+                                </p>
                             </div>
                             <Package className="size-8 text-muted-foreground" />
                         </div>
@@ -212,11 +237,19 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                     <div className="rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Bulan Ini</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Bulan Ini
+                                </p>
                                 <p className="text-2xl font-bold">
-                                    {usages.data.filter(
-                                        (u) => new Date(u.tanggal).getMonth() === new Date().getMonth()
-                                    ).length}
+                                    {
+                                        usages.data.filter(
+                                            (u) =>
+                                                new Date(
+                                                    u.tanggal,
+                                                ).getMonth() ===
+                                                new Date().getMonth(),
+                                        ).length
+                                    }
                                 </p>
                             </div>
                             <Calendar className="size-8 text-muted-foreground" />
@@ -232,7 +265,9 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                             id="date_from"
                             type="date"
                             value={filters.date_from || ''}
-                            onChange={(e) => handleDateFilter('date_from', e.target.value)}
+                            onChange={(e) =>
+                                handleDateFilter('date_from', e.target.value)
+                            }
                             className="w-[180px]"
                         />
                     </div>
@@ -242,7 +277,9 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                             id="date_to"
                             type="date"
                             value={filters.date_to || ''}
-                            onChange={(e) => handleDateFilter('date_to', e.target.value)}
+                            onChange={(e) =>
+                                handleDateFilter('date_to', e.target.value)
+                            }
                             className="w-[180px]"
                         />
                     </div>
@@ -251,7 +288,10 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                             variant="ghost"
                             size="sm"
                             onClick={() =>
-                                router.get(index().url, { date_from: null, date_to: null })
+                                router.get(index().url, {
+                                    date_from: null,
+                                    date_to: null,
+                                })
                             }
                         >
                             Reset Filter
@@ -272,21 +312,31 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                 {usages.last_page > 1 && (
                     <div className="flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            Halaman {usages.current_page} dari {usages.last_page}
+                            Halaman {usages.current_page} dari{' '}
+                            {usages.last_page}
                         </p>
                         <div className="flex gap-2">
-                            {Array.from({ length: usages.last_page }).map((_, i) => (
-                                <Button
-                                    key={i}
-                                    variant={usages.current_page === i + 1 ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() =>
-                                        router.get(index().url, { ...filters, page: i + 1 })
-                                    }
-                                >
-                                    {i + 1}
-                                </Button>
-                            ))}
+                            {Array.from({ length: usages.last_page }).map(
+                                (_, i) => (
+                                    <Button
+                                        key={i}
+                                        variant={
+                                            usages.current_page === i + 1
+                                                ? 'default'
+                                                : 'outline'
+                                        }
+                                        size="sm"
+                                        onClick={() =>
+                                            router.get(index().url, {
+                                                ...filters,
+                                                page: i + 1,
+                                            })
+                                        }
+                                    >
+                                        {i + 1}
+                                    </Button>
+                                ),
+                            )}
                         </div>
                     </div>
                 )}
@@ -295,30 +345,49 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                 <Dialog open={usageDialog} onOpenChange={setUsageDialog}>
                     <DialogContent className="max-w-md">
                         <DialogHeader>
-                            <DialogTitle>Catat Pemakaian Bahan Kantor</DialogTitle>
+                            <DialogTitle>
+                                Catat Pemakaian Bahan Kantor
+                            </DialogTitle>
                             <DialogDescription>
                                 Catat pemakaian bahan kantor dengan lengkap
                             </DialogDescription>
                         </DialogHeader>
-                        <form onSubmit={handleUsageSubmit} className="space-y-4">
+                        <form
+                            onSubmit={handleUsageSubmit}
+                            className="space-y-4"
+                        >
                             <div className="space-y-2">
-                                <Label htmlFor="usage_supply_id">Bahan Kantor</Label>
+                                <Label htmlFor="usage_supply_id">
+                                    Bahan Kantor
+                                </Label>
                                 <Select
                                     value={usageForm.data.supply_id}
-                                    onValueChange={(value) => usageForm.setData('supply_id', value)}
+                                    onValueChange={(value) =>
+                                        usageForm.setData('supply_id', value)
+                                    }
                                 >
                                     <SelectTrigger id="usage_supply_id">
                                         <SelectValue placeholder="Pilih bahan kantor" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">Pilih bahan kantor</SelectItem>
-                                        <SelectItem value="sample-1">Kertas A4</SelectItem>
-                                        <SelectItem value="sample-2">Pulpen Hitam</SelectItem>
-                                        <SelectItem value="sample-3">Spidol Whiteboard</SelectItem>
+                                        <SelectItem value="">
+                                            Pilih bahan kantor
+                                        </SelectItem>
+                                        <SelectItem value="sample-1">
+                                            Kertas A4
+                                        </SelectItem>
+                                        <SelectItem value="sample-2">
+                                            Pulpen Hitam
+                                        </SelectItem>
+                                        <SelectItem value="sample-3">
+                                            Spidol Whiteboard
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                                 {usageForm.errors.supply_id && (
-                                    <p className="text-sm text-destructive">{usageForm.errors.supply_id}</p>
+                                    <p className="text-sm text-destructive">
+                                        {usageForm.errors.supply_id}
+                                    </p>
                                 )}
                             </div>
                             <div className="space-y-2">
@@ -328,10 +397,17 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                     type="number"
                                     min="1"
                                     value={usageForm.data.jumlah}
-                                    onChange={(e) => usageForm.setData('jumlah', e.target.value)}
+                                    onChange={(e) =>
+                                        usageForm.setData(
+                                            'jumlah',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {usageForm.errors.jumlah && (
-                                    <p className="text-sm text-destructive">{usageForm.errors.jumlah}</p>
+                                    <p className="text-sm text-destructive">
+                                        {usageForm.errors.jumlah}
+                                    </p>
                                 )}
                             </div>
                             <div className="space-y-2">
@@ -340,30 +416,55 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                     id="usage_tanggal"
                                     type="date"
                                     value={usageForm.data.tanggal}
-                                    onChange={(e) => usageForm.setData('tanggal', e.target.value)}
+                                    onChange={(e) =>
+                                        usageForm.setData(
+                                            'tanggal',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {usageForm.errors.tanggal && (
-                                    <p className="text-sm text-destructive">{usageForm.errors.tanggal}</p>
+                                    <p className="text-sm text-destructive">
+                                        {usageForm.errors.tanggal}
+                                    </p>
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="usage_keperluan">Keperluan</Label>
+                                <Label htmlFor="usage_keperluan">
+                                    Keperluan
+                                </Label>
                                 <Textarea
                                     id="usage_keperluan"
                                     placeholder="Jelaskan keperluan pemakaian..."
                                     value={usageForm.data.keperluan}
-                                    onChange={(e) => usageForm.setData('keperluan', e.target.value)}
+                                    onChange={(e) =>
+                                        usageForm.setData(
+                                            'keperluan',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {usageForm.errors.keperluan && (
-                                    <p className="text-sm text-destructive">{usageForm.errors.keperluan}</p>
+                                    <p className="text-sm text-destructive">
+                                        {usageForm.errors.keperluan}
+                                    </p>
                                 )}
                             </div>
                             <DialogFooter>
-                                <Button type="button" variant="outline" onClick={() => setUsageDialog(false)}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setUsageDialog(false)}
+                                >
                                     Batal
                                 </Button>
-                                <Button type="submit" disabled={usageForm.processing}>
-                                    {usageForm.processing ? 'Menyimpan...' : 'Simpan'}
+                                <Button
+                                    type="submit"
+                                    disabled={usageForm.processing}
+                                >
+                                    {usageForm.processing
+                                        ? 'Menyimpan...'
+                                        : 'Simpan'}
                                 </Button>
                             </DialogFooter>
                         </form>
@@ -371,33 +472,57 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                 </Dialog>
 
                 {/* Quick Deduct Dialog */}
-                <Dialog open={quickDeductDialog} onOpenChange={setQuickDeductDialog}>
+                <Dialog
+                    open={quickDeductDialog}
+                    onOpenChange={setQuickDeductDialog}
+                >
                     <DialogContent className="max-w-md">
                         <DialogHeader>
                             <DialogTitle>Quick Deduct Stok</DialogTitle>
                             <DialogDescription>
-                                Kurangi stok dengan cepat tanpa mencatat pemakaian lengkap
+                                Kurangi stok dengan cepat tanpa mencatat
+                                pemakaian lengkap
                             </DialogDescription>
                         </DialogHeader>
-                        <form onSubmit={handleQuickDeductSubmit} className="space-y-4">
+                        <form
+                            onSubmit={handleQuickDeductSubmit}
+                            className="space-y-4"
+                        >
                             <div className="space-y-2">
-                                <Label htmlFor="qd_supply_id">Bahan Kantor</Label>
+                                <Label htmlFor="qd_supply_id">
+                                    Bahan Kantor
+                                </Label>
                                 <Select
                                     value={quickDeductForm.data.supply_id}
-                                    onValueChange={(value) => quickDeductForm.setData('supply_id', value)}
+                                    onValueChange={(value) =>
+                                        quickDeductForm.setData(
+                                            'supply_id',
+                                            value,
+                                        )
+                                    }
                                 >
                                     <SelectTrigger id="qd_supply_id">
                                         <SelectValue placeholder="Pilih bahan kantor" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">Pilih bahan kantor</SelectItem>
-                                        <SelectItem value="sample-1">Kertas A4</SelectItem>
-                                        <SelectItem value="sample-2">Pulpen Hitam</SelectItem>
-                                        <SelectItem value="sample-3">Spidol Whiteboard</SelectItem>
+                                        <SelectItem value="">
+                                            Pilih bahan kantor
+                                        </SelectItem>
+                                        <SelectItem value="sample-1">
+                                            Kertas A4
+                                        </SelectItem>
+                                        <SelectItem value="sample-2">
+                                            Pulpen Hitam
+                                        </SelectItem>
+                                        <SelectItem value="sample-3">
+                                            Spidol Whiteboard
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                                 {quickDeductForm.errors.supply_id && (
-                                    <p className="text-sm text-destructive">{quickDeductForm.errors.supply_id}</p>
+                                    <p className="text-sm text-destructive">
+                                        {quickDeductForm.errors.supply_id}
+                                    </p>
                                 )}
                             </div>
                             <div className="space-y-2">
@@ -407,30 +532,55 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                     type="number"
                                     min="1"
                                     value={quickDeductForm.data.jumlah}
-                                    onChange={(e) => quickDeductForm.setData('jumlah', e.target.value)}
+                                    onChange={(e) =>
+                                        quickDeductForm.setData(
+                                            'jumlah',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {quickDeductForm.errors.jumlah && (
-                                    <p className="text-sm text-destructive">{quickDeductForm.errors.jumlah}</p>
+                                    <p className="text-sm text-destructive">
+                                        {quickDeductForm.errors.jumlah}
+                                    </p>
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="qd_keterangan">Keterangan</Label>
+                                <Label htmlFor="qd_keterangan">
+                                    Keterangan
+                                </Label>
                                 <Textarea
                                     id="qd_keterangan"
                                     placeholder="Keterangan singkat..."
                                     value={quickDeductForm.data.keterangan}
-                                    onChange={(e) => quickDeductForm.setData('keterangan', e.target.value)}
+                                    onChange={(e) =>
+                                        quickDeductForm.setData(
+                                            'keterangan',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {quickDeductForm.errors.keterangan && (
-                                    <p className="text-sm text-destructive">{quickDeductForm.errors.keterangan}</p>
+                                    <p className="text-sm text-destructive">
+                                        {quickDeductForm.errors.keterangan}
+                                    </p>
                                 )}
                             </div>
                             <DialogFooter>
-                                <Button type="button" variant="outline" onClick={() => setQuickDeductDialog(false)}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setQuickDeductDialog(false)}
+                                >
                                     Batal
                                 </Button>
-                                <Button type="submit" disabled={quickDeductForm.processing}>
-                                    {quickDeductForm.processing ? 'Memproses...' : 'Kurangi Stok'}
+                                <Button
+                                    type="submit"
+                                    disabled={quickDeductForm.processing}
+                                >
+                                    {quickDeductForm.processing
+                                        ? 'Memproses...'
+                                        : 'Kurangi Stok'}
                                 </Button>
                             </DialogFooter>
                         </form>

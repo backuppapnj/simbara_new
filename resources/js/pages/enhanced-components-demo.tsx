@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { DataTable, QuickActions, StatCard } from '@/components/enhanced';
 import AppLayout from '@/layouts/app-layout';
-import { DataTable, StatCard, QuickActions } from '@/components/enhanced';
 import {
-    Package,
-    TrendingUp,
-    FileText,
     AlertTriangle,
-    Plus,
     Download,
-    Upload,
+    FileText,
+    Package,
+    Plus,
     Settings,
+    TrendingUp,
+    Upload,
     Users,
 } from 'lucide-react';
+import { useState } from 'react';
 
 // Mock data for DataTable
 interface MockData {
@@ -118,8 +118,10 @@ const columns = [
         sortable: true,
         cell: (row: MockData) => {
             const statusColors: Record<string, string> = {
-                Tersedia: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                'Stok Menipis': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                Tersedia:
+                    'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                'Stok Menipis':
+                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
                 Kritis: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
             };
             return (
@@ -234,7 +236,9 @@ export default function EnhancedComponentsDemo() {
 
                 {/* StatCard Examples */}
                 <div>
-                    <h2 className="text-2xl font-semibold mb-4">StatCard Examples</h2>
+                    <h2 className="mb-4 text-2xl font-semibold">
+                        StatCard Examples
+                    </h2>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         <StatCard
                             title="Total Aset"
@@ -271,7 +275,7 @@ export default function EnhancedComponentsDemo() {
 
                 {/* StatCard Loading and Error States */}
                 <div>
-                    <h2 className="text-2xl font-semibold mb-4">
+                    <h2 className="mb-4 text-2xl font-semibold">
                         StatCard Loading & Error States
                     </h2>
                     <div className="grid gap-4 md:grid-cols-3">
@@ -298,7 +302,9 @@ export default function EnhancedComponentsDemo() {
 
                 {/* QuickActions Example */}
                 <div>
-                    <h2 className="text-2xl font-semibold mb-4">QuickActions Example</h2>
+                    <h2 className="mb-4 text-2xl font-semibold">
+                        QuickActions Example
+                    </h2>
                     <QuickActions
                         title="Aksi Cepat"
                         description="Aksi yang sering digunakan"
@@ -309,7 +315,9 @@ export default function EnhancedComponentsDemo() {
 
                 {/* QuickActions All */}
                 <div>
-                    <h2 className="text-2xl font-semibold mb-4">All QuickActions</h2>
+                    <h2 className="mb-4 text-2xl font-semibold">
+                        All QuickActions
+                    </h2>
                     <QuickActions
                         title="Semua Aksi"
                         actions={quickActions}
@@ -319,7 +327,9 @@ export default function EnhancedComponentsDemo() {
 
                 {/* DataTable Example */}
                 <div>
-                    <h2 className="text-2xl font-semibold mb-4">DataTable Example</h2>
+                    <h2 className="mb-4 text-2xl font-semibold">
+                        DataTable Example
+                    </h2>
                     <DataTable
                         data={mockData}
                         columns={columns}
@@ -339,7 +349,7 @@ export default function EnhancedComponentsDemo() {
                 <div className="flex gap-4">
                     <button
                         onClick={() => setIsLoading(!isLoading)}
-                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                        className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90"
                     >
                         {isLoading ? 'Stop Loading' : 'Show Loading State'}
                     </button>

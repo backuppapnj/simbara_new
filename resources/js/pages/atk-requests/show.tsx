@@ -1,23 +1,29 @@
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/app-layout';
+import { cn } from '@/lib/utils';
+import { type BreadcrumbItem } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
 import {
     ArrowLeft,
-    CheckCircle,
-    XCircle,
-    Package,
-    Calendar,
-    User,
     Building,
+    Calendar,
+    CheckCircle,
     FileText,
+    Package,
+    User,
+    XCircle,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface RequestDetail {
     id: string;
@@ -91,13 +97,41 @@ interface ShowProps {
 }
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-    pending: { label: 'Pending', className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-800' },
-    level1_approved: { label: 'Approved L1', className: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-800' },
-    level2_approved: { label: 'Approved L2', className: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-800' },
-    level3_approved: { label: 'Approved L3', className: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-800' },
-    rejected: { label: 'Rejected', className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-800' },
-    diserahkan: { label: 'Diserahkan', className: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-800' },
-    diterima: { label: 'Diterima', className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-800' },
+    pending: {
+        label: 'Pending',
+        className:
+            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-800',
+    },
+    level1_approved: {
+        label: 'Approved L1',
+        className:
+            'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-800',
+    },
+    level2_approved: {
+        label: 'Approved L2',
+        className:
+            'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-800',
+    },
+    level3_approved: {
+        label: 'Approved L3',
+        className:
+            'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-800',
+    },
+    rejected: {
+        label: 'Rejected',
+        className:
+            'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-800',
+    },
+    diserahkan: {
+        label: 'Diserahkan',
+        className:
+            'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-800',
+    },
+    diterima: {
+        label: 'Diterima',
+        className:
+            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-800',
+    },
 };
 
 const statusSteps = [
@@ -128,7 +162,11 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
     const handleReject = () => {
         rejectForm.post(route('atk-requests.reject', atkRequest.id), {
             onFinish: () => {
-                (document.querySelector('[data-dialog-close]') as HTMLButtonElement)?.click();
+                (
+                    document.querySelector(
+                        '[data-dialog-close]',
+                    ) as HTMLButtonElement
+                )?.click();
             },
         });
     };
@@ -142,17 +180,27 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
         router.post(route('atk-requests.confirm-receive', atkRequest.id));
     };
 
-    const canApproveLevel1 = can.approve_level1 && atkRequest.status === 'pending';
-    const canApproveLevel2 = can.approve_level2 && atkRequest.status === 'level1_approved';
-    const canApproveLevel3 = can.approve_level3 && atkRequest.status === 'level2_approved';
-    const canReject = (can.approve_level1 || can.approve_level2 || can.approve_level3) &&
-        ['pending', 'level1_approved', 'level2_approved'].includes(atkRequest.status);
-    const canDistribute = can.distribute && atkRequest.status === 'level3_approved';
-    const canConfirm = can.confirm_receive && atkRequest.status === 'diserahkan';
+    const canApproveLevel1 =
+        can.approve_level1 && atkRequest.status === 'pending';
+    const canApproveLevel2 =
+        can.approve_level2 && atkRequest.status === 'level1_approved';
+    const canApproveLevel3 =
+        can.approve_level3 && atkRequest.status === 'level2_approved';
+    const canReject =
+        (can.approve_level1 || can.approve_level2 || can.approve_level3) &&
+        ['pending', 'level1_approved', 'level2_approved'].includes(
+            atkRequest.status,
+        );
+    const canDistribute =
+        can.distribute && atkRequest.status === 'level3_approved';
+    const canConfirm =
+        can.confirm_receive && atkRequest.status === 'diserahkan';
 
     const getCurrentStatusIndex = () => {
         if (atkRequest.status === 'rejected') return -1;
-        const index = statusSteps.findIndex(step => step.key === atkRequest.status);
+        const index = statusSteps.findIndex(
+            (step) => step.key === atkRequest.status,
+        );
         return index >= 0 ? index : 0;
     };
 
@@ -172,13 +220,23 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                             </Button>
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold">{atkRequest.no_permintaan}</h1>
+                            <h1 className="text-2xl font-bold">
+                                {atkRequest.no_permintaan}
+                            </h1>
                             <div className="flex items-center gap-2">
-                                <Badge className={statusConfig[atkRequest.status]?.className}>
-                                    {statusConfig[atkRequest.status]?.label || atkRequest.status}
+                                <Badge
+                                    className={
+                                        statusConfig[atkRequest.status]
+                                            ?.className
+                                    }
+                                >
+                                    {statusConfig[atkRequest.status]?.label ||
+                                        atkRequest.status}
                                 </Badge>
                                 <p className="text-sm text-muted-foreground">
-                                    {new Date(atkRequest.tanggal).toLocaleDateString('id-ID', {
+                                    {new Date(
+                                        atkRequest.tanggal,
+                                    ).toLocaleDateString('id-ID', {
                                         day: 'numeric',
                                         month: 'long',
                                         year: 'numeric',
@@ -190,19 +248,28 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
 
                     <div className="flex gap-2">
                         {canApproveLevel1 && (
-                            <Button onClick={() => handleApprove(1)} className="bg-green-600 hover:bg-green-700">
+                            <Button
+                                onClick={() => handleApprove(1)}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
                                 <CheckCircle className="mr-2 h-4 w-4" />
                                 Approve L1
                             </Button>
                         )}
                         {canApproveLevel2 && (
-                            <Button onClick={() => handleApprove(2)} className="bg-green-600 hover:bg-green-700">
+                            <Button
+                                onClick={() => handleApprove(2)}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
                                 <CheckCircle className="mr-2 h-4 w-4" />
                                 Approve L2
                             </Button>
                         )}
                         {canApproveLevel3 && (
-                            <Button onClick={() => handleApprove(3)} className="bg-green-600 hover:bg-green-700">
+                            <Button
+                                onClick={() => handleApprove(3)}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
                                 <CheckCircle className="mr-2 h-4 w-4" />
                                 Approve L3
                             </Button>
@@ -217,26 +284,46 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <DialogTitle>Tolak Permintaan</DialogTitle>
+                                        <DialogTitle>
+                                            Tolak Permintaan
+                                        </DialogTitle>
                                     </DialogHeader>
                                     <div className="space-y-4">
                                         <div>
-                                            <Label htmlFor="alasan_penolakan">Alasan Penolakan</Label>
+                                            <Label htmlFor="alasan_penolakan">
+                                                Alasan Penolakan
+                                            </Label>
                                             <Textarea
                                                 id="alasan_penolakan"
-                                                value={rejectForm.data.alasan_penolakan}
-                                                onChange={(e) => rejectForm.setData('alasan_penolakan', e.target.value)}
+                                                value={
+                                                    rejectForm.data
+                                                        .alasan_penolakan
+                                                }
+                                                onChange={(e) =>
+                                                    rejectForm.setData(
+                                                        'alasan_penolakan',
+                                                        e.target.value,
+                                                    )
+                                                }
                                                 placeholder="Masukkan alasan penolakan..."
                                                 rows={4}
                                             />
-                                            {rejectForm.errors.alasan_penolakan && (
-                                                <p className="mt-1 text-sm text-red-600">{rejectForm.errors.alasan_penolakan}</p>
+                                            {rejectForm.errors
+                                                .alasan_penolakan && (
+                                                <p className="mt-1 text-sm text-red-600">
+                                                    {
+                                                        rejectForm.errors
+                                                            .alasan_penolakan
+                                                    }
+                                                </p>
                                             )}
                                         </div>
                                         <div className="flex justify-end gap-2">
                                             <Button
                                                 variant="outline"
-                                                onClick={() => rejectForm.reset()}
+                                                onClick={() =>
+                                                    rejectForm.reset()
+                                                }
                                                 data-dialog-close
                                             >
                                                 Batal
@@ -246,7 +333,9 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                                 onClick={handleReject}
                                                 disabled={rejectForm.processing}
                                             >
-                                                {rejectForm.processing ? 'Memproses...' : 'Tolak'}
+                                                {rejectForm.processing
+                                                    ? 'Memproses...'
+                                                    : 'Tolak'}
                                             </Button>
                                         </div>
                                     </div>
@@ -264,9 +353,12 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                     <CardContent>
                         <div className="flex items-center justify-between">
                             {statusSteps.map((step, index) => {
-                                const isCompleted = index <= currentStatusIndex && currentStatusIndex >= 0;
+                                const isCompleted =
+                                    index <= currentStatusIndex &&
+                                    currentStatusIndex >= 0;
                                 const isCurrent = index === currentStatusIndex;
-                                const isRejected = atkRequest.status === 'rejected';
+                                const isRejected =
+                                    atkRequest.status === 'rejected';
 
                                 let approver = null;
                                 let approvedAt = null;
@@ -288,17 +380,20 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                 }
 
                                 return (
-                                    <div key={step.key} className="flex flex-col items-center">
+                                    <div
+                                        key={step.key}
+                                        className="flex flex-col items-center"
+                                    >
                                         <div
                                             className={cn(
                                                 'flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-semibold',
                                                 isRejected
                                                     ? 'border-red-500 bg-red-500 text-white'
                                                     : isCompleted
-                                                        ? 'border-green-500 bg-green-500 text-white'
-                                                        : isCurrent
-                                                            ? 'border-primary bg-primary text-primary-foreground'
-                                                            : 'border-muted bg-background text-muted-foreground'
+                                                      ? 'border-green-500 bg-green-500 text-white'
+                                                      : isCurrent
+                                                        ? 'border-primary bg-primary text-primary-foreground'
+                                                        : 'border-muted bg-background text-muted-foreground',
                                             )}
                                         >
                                             {isRejected ? (
@@ -310,13 +405,21 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                             )}
                                         </div>
                                         <div className="mt-2 text-center">
-                                            <p className="text-xs font-medium">{step.label}</p>
+                                            <p className="text-xs font-medium">
+                                                {step.label}
+                                            </p>
                                             {approver && (
-                                                <p className="text-xs text-muted-foreground">{approver.name}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {approver.name}
+                                                </p>
                                             )}
                                             {approvedAt && (
                                                 <p className="text-xs text-muted-foreground">
-                                                    {new Date(approvedAt).toLocaleDateString('id-ID')}
+                                                    {new Date(
+                                                        approvedAt,
+                                                    ).toLocaleDateString(
+                                                        'id-ID',
+                                                    )}
                                                 </p>
                                             )}
                                         </div>
@@ -324,7 +427,9 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                             <div
                                                 className={cn(
                                                     'h-1 w-20',
-                                                    index < currentStatusIndex ? 'bg-green-500' : 'bg-muted'
+                                                    index < currentStatusIndex
+                                                        ? 'bg-green-500'
+                                                        : 'bg-muted',
                                                 )}
                                             />
                                         )}
@@ -348,23 +453,35 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                             <div className="flex items-center gap-3">
                                 <User className="h-5 w-5 text-muted-foreground" />
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Pemohon</p>
-                                    <p className="font-medium">{atkRequest.user?.name}</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Pemohon
+                                    </p>
+                                    <p className="font-medium">
+                                        {atkRequest.user?.name}
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Building className="h-5 w-5 text-muted-foreground" />
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Departemen</p>
-                                    <p className="font-medium">{atkRequest.department?.name}</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Departemen
+                                    </p>
+                                    <p className="font-medium">
+                                        {atkRequest.department?.name}
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Calendar className="h-5 w-5 text-muted-foreground" />
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Tanggal</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Tanggal
+                                    </p>
                                     <p className="font-medium">
-                                        {new Date(atkRequest.tanggal).toLocaleDateString('id-ID', {
+                                        {new Date(
+                                            atkRequest.tanggal,
+                                        ).toLocaleDateString('id-ID', {
                                             day: 'numeric',
                                             month: 'long',
                                             year: 'numeric',
@@ -374,8 +491,12 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                             </div>
                             {atkRequest.keterangan && (
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Keterangan</p>
-                                    <p className="font-medium">{atkRequest.keterangan}</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Keterangan
+                                    </p>
+                                    <p className="font-medium">
+                                        {atkRequest.keterangan}
+                                    </p>
                                 </div>
                             )}
                             {atkRequest.alasan_penolakan && (
@@ -407,13 +528,18 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                         className="flex items-start justify-between rounded-lg border p-3"
                                     >
                                         <div className="flex-1">
-                                            <p className="font-medium">{detail.item?.nama_barang}</p>
+                                            <p className="font-medium">
+                                                {detail.item?.nama_barang}
+                                            </p>
                                             <p className="text-sm text-muted-foreground">
                                                 {detail.item?.kode_barang}
                                             </p>
                                         </div>
                                         <div className="ml-4 text-right">
-                                            <p className="font-medium">{detail.jumlah_diminta} {detail.item?.satuan}</p>
+                                            <p className="font-medium">
+                                                {detail.jumlah_diminta}{' '}
+                                                {detail.item?.satuan}
+                                            </p>
                                             <p className="text-sm text-muted-foreground">
                                                 Diminta
                                             </p>
@@ -434,10 +560,14 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                     Barang Siap Diterima
                                 </p>
                                 <p className="text-sm text-green-700 dark:text-green-300">
-                                    Konfirmasi bahwa Anda telah menerima barang yang diminta
+                                    Konfirmasi bahwa Anda telah menerima barang
+                                    yang diminta
                                 </p>
                             </div>
-                            <Button onClick={handleConfirmReceive} className="bg-green-600 hover:bg-green-700">
+                            <Button
+                                onClick={handleConfirmReceive}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
                                 <CheckCircle className="mr-2 h-4 w-4" />
                                 Konfirmasi Penerimaan
                             </Button>

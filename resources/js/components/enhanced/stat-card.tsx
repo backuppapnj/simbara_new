@@ -1,11 +1,15 @@
-import * as React from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, TrendingDown, TrendingUp, Minus } from 'lucide-react';
-import { type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+    AlertCircle,
+    Minus,
+    TrendingDown,
+    TrendingUp,
+    type LucideIcon,
+} from 'lucide-react';
 
 export interface StatCardProps {
     title: string;
@@ -61,9 +65,21 @@ export function StatCard({
     const getStatusBadge = () => {
         if (status === 'neutral') return null;
         const variants = {
-            success: { label: 'Baik', className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' },
-            warning: { label: 'Perhatian', className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' },
-            error: { label: 'Kritis', className: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' },
+            success: {
+                label: 'Baik',
+                className:
+                    'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+            },
+            warning: {
+                label: 'Perhatian',
+                className:
+                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+            },
+            error: {
+                label: 'Kritis',
+                className:
+                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+            },
         };
         const variant = variants[status];
         return <Badge className={variant.className}>{variant.label}</Badge>;
@@ -91,17 +107,21 @@ export function StatCard({
                 ) : error ? (
                     <Alert variant="destructive" className="py-2">
                         <AlertCircle className="size-4" />
-                        <AlertDescription className="text-xs">{error}</AlertDescription>
+                        <AlertDescription className="text-xs">
+                            {error}
+                        </AlertDescription>
                     </Alert>
                 ) : (
                     <>
-                        <div className="text-2xl font-bold tracking-tight">{value}</div>
+                        <div className="text-2xl font-bold tracking-tight">
+                            {value}
+                        </div>
                         {trend && (
                             <div
                                 className={cn(
                                     'mt-2 flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium',
                                     getTrendColor(),
-                                    getTrendBgColor()
+                                    getTrendBgColor(),
                                 )}
                             >
                                 {getTrendIcon()}
@@ -119,8 +139,9 @@ export function StatCard({
 
     const cardClassName = cn(
         'transition-all duration-200',
-        (href || onClick) && 'cursor-pointer hover:shadow-md hover:border-primary/50',
-        className
+        (href || onClick) &&
+            'cursor-pointer hover:border-primary/50 hover:shadow-md',
+        className,
     );
 
     if (href) {

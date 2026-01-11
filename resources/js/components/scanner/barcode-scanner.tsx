@@ -22,30 +22,36 @@ export function BarcodeScanner({
     showCloseButton = true,
 }: BarcodeScannerProps) {
     const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
-    const scannerElementId = useMemo(() => `barcode-scanner-${Math.random().toString(36).substring(7)}`, []);
+    const scannerElementId = useMemo(
+        () => `barcode-scanner-${Math.random().toString(36).substring(7)}`,
+        [],
+    );
     const hasScannedRef = useRef(false);
     const stopScanningRef = useRef<(() => Promise<void>) | null>(null);
 
-    const handleDetected = useCallback((decodedText: string, decodedResult?: unknown) => {
-        // For non-continuous scan, only process the first scan
-        if (!continuousScan && hasScannedRef.current) {
-            return;
-        }
+    const handleDetected = useCallback(
+        (decodedText: string, decodedResult?: unknown) => {
+            // For non-continuous scan, only process the first scan
+            if (!continuousScan && hasScannedRef.current) {
+                return;
+            }
 
-        hasScannedRef.current = true;
-        setLastScannedCode(decodedText);
+            hasScannedRef.current = true;
+            setLastScannedCode(decodedText);
 
-        if (onScanSuccess) {
-            onScanSuccess(decodedText, decodedResult);
-        }
+            if (onScanSuccess) {
+                onScanSuccess(decodedText, decodedResult);
+            }
 
-        // Auto-stop scanner after successful scan (unless continuous)
-        if (!continuousScan && stopScanningRef.current) {
-            setTimeout(() => {
-                stopScanningRef.current?.();
-            }, 500);
-        }
-    }, [continuousScan, onScanSuccess]);
+            // Auto-stop scanner after successful scan (unless continuous)
+            if (!continuousScan && stopScanningRef.current) {
+                setTimeout(() => {
+                    stopScanningRef.current?.();
+                }, 500);
+            }
+        },
+        [continuousScan, onScanSuccess],
+    );
 
     const {
         isScanning,

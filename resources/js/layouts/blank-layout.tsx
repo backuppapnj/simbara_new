@@ -1,7 +1,6 @@
 import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { type BreadcrumbItem } from '@/types';
-import { type PropsWithChildren } from 'react';
 
 interface BlankLayoutProps {
     children: React.ReactNode;
@@ -32,7 +31,9 @@ export default function BlankLayout({
         <AppShell variant="blank">
             {title && (
                 <div className="border-b border-sidebar-border/80 bg-background px-4 py-4 md:px-6">
-                    <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+                    <h1 className="text-2xl font-semibold tracking-tight">
+                        {title}
+                    </h1>
                 </div>
             )}
             {breadcrumbs.length > 0 && (
@@ -48,7 +49,7 @@ export default function BlankLayout({
                                 {breadcrumb.href ? (
                                     <a
                                         href={breadcrumb.href}
-                                        className="hover:text-foreground transition-colors"
+                                        className="transition-colors hover:text-foreground"
                                     >
                                         {breadcrumb.title}
                                     </a>

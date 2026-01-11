@@ -20,13 +20,12 @@ return new class extends Migration
             $table->integer('stok_sesudah');
             $table->string('tipe', 50)->comment('pembelian, permintaan, manual, quick_deduct');
             $table->ulid('referensi_id')->nullable();
-            $table->ulid('user_id')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('supply_id')->references('id')->on('office_supplies')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

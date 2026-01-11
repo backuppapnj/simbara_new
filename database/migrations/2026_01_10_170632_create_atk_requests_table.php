@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('atk_requests', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('no_permintaan', 50)->unique();
-            $table->ulid('user_id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->ulid('department_id');
             $table->date('tanggal');
             $table->enum('status', [
@@ -26,22 +26,18 @@ return new class extends Migration
                 'diserahkan',
                 'diterima',
             ])->default('pending');
-            $table->ulid('level1_approval_by')->nullable();
+            $table->foreignId('level1_approval_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('level1_approval_at')->nullable();
-            $table->ulid('level2_approval_by')->nullable();
+            $table->foreignId('level2_approval_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('level2_approval_at')->nullable();
-            $table->ulid('level3_approval_by')->nullable();
+            $table->foreignId('level3_approval_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('level3_approval_at')->nullable();
             $table->text('keterangan')->nullable();
             $table->text('alasan_penolakan')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('restrict');
-            $table->foreign('level1_approval_by')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('level2_approval_by')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('level3_approval_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

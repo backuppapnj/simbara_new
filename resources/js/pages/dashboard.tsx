@@ -2,18 +2,11 @@ import QuickActions from '@/components/dashboard/quick-actions';
 import StatsChart from '@/components/dashboard/stats-chart';
 import SummaryCard from '@/components/dashboard/summary-card';
 import WelcomeSection from '@/components/dashboard/welcome-section';
-import { WhenVisible } from '@inertiajs/react';
-import {
-    Archive,
-    FileText,
-    Package,
-    ShoppingCart,
-    Wrench,
-} from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, WhenVisible } from '@inertiajs/react';
+import { FileText, Package, ShoppingCart, Wrench } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -30,8 +23,16 @@ interface SummaryData {
 }
 
 interface ChartData {
-    asset_distribution: Array<{ category: string; count: number; value: number }>;
-    monthly_trends: Array<{ month: string; requests: number; expenditure: number }>;
+    asset_distribution: Array<{
+        category: string;
+        count: number;
+        value: number;
+    }>;
+    monthly_trends: Array<{
+        month: string;
+        requests: number;
+        expenditure: number;
+    }>;
 }
 
 interface DashboardProps {

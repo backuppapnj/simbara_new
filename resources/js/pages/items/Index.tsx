@@ -49,7 +49,8 @@ export default function ItemsIndex({ items, filters }: ItemsProps) {
 
                 <div className="rounded-lg border p-6">
                     <p className="text-muted-foreground">
-                        Items page loaded successfully. Found {items.total} items.
+                        Items page loaded successfully. Found {items.total}{' '}
+                        items.
                     </p>
                 </div>
             </div>

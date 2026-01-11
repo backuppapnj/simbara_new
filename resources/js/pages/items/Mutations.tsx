@@ -1,13 +1,19 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, usePoll } from '@inertiajs/react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, RefreshCw, Filter } from 'lucide-react';
+import { ArrowLeft, Filter, RefreshCw } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -55,7 +61,9 @@ interface MutationsProps {
     };
 }
 
-function getMutationBadgeVariant(jenis: string): 'default' | 'secondary' | 'destructive' | 'outline' {
+function getMutationBadgeVariant(
+    jenis: string,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
     switch (jenis) {
         case 'masuk':
             return 'default';
@@ -81,7 +89,11 @@ function getMutationBadgeColor(jenis: string): string {
     }
 }
 
-export default function ItemMutations({ item, mutations, filters }: MutationsProps) {
+export default function ItemMutations({
+    item,
+    mutations,
+    filters,
+}: MutationsProps) {
     // Enable Inertia v2 polling for real-time updates (every 5 seconds)
     const { start, stop } = usePoll(5000, {
         preserveState: true,
@@ -114,7 +126,11 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                             </p>
                         </div>
                     </div>
-                    <Button onClick={handleManualRefresh} variant="outline" size="sm">
+                    <Button
+                        onClick={handleManualRefresh}
+                        variant="outline"
+                        size="sm"
+                    >
                         <RefreshCw className="mr-2 h-4 w-4" />
                         Refresh
                     </Button>
@@ -129,12 +145,17 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-4xl font-bold">{item.stok}</span>
-                            <span className="text-lg text-muted-foreground">{item.satuan}</span>
+                            <span className="text-4xl font-bold">
+                                {item.stok}
+                            </span>
+                            <span className="text-lg text-muted-foreground">
+                                {item.satuan}
+                            </span>
                         </div>
                         {item.stok <= 10 && (
                             <p className="mt-2 text-sm text-orange-600 dark:text-orange-400">
-                                Stok menipis! Pertimbangkan untuk melakukan pembelian.
+                                Stok menipis! Pertimbangkan untuk melakukan
+                                pembelian.
                             </p>
                         )}
                     </CardContent>
@@ -153,14 +174,21 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                     <CardContent>
                         <div className="grid gap-4 md:grid-cols-3">
                             <div>
-                                <label className="mb-2 block text-sm font-medium">Jenis Mutasi</label>
+                                <label className="mb-2 block text-sm font-medium">
+                                    Jenis Mutasi
+                                </label>
                                 <select
-                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                     value={filters.jenis}
                                     onChange={(e) => {
-                                        const url = new URL(window.location.href);
+                                        const url = new URL(
+                                            window.location.href,
+                                        );
                                         if (e.target.value) {
-                                            url.searchParams.set('jenis', e.target.value);
+                                            url.searchParams.set(
+                                                'jenis',
+                                                e.target.value,
+                                            );
                                         } else {
                                             url.searchParams.delete('jenis');
                                         }
@@ -170,34 +198,52 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                                     <option value="">Semua</option>
                                     <option value="masuk">Masuk</option>
                                     <option value="keluar">Keluar</option>
-                                    <option value="adjustment">Adjustment</option>
+                                    <option value="adjustment">
+                                        Adjustment
+                                    </option>
                                 </select>
                             </div>
                             <div>
-                                <label className="mb-2 block text-sm font-medium">Dari Tanggal</label>
+                                <label className="mb-2 block text-sm font-medium">
+                                    Dari Tanggal
+                                </label>
                                 <Input
                                     type="date"
                                     value={filters.date_from}
                                     onChange={(e) => {
-                                        const url = new URL(window.location.href);
+                                        const url = new URL(
+                                            window.location.href,
+                                        );
                                         if (e.target.value) {
-                                            url.searchParams.set('date_from', e.target.value);
+                                            url.searchParams.set(
+                                                'date_from',
+                                                e.target.value,
+                                            );
                                         } else {
-                                            url.searchParams.delete('date_from');
+                                            url.searchParams.delete(
+                                                'date_from',
+                                            );
                                         }
                                         window.location.href = url.toString();
                                     }}
                                 />
                             </div>
                             <div>
-                                <label className="mb-2 block text-sm font-medium">Sampai Tanggal</label>
+                                <label className="mb-2 block text-sm font-medium">
+                                    Sampai Tanggal
+                                </label>
                                 <Input
                                     type="date"
                                     value={filters.date_to}
                                     onChange={(e) => {
-                                        const url = new URL(window.location.href);
+                                        const url = new URL(
+                                            window.location.href,
+                                        );
                                         if (e.target.value) {
-                                            url.searchParams.set('date_to', e.target.value);
+                                            url.searchParams.set(
+                                                'date_to',
+                                                e.target.value,
+                                            );
                                         } else {
                                             url.searchParams.delete('date_to');
                                         }
@@ -220,7 +266,9 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                     <CardContent>
                         {mutations.data.length === 0 ? (
                             <div className="py-12 text-center">
-                                <p className="text-muted-foreground">Tidak ada mutasi stock ditemukan.</p>
+                                <p className="text-muted-foreground">
+                                    Tidak ada mutasi stock ditemukan.
+                                </p>
                             </div>
                         ) : (
                             <div className="overflow-x-auto">
@@ -230,53 +278,88 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                                             <TableHead>Tanggal</TableHead>
                                             <TableHead>Keterangan</TableHead>
                                             <TableHead>Jenis</TableHead>
-                                            <TableHead className="text-right">Masuk</TableHead>
-                                            <TableHead className="text-right">Keluar</TableHead>
-                                            <TableHead className="text-right">Saldo</TableHead>
+                                            <TableHead className="text-right">
+                                                Masuk
+                                            </TableHead>
+                                            <TableHead className="text-right">
+                                                Keluar
+                                            </TableHead>
+                                            <TableHead className="text-right">
+                                                Saldo
+                                            </TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {mutations.data.map((mutation) => (
                                             <TableRow key={mutation.id}>
                                                 <TableCell className="whitespace-nowrap">
-                                                    {new Date(mutation.created_at).toLocaleDateString('id-ID', {
-                                                        day: '2-digit',
-                                                        month: 'short',
-                                                        year: 'numeric',
-                                                        hour: '2-digit',
-                                                        minute: '2-digit',
-                                                    })}
+                                                    {new Date(
+                                                        mutation.created_at,
+                                                    ).toLocaleDateString(
+                                                        'id-ID',
+                                                        {
+                                                            day: '2-digit',
+                                                            month: 'short',
+                                                            year: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit',
+                                                        },
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
                                                     {mutation.keterangan || '-'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Badge className={getMutationBadgeColor(mutation.jenis_mutasi)}>
-                                                        {mutation.jenis_mutasi === 'masuk' && 'Masuk'}
-                                                        {mutation.jenis_mutasi === 'keluar' && 'Keluar'}
-                                                        {mutation.jenis_mutasi === 'adjustment' && 'Adjustment'}
+                                                    <Badge
+                                                        className={getMutationBadgeColor(
+                                                            mutation.jenis_mutasi,
+                                                        )}
+                                                    >
+                                                        {mutation.jenis_mutasi ===
+                                                            'masuk' && 'Masuk'}
+                                                        {mutation.jenis_mutasi ===
+                                                            'keluar' &&
+                                                            'Keluar'}
+                                                        {mutation.jenis_mutasi ===
+                                                            'adjustment' &&
+                                                            'Adjustment'}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    {mutation.jenis_mutasi === 'masuk' || mutation.jenis_mutasi === 'adjustment' && mutation.jumlah > 0 ? (
+                                                    {mutation.jenis_mutasi ===
+                                                        'masuk' ||
+                                                    (mutation.jenis_mutasi ===
+                                                        'adjustment' &&
+                                                        mutation.jumlah > 0) ? (
                                                         <span className="font-medium text-green-600 dark:text-green-400">
-                                                            +{Math.abs(mutation.jumlah)}
+                                                            +
+                                                            {Math.abs(
+                                                                mutation.jumlah,
+                                                            )}
                                                         </span>
                                                     ) : (
                                                         '-'
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    {mutation.jenis_mutasi === 'keluar' || (mutation.jenis_mutasi === 'adjustment' && mutation.jumlah < 0) ? (
+                                                    {mutation.jenis_mutasi ===
+                                                        'keluar' ||
+                                                    (mutation.jenis_mutasi ===
+                                                        'adjustment' &&
+                                                        mutation.jumlah < 0) ? (
                                                         <span className="font-medium text-red-600 dark:text-red-400">
-                                                            -{Math.abs(mutation.jumlah)}
+                                                            -
+                                                            {Math.abs(
+                                                                mutation.jumlah,
+                                                            )}
                                                         </span>
                                                     ) : (
                                                         '-'
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="text-right font-medium">
-                                                    {mutation.running_balance ?? mutation.stok_sesudah}
+                                                    {mutation.running_balance ??
+                                                        mutation.stok_sesudah}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -289,7 +372,8 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                         {mutations.last_page > 1 && (
                             <div className="mt-4 flex items-center justify-between">
                                 <p className="text-sm text-muted-foreground">
-                                    Halaman {mutations.current_page} dari {mutations.last_page}
+                                    Halaman {mutations.current_page} dari{' '}
+                                    {mutations.last_page}
                                 </p>
                                 <div className="flex gap-2">
                                     {mutations.current_page > 1 && (
@@ -297,22 +381,41 @@ export default function ItemMutations({ item, mutations, filters }: MutationsPro
                                             variant="outline"
                                             size="sm"
                                             onClick={() => {
-                                                const url = new URL(window.location.href);
-                                                url.searchParams.set('page', String(mutations.current_page - 1));
-                                                window.location.href = url.toString();
+                                                const url = new URL(
+                                                    window.location.href,
+                                                );
+                                                url.searchParams.set(
+                                                    'page',
+                                                    String(
+                                                        mutations.current_page -
+                                                            1,
+                                                    ),
+                                                );
+                                                window.location.href =
+                                                    url.toString();
                                             }}
                                         >
                                             Previous
                                         </Button>
                                     )}
-                                    {mutations.current_page < mutations.last_page && (
+                                    {mutations.current_page <
+                                        mutations.last_page && (
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             onClick={() => {
-                                                const url = new URL(window.location.href);
-                                                url.searchParams.set('page', String(mutations.current_page + 1));
-                                                window.location.href = url.toString();
+                                                const url = new URL(
+                                                    window.location.href,
+                                                );
+                                                url.searchParams.set(
+                                                    'page',
+                                                    String(
+                                                        mutations.current_page +
+                                                            1,
+                                                    ),
+                                                );
+                                                window.location.href =
+                                                    url.toString();
                                             }}
                                         >
                                             Next

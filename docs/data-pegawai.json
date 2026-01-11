@@ -1,0 +1,296 @@
+{
+    "satker": "Pengadilan Agama Penajam",
+    "total_pegawai": 29,
+    "pegawai": [
+        {
+            "no": 1,
+            "id": 15698,
+            "nip": "198505092009041006",
+            "nama": "FATTAHUURRIDLO AL GHANY, S.H.I., M.S.I.",
+            "jabatan": "Ketua Pengadilan Tingkat Pertama Klas II",
+            "unit_kerja": "Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2024-05-13",
+            "golongan": "IV/a"
+        },
+        {
+            "no": 2,
+            "id": 20653,
+            "nip": "198410092007042001",
+            "nama": "NAHDIYANTI, S.H.I., M.H.",
+            "jabatan": "Wakil Ketua Tingkat Pertama",
+            "unit_kerja": "Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2022-11-28",
+            "golongan": "IV/a"
+        },
+        {
+            "no": 3,
+            "id": 44292,
+            "nip": "199702232022032013",
+            "nama": "NUR RIZKA FANI, S.H.",
+            "jabatan": "Hakim Tingkat Pertama",
+            "unit_kerja": "Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-11",
+            "golongan": "III/a"
+        },
+        {
+            "no": 4,
+            "id": 44653,
+            "nip": "199704162022032013",
+            "nama": "VIDYA NURCHALIZA, S.H.",
+            "jabatan": "Hakim Tingkat Pertama",
+            "unit_kerja": "Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-11",
+            "golongan": "III/a"
+        },
+        {
+            "no": 5,
+            "id": 10835,
+            "nip": "197503141996031002",
+            "nama": "MUHAMMAD HAMDI, S.H., M.Hum.",
+            "jabatan": "Panitera Tingkat Pertama Klas II",
+            "unit_kerja": "Panitera - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2024-06-11",
+            "golongan": "IV/a"
+        },
+        {
+            "no": 6,
+            "id": 12148,
+            "nip": "198301042006042003",
+            "nama": "INDRA YANITA YULIANA, S.E., M.Si.",
+            "jabatan": "Sekretaris Tingkat Pertama Klas II",
+            "unit_kerja": "Sekretaris - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2019-08-07",
+            "golongan": "IV/a"
+        },
+        {
+            "no": 7,
+            "id": 33088,
+            "nip": "198506052009042006",
+            "nama": "NUZULA YUSTISIA, S.H.I.",
+            "jabatan": "Panitera Muda Tingkat Pertama Klas II",
+            "unit_kerja": "Panitera Muda Permohonan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-07-21",
+            "golongan": "III/d"
+        },
+        {
+            "no": 8,
+            "id": 15051,
+            "nip": "198108022009122002",
+            "nama": "FARIDAH FITRIYANI, S.H.I.",
+            "jabatan": "Panitera Muda Tingkat Pertama Klas II",
+            "unit_kerja": "Panitera Muda Gugatan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2024-10-10",
+            "golongan": "III/d"
+        },
+        {
+            "no": 9,
+            "id": 9300,
+            "nip": "198411192011011012",
+            "nama": "AWALUDDIN NUR, S.H.I.",
+            "jabatan": "Kepala Subbagian",
+            "unit_kerja": "Subbagian Perencanaan, Teknologi Informasi, dan Pelaporan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-08-28",
+            "golongan": "III/d"
+        },
+        {
+            "no": 10,
+            "id": 34175,
+            "nip": "198802022008051001",
+            "nama": "MUHAMMAD ZAIM NOOR, S.H.",
+            "jabatan": "Kepala Subbagian",
+            "unit_kerja": "Subbagian Umum dan Keuangan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-08-28",
+            "golongan": "III/c"
+        },
+        {
+            "no": 11,
+            "id": 40337,
+            "nip": "199408302020122007",
+            "nama": "RAINI MAULIDINA, S.H.",
+            "jabatan": "Panitera Pengganti Tingkat Pertama",
+            "unit_kerja": "Panitera - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-17",
+            "golongan": "III/b"
+        },
+        {
+            "no": 12,
+            "id": 40695,
+            "nip": "199705312020121004",
+            "nama": "MUHAMMAD MIFTAHUDIN, S.H.",
+            "jabatan": "Panitera Pengganti Tingkat Pertama",
+            "unit_kerja": "Panitera - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-17",
+            "golongan": "III/b"
+        },
+        {
+            "no": 13,
+            "id": 43213,
+            "nip": "199702012022031004",
+            "nama": "MUHAMMAD ILHAM, S.H., M.Kn.",
+            "jabatan": "Klerek - Analis Perkara Peradilan",
+            "unit_kerja": "Panitera Muda Gugatan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2023-10-02",
+            "golongan": "III/b"
+        },
+        {
+            "no": 14,
+            "id": 53314,
+            "nip": "200106132024052001",
+            "nama": "QURROTU AINI, S.H.",
+            "jabatan": "Klerek - Analis Perkara Peradilan",
+            "unit_kerja": "Panitera Muda Hukum - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-05-02",
+            "golongan": "III/a"
+        },
+        {
+            "no": 15,
+            "id": 82353,
+            "nip": "200009242025062019",
+            "nama": "CUCU KHOFIFAH, S.H.",
+            "jabatan": "Klerek - Analis Perkara Peradilan",
+            "unit_kerja": "Panitera Muda Hukum - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-01",
+            "golongan": "III/a"
+        },
+        {
+            "no": 16,
+            "id": 77385,
+            "nip": "199712262025062010",
+            "nama": "RAINA PUTRI NASUHA, S.H.",
+            "jabatan": "Klerek - Analis Perkara Peradilan",
+            "unit_kerja": "Panitera Muda Gugatan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-01",
+            "golongan": "III/a"
+        },
+        {
+            "no": 17,
+            "id": 40339,
+            "nip": "199107132020121003",
+            "nama": "MUHARDIANSYAH, S.Kom.",
+            "jabatan": "Pranata Komputer Ahli Pertama",
+            "unit_kerja": "Subbagian Perencanaan, Teknologi Informasi, dan Pelaporan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2022-08-01",
+            "golongan": "III/a"
+        },
+        {
+            "no": 18,
+            "id": 71562,
+            "nip": "199710252025062012",
+            "nama": "NUR MUFLIHAH PUTRI WIJANARKO, S.T.",
+            "jabatan": "Teknisi Sarana dan Prasarana",
+            "unit_kerja": "Subbagian Umum dan Keuangan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-01",
+            "golongan": "III/a"
+        },
+        {
+            "no": 19,
+            "id": 40338,
+            "nip": "199211132020122011",
+            "nama": "YULINDA, A.Md.Kom.",
+            "jabatan": "Klerek - Pengelola Penanganan Perkara",
+            "unit_kerja": "Panitera Muda Permohonan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2023-10-02",
+            "golongan": "II/d"
+        },
+        {
+            "no": 20,
+            "id": 82605,
+            "nip": "199604102025062008",
+            "nama": "NURAVITA PRAMESTI, A.Md.",
+            "jabatan": "Klerek - Dokumentalis Hukum",
+            "unit_kerja": "Panitera Muda Hukum - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-23",
+            "golongan": "II/c"
+        },
+        {
+            "no": 21,
+            "id": 43299,
+            "nip": "199010082022031004",
+            "nama": "IRWAN SYAH SETIAWAN, A.md",
+            "jabatan": "Klerek - Pengelola Penanganan Perkara",
+            "unit_kerja": "Panitera Muda Gugatan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2023-10-02",
+            "golongan": "II/c"
+        },
+        {
+            "no": 22,
+            "id": 77934,
+            "nip": "199709082025061006",
+            "nama": "JAKFAR, A.Md.A.B.",
+            "jabatan": "Klerek - Dokumentalis Hukum",
+            "unit_kerja": "Panitera Muda Gugatan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-06-01",
+            "golongan": "II/c"
+        },
+        {
+            "no": 23,
+            "id": 117092,
+            "nip": "199711202025212035",
+            "nama": "NOVAYANTI, S.H.",
+            "jabatan": "Operator - Penata Layanan Operasional",
+            "unit_kerja": "Panitera Muda Hukum - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-09-01",
+            "golongan": "IX"
+        },
+        {
+            "no": 24,
+            "id": 131447,
+            "nip": "198510102025211065",
+            "nama": "DAMAI AZIZU, S.Kom.",
+            "jabatan": "Operator - Penata Layanan Operasional",
+            "unit_kerja": "Subbagian Perencanaan, Teknologi Informasi, dan Pelaporan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-09-01",
+            "golongan": "IX"
+        },
+        {
+            "no": 25,
+            "id": 131042,
+            "nip": "199605112025212037",
+            "nama": "NAJWA HIJRIANA, S.E.",
+            "jabatan": "Operator - Penata Layanan Operasional",
+            "unit_kerja": "Subbagian Kepegawaian, Organisasi, dan Tata Laksana - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-09-01",
+            "golongan": "IX"
+        },
+        {
+            "no": 26,
+            "id": 107462,
+            "nip": "199406072025211039",
+            "nama": "ASHAR, S.H.",
+            "jabatan": "Operator - Penata Layanan Operasional",
+            "unit_kerja": "Subbagian Umum dan Keuangan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-09-01",
+            "golongan": "IX"
+        },
+        {
+            "no": 27,
+            "id": 166070,
+            "nip": "198204262025211027",
+            "nama": "AMIN NUR",
+            "jabatan": "Operator Layanan Operasional",
+            "unit_kerja": "Subbagian Umum dan Keuangan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-09-01",
+            "golongan": "V"
+        },
+        {
+            "no": 28,
+            "id": 131951,
+            "nip": "198210062025211034",
+            "nama": "ADI IRAWAN",
+            "jabatan": "Pengelola Umum Operasional",
+            "unit_kerja": "Subbagian Umum dan Keuangan - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2025-09-01",
+            "golongan": "I"
+        },
+        {
+            "no": 29,
+            "id": 38305,
+            "nip": "199304112019032020",
+            "nama": "NURUL FITRIANI, A.Md.Kom.",
+            "jabatan": "Juru Sita Pengganti",
+            "unit_kerja": "Panitera - Pengadilan Agama Penajam",
+            "tmt_jabatan_mulai": "2023-10-09",
+            "golongan": "II/d"
+        }
+    ]
+}

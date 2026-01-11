@@ -8,6 +8,7 @@ use App\Models\Asset;
 use App\Models\AtkRequest;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -70,7 +71,7 @@ class DashboardController extends Controller
      */
     protected function getDamagedAssets(): int
     {
-        return Asset::where('kondisi', 'rusak')->count();
+        return Asset::where('ur_kondisi', 'rusak')->count();
     }
 
     /**
@@ -87,11 +88,11 @@ class DashboardController extends Controller
     protected function getAssetDistribution(): array
     {
         return Asset::query()
-            ->selectRaw('kategori, COUNT(*) as count, SUM(harga_perolehan) as value')
-            ->groupBy('kategori')
+            ->selectRaw('ur_sskel, COUNT(*) as count, SUM(rph_perolehan) as value')
+            ->groupBy('ur_sskel')
             ->get()
             ->map(fn ($item) => [
-                'category' => $item->kategori ?? 'Lainnya',
+                'category' => $item->ur_sskel ?? 'Lainnya',
                 'count' => $item->count,
                 'value' => (int) $item->value,
             ])
@@ -103,18 +104,28 @@ class DashboardController extends Controller
      */
     protected function getMonthlyTrends(): array
     {
-        // Get last 6 months of data
-        return AtkRequest::query()
-            ->selectRaw('DATE_FORMAT(tanggal, "%b") as month, COUNT(*) as requests, SUM(total_nilai) as expenditure')
+        // Get last 6 months of data using MySQL DATE_FORMAT
+        $data = AtkRequest::query()
+            ->selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as year_month, COUNT(*) as requests')
             ->where('tanggal', '>=', now()->subMonths(6))
-            ->groupBy('month')
-            ->orderBy('tanggal')
+            ->groupBy('year_month')
+            ->orderBy('year_month')
+            ->get();
+
+        // Calculate expenditure by summing up request details with item prices
+        $requests = AtkRequest::query()
+            ->with(['requestDetails.item'])
+            ->where('tanggal', '>=', now()->subMonths(6))
             ->get()
-            ->map(fn ($item) => [
-                'month' => $item->month,
-                'requests' => $item->requests,
-                'expenditure' => (int) ($item->expenditure ?? 0),
-            ])
-            ->toArray();
+            ->groupBy(fn ($request) => $request->tanggal->format('Y-m'));
+
+        // Format month names in PHP using Carbon and calculate expenditure
+        return $data->map(fn ($item) => [
+            'month' => $item->year_month ? Carbon::parse($item->year_month.'-01')->format('M') : '',
+            'requests' => $item->requests,
+            'expenditure' => (int) ($requests->get($item->year_month)?->sum(fn ($request) => $request->requestDetails->sum(fn ($detail) => ($detail->jumlah_diberikan ?? $detail->jumlah_disetujui ?? $detail->jumlah_diminta) * ($detail->item?->harga_rata_rata ?? 0)
+            )
+            ) ?? 0),
+        ])->toArray();
     }
 }

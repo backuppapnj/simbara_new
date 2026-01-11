@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useEffect, RefObject } from 'react';
+import { RefObject, useCallback, useEffect, useRef } from 'react';
 
 interface SwipeHandlers {
     onSwipeLeft?: () => void;
@@ -32,15 +32,13 @@ interface SwipeState {
 
 export function useSwipe(
     handlers: SwipeHandlers,
-    options: SwipeOptions = {}
+    options: SwipeOptions = {},
 ): SwipeState {
-    const {
-        threshold = 50,
-        restrain = 100,
-        allowedTime = 300,
-    } = options;
+    const { threshold = 50, restrain = 100, allowedTime = 300 } = options;
 
-    const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+    const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(
+        null,
+    );
 
     const onTouchStart = useCallback((e: React.TouchEvent) => {
         const touch = e.changedTouches[0];
@@ -51,92 +49,113 @@ export function useSwipe(
         };
     }, []);
 
-    const onTouchEnd = useCallback((e: React.TouchEvent) => {
-        const touchStart = touchStartRef.current;
-        if (!touchStart) return;
+    const onTouchEnd = useCallback(
+        (e: React.TouchEvent) => {
+            const touchStart = touchStartRef.current;
+            if (!touchStart) return;
 
-        const touch = e.changedTouches[0];
-        const diffX = touch.clientX - touchStart.x;
-        const diffY = touch.clientY - touchStart.y;
-        const elapsedTime = Date.now() - touchStart.time;
+            const touch = e.changedTouches[0];
+            const diffX = touch.clientX - touchStart.x;
+            const diffY = touch.clientY - touchStart.y;
+            const elapsedTime = Date.now() - touchStart.time;
 
-        // Check if the gesture was fast enough and didn't move too much in the wrong direction
-        if (elapsedTime <= allowedTime) {
-            if (Math.abs(diffX) > threshold && Math.abs(diffY) <= restrain) {
-                if (diffX > 0) {
-                    handlers.onSwipeRight?.();
-                } else {
-                    handlers.onSwipeLeft?.();
-                }
-            } else if (Math.abs(diffY) > threshold && Math.abs(diffX) <= restrain) {
-                if (diffY > 0) {
-                    handlers.onSwipeDown?.();
-                } else {
-                    handlers.onSwipeUp?.();
+            // Check if the gesture was fast enough and didn't move too much in the wrong direction
+            if (elapsedTime <= allowedTime) {
+                if (
+                    Math.abs(diffX) > threshold &&
+                    Math.abs(diffY) <= restrain
+                ) {
+                    if (diffX > 0) {
+                        handlers.onSwipeRight?.();
+                    } else {
+                        handlers.onSwipeLeft?.();
+                    }
+                } else if (
+                    Math.abs(diffY) > threshold &&
+                    Math.abs(diffX) <= restrain
+                ) {
+                    if (diffY > 0) {
+                        handlers.onSwipeDown?.();
+                    } else {
+                        handlers.onSwipeUp?.();
+                    }
                 }
             }
-        }
 
-        touchStartRef.current = null;
-    }, [handlers, threshold, restrain, allowedTime]);
+            touchStartRef.current = null;
+        },
+        [handlers, threshold, restrain, allowedTime],
+    );
 
     return { onTouchStart, onTouchEnd };
 }
 
 export function useLongPress(
     callback: () => void,
-    options: LongPressOptions = {}
+    options: LongPressOptions = {},
 ): TouchHandlers {
     const { delay = 500, moveThreshold = 10 } = options;
 
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
-    const start = useCallback((e: React.TouchEvent) => {
-        const touch = e.changedTouches[0];
-        touchStartRef.current = {
-            x: touch.clientX,
-            y: touch.clientY,
-        };
-
-        timeoutRef.current = setTimeout(() => {
-            // Vibrate on long press
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
-            callback();
-        }, delay);
-    }, [callback, delay]);
-
-    const clear = useCallback((e: React.TouchEvent) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
-        }
-
-        // Check if moved beyond threshold
-        const touchStart = touchStartRef.current;
-        if (touchStart && e.changedTouches) {
+    const start = useCallback(
+        (e: React.TouchEvent) => {
             const touch = e.changedTouches[0];
-            const diffX = Math.abs(touch.clientX - touchStart.x);
-            const diffY = Math.abs(touch.clientY - touchStart.y);
+            touchStartRef.current = {
+                x: touch.clientX,
+                y: touch.clientY,
+            };
 
-            if (diffX > moveThreshold || diffY > moveThreshold) {
-                // Moved too much, don't trigger callback
-                return;
+            timeoutRef.current = setTimeout(() => {
+                // Vibrate on long press
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+                callback();
+            }, delay);
+        },
+        [callback, delay],
+    );
+
+    const clear = useCallback(
+        (e: React.TouchEvent) => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+                timeoutRef.current = null;
             }
-        }
 
-        touchStartRef.current = null;
-    }, [moveThreshold]);
+            // Check if moved beyond threshold
+            const touchStart = touchStartRef.current;
+            if (touchStart && e.changedTouches) {
+                const touch = e.changedTouches[0];
+                const diffX = Math.abs(touch.clientX - touchStart.x);
+                const diffY = Math.abs(touch.clientY - touchStart.y);
 
-    const onTouchStart = useCallback((e: React.TouchEvent) => {
-        start(e);
-    }, [start]);
+                if (diffX > moveThreshold || diffY > moveThreshold) {
+                    // Moved too much, don't trigger callback
+                    return;
+                }
+            }
 
-    const onTouchEnd = useCallback((e: React.TouchEvent) => {
-        clear(e);
-    }, [clear]);
+            touchStartRef.current = null;
+        },
+        [moveThreshold],
+    );
+
+    const onTouchStart = useCallback(
+        (e: React.TouchEvent) => {
+            start(e);
+        },
+        [start],
+    );
+
+    const onTouchEnd = useCallback(
+        (e: React.TouchEvent) => {
+            clear(e);
+        },
+        [clear],
+    );
 
     return { onTouchStart, onTouchEnd };
 }
@@ -154,9 +173,12 @@ interface PinchCallbacks {
 
 export function usePinchZoom(
     callbacks: PinchCallbacks,
-    elementRef: RefObject<HTMLElement>
+    elementRef: RefObject<HTMLElement>,
 ): { scale: number; isPinching: boolean } {
-    const [state, setState] = useState<PinchState>({ scale: 1, isPinching: false });
+    const [state, setState] = useState<PinchState>({
+        scale: 1,
+        isPinching: false,
+    });
 
     useEffect(() => {
         const element = elementRef.current;
@@ -183,7 +205,8 @@ export function usePinchZoom(
         const handleTouchMove = (e: TouchEvent) => {
             if (e.touches.length === 2 && initialDistance > 0) {
                 const currentDistance = getDistance(e.touches[0], e.touches[1]);
-                const newScale = (currentDistance / initialDistance) * initialScale;
+                const newScale =
+                    (currentDistance / initialDistance) * initialScale;
 
                 setState((prev) => ({ ...prev, scale: newScale }));
                 callbacks.onPinchMove?.(newScale);
@@ -198,14 +221,26 @@ export function usePinchZoom(
             }
         };
 
-        element.addEventListener('touchstart', handleTouchStart as EventListener);
+        element.addEventListener(
+            'touchstart',
+            handleTouchStart as EventListener,
+        );
         element.addEventListener('touchmove', handleTouchMove as EventListener);
         element.addEventListener('touchend', handleTouchEnd as EventListener);
 
         return () => {
-            element.removeEventListener('touchstart', handleTouchStart as EventListener);
-            element.removeEventListener('touchmove', handleTouchMove as EventListener);
-            element.removeEventListener('touchend', handleTouchEnd as EventListener);
+            element.removeEventListener(
+                'touchstart',
+                handleTouchStart as EventListener,
+            );
+            element.removeEventListener(
+                'touchmove',
+                handleTouchMove as EventListener,
+            );
+            element.removeEventListener(
+                'touchend',
+                handleTouchEnd as EventListener,
+            );
         };
     }, [elementRef, callbacks, state.scale, state.isPinching]);
 
@@ -280,9 +315,11 @@ export function SwipeableActions({
                 <div
                     className={cn(
                         'absolute inset-y-0 right-0 flex items-center justify-end px-4 transition-transform',
-                        rightAction.bgColor || 'bg-blue-500'
+                        rightAction.bgColor || 'bg-blue-500',
                     )}
-                    style={{ transform: `translateX(${Math.min(0, translateX)}px)` }}
+                    style={{
+                        transform: `translateX(${Math.min(0, translateX)}px)`,
+                    }}
                 >
                     <div className="flex items-center gap-2 text-white">
                         {rightAction.icon}
@@ -296,9 +333,11 @@ export function SwipeableActions({
                 <div
                     className={cn(
                         'absolute inset-y-0 left-0 flex items-center justify-start px-4 transition-transform',
-                        leftAction.bgColor || 'bg-red-500'
+                        leftAction.bgColor || 'bg-red-500',
                     )}
-                    style={{ transform: `translateX(${Math.max(0, translateX)}px)` }}
+                    style={{
+                        transform: `translateX(${Math.max(0, translateX)}px)`,
+                    }}
                 >
                     <div className="flex items-center gap-2 text-white">
                         <span className="font-medium">{leftAction.label}</span>

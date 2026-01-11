@@ -1,15 +1,15 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router, useForm } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
-    ArrowLeft,
-    PackageCheck,
-    CheckCircle,
-    FileText,
-    Calendar,
-    Building2,
-    DollarSign,
     AlertCircle,
+    ArrowLeft,
+    Building2,
+    Calendar,
+    CheckCircle,
+    DollarSign,
+    FileText,
+    PackageCheck,
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -57,7 +57,8 @@ interface ShowProps {
 const statusColors = {
     draft: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     received: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    completed:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
 };
 
 const statusLabels = {
@@ -88,7 +89,7 @@ export default function PurchaseShow({ purchase }: ShowProps) {
 
         if (
             !confirm(
-                `Apakah Anda yakin ingin menerima barang dari pembelian ${purchase.no_pembelian}?`
+                `Apakah Anda yakin ingin menerima barang dari pembelian ${purchase.no_pembelian}?`,
             )
         ) {
             return;
@@ -104,7 +105,7 @@ export default function PurchaseShow({ purchase }: ShowProps) {
     const handleComplete = () => {
         if (
             !confirm(
-                `Apakah Anda yakin ingin menyelesaikan pembelian ${purchase.no_pembelian} dan mengupdate stok?`
+                `Apakah Anda yakin ingin menyelesaikan pembelian ${purchase.no_pembelian} dan mengupdate stok?`,
             )
         ) {
             return;
@@ -115,15 +116,17 @@ export default function PurchaseShow({ purchase }: ShowProps) {
             {},
             {
                 onSuccess: () => {
-                    alert('Pembelian berhasil diselesaikan dan stok telah diupdate.');
+                    alert(
+                        'Pembelian berhasil diselesaikan dan stok telah diupdate.',
+                    );
                 },
-            }
+            },
         );
     };
 
     const totalItems = purchase.purchase_details.reduce(
         (sum, detail) => sum + detail.jumlah,
-        0
+        0,
     );
 
     return (
@@ -153,7 +156,9 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                             <h1 className="text-2xl font-bold tracking-tight">
                                 {purchase.no_pembelian}
                             </h1>
-                            <p className="text-muted-foreground">Detail pembelian ATK</p>
+                            <p className="text-muted-foreground">
+                                Detail pembelian ATK
+                            </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -177,9 +182,13 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                         <div className="flex items-start gap-3">
                             <Calendar className="h-5 w-5 text-muted-foreground" />
                             <div>
-                                <p className="text-sm text-muted-foreground">Tanggal</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Tanggal
+                                </p>
                                 <p className="font-medium">
-                                    {new Date(purchase.tanggal).toLocaleDateString('id-ID', {
+                                    {new Date(
+                                        purchase.tanggal,
+                                    ).toLocaleDateString('id-ID', {
                                         day: 'numeric',
                                         month: 'long',
                                         year: 'numeric',
@@ -190,28 +199,42 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                         <div className="flex items-start gap-3">
                             <Building2 className="h-5 w-5 text-muted-foreground" />
                             <div>
-                                <p className="text-sm text-muted-foreground">Supplier</p>
-                                <p className="font-medium">{purchase.supplier}</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Supplier
+                                </p>
+                                <p className="font-medium">
+                                    {purchase.supplier}
+                                </p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
                             <PackageCheck className="h-5 w-5 text-muted-foreground" />
                             <div>
-                                <p className="text-sm text-muted-foreground">Total Item</p>
-                                <p className="font-medium">{totalItems} barang</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Total Item
+                                </p>
+                                <p className="font-medium">
+                                    {totalItems} barang
+                                </p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
                             <DollarSign className="h-5 w-5 text-muted-foreground" />
                             <div>
-                                <p className="text-sm text-muted-foreground">Total Nilai</p>
-                                <p className="font-medium">{formatCurrency(purchase.total_nilai)}</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Total Nilai
+                                </p>
+                                <p className="font-medium">
+                                    {formatCurrency(purchase.total_nilai)}
+                                </p>
                             </div>
                         </div>
                     </div>
                     {purchase.keterangan && (
                         <div className="mt-4 rounded-lg bg-muted/50 p-3">
-                            <p className="text-sm text-muted-foreground">Keterangan</p>
+                            <p className="text-sm text-muted-foreground">
+                                Keterangan
+                            </p>
                             <p className="text-sm">{purchase.keterangan}</p>
                         </div>
                     )}
@@ -233,8 +256,10 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                                             Penerimaan Barang
                                         </p>
                                         <p className="text-blue-700 dark:text-blue-300">
-                                            Masukkan jumlah barang yang diterima sesuai dengan fisik. Jika ada
-                                            selisih, dapat diinput di kolom jumlah diterima.
+                                            Masukkan jumlah barang yang diterima
+                                            sesuai dengan fisik. Jika ada
+                                            selisih, dapat diinput di kolom
+                                            jumlah diterima.
                                         </p>
                                     </div>
                                 </div>
@@ -244,50 +269,90 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                                 <table className="w-full text-sm">
                                     <thead className="border-b bg-muted/50">
                                         <tr>
-                                            <th className="px-4 py-3 text-left font-medium">Kode Barang</th>
-                                            <th className="px-4 py-3 text-left font-medium">Nama Barang</th>
-                                            <th className="px-4 py-3 text-center font-medium">Jumlah Order</th>
-                                            <th className="px-4 py-3 text-center font-medium">Jumlah Diterima</th>
-                                            <th className="px-4 py-3 text-right font-medium">Harga Satuan</th>
-                                            <th className="px-4 py-3 text-right font-medium">Subtotal</th>
+                                            <th className="px-4 py-3 text-left font-medium">
+                                                Kode Barang
+                                            </th>
+                                            <th className="px-4 py-3 text-left font-medium">
+                                                Nama Barang
+                                            </th>
+                                            <th className="px-4 py-3 text-center font-medium">
+                                                Jumlah Order
+                                            </th>
+                                            <th className="px-4 py-3 text-center font-medium">
+                                                Jumlah Diterima
+                                            </th>
+                                            <th className="px-4 py-3 text-right font-medium">
+                                                Harga Satuan
+                                            </th>
+                                            <th className="px-4 py-3 text-right font-medium">
+                                                Subtotal
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {purchase.purchase_details.map((detail, index) => (
-                                            <tr key={detail.id} className="border-b">
-                                                <td className="px-4 py-3 font-medium">
-                                                    {detail.item?.kode_barang || '-'}
-                                                </td>
-                                                <td className="px-4 py-3">{detail.item?.nama_barang || '-'}</td>
-                                                <td className="px-4 py-3 text-center">
-                                                    {detail.jumlah} {detail.item?.satuan}
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <input
-                                                        type="number"
-                                                        min={0}
-                                                        max={detail.jumlah}
-                                                        value={receiveForm.data.items[index].jumlah_diterima}
-                                                        onChange={(e) =>
-                                                            receiveForm.setData(
-                                                                `items.${index}.jumlah_diterima`,
-                                                                parseInt(e.target.value) || 0
-                                                            )
-                                                        }
-                                                        className="w-24 rounded-md border bg-background px-2 py-1 text-center"
-                                                    />
-                                                    <span className="ml-1 text-xs text-muted-foreground">
+                                        {purchase.purchase_details.map(
+                                            (detail, index) => (
+                                                <tr
+                                                    key={detail.id}
+                                                    className="border-b"
+                                                >
+                                                    <td className="px-4 py-3 font-medium">
+                                                        {detail.item
+                                                            ?.kode_barang ||
+                                                            '-'}
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        {detail.item
+                                                            ?.nama_barang ||
+                                                            '-'}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-center">
+                                                        {detail.jumlah}{' '}
                                                         {detail.item?.satuan}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3 text-right">
-                                                    {formatCurrency(detail.harga_satuan)}
-                                                </td>
-                                                <td className="px-4 py-3 text-right font-medium">
-                                                    {formatCurrency(detail.subtotal)}
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <input
+                                                            type="number"
+                                                            min={0}
+                                                            max={detail.jumlah}
+                                                            value={
+                                                                receiveForm.data
+                                                                    .items[
+                                                                    index
+                                                                ]
+                                                                    .jumlah_diterima
+                                                            }
+                                                            onChange={(e) =>
+                                                                receiveForm.setData(
+                                                                    `items.${index}.jumlah_diterima`,
+                                                                    parseInt(
+                                                                        e.target
+                                                                            .value,
+                                                                    ) || 0,
+                                                                )
+                                                            }
+                                                            className="w-24 rounded-md border bg-background px-2 py-1 text-center"
+                                                        />
+                                                        <span className="ml-1 text-xs text-muted-foreground">
+                                                            {
+                                                                detail.item
+                                                                    ?.satuan
+                                                            }
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-right">
+                                                        {formatCurrency(
+                                                            detail.harga_satuan,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-right font-medium">
+                                                        {formatCurrency(
+                                                            detail.subtotal,
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ),
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -305,7 +370,9 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                                     className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     <PackageCheck className="h-4 w-4" />
-                                    {receiveForm.processing ? 'Memproses...' : 'Terima Barang'}
+                                    {receiveForm.processing
+                                        ? 'Memproses...'
+                                        : 'Terima Barang'}
                                 </button>
                             </div>
                         </form>
@@ -322,16 +389,26 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                         <table className="w-full text-sm">
                             <thead className="border-b bg-muted/50">
                                 <tr>
-                                    <th className="px-4 py-3 text-left font-medium">Kode Barang</th>
-                                    <th className="px-4 py-3 text-left font-medium">Nama Barang</th>
-                                    <th className="px-4 py-3 text-center font-medium">Jumlah</th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Kode Barang
+                                    </th>
+                                    <th className="px-4 py-3 text-left font-medium">
+                                        Nama Barang
+                                    </th>
+                                    <th className="px-4 py-3 text-center font-medium">
+                                        Jumlah
+                                    </th>
                                     {purchase.status !== 'draft' && (
                                         <th className="px-4 py-3 text-center font-medium">
                                             Jumlah Diterima
                                         </th>
                                     )}
-                                    <th className="px-4 py-3 text-right font-medium">Harga Satuan</th>
-                                    <th className="px-4 py-3 text-right font-medium">Subtotal</th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Harga Satuan
+                                    </th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Subtotal
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -340,33 +417,44 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                                         <td className="px-4 py-3 font-medium">
                                             {detail.item?.kode_barang || '-'}
                                         </td>
-                                        <td className="px-4 py-3">{detail.item?.nama_barang || '-'}</td>
+                                        <td className="px-4 py-3">
+                                            {detail.item?.nama_barang || '-'}
+                                        </td>
                                         <td className="px-4 py-3 text-center">
-                                            {detail.jumlah} {detail.item?.satuan}
+                                            {detail.jumlah}{' '}
+                                            {detail.item?.satuan}
                                         </td>
                                         {purchase.status !== 'draft' && (
                                             <td className="px-4 py-3 text-center">
                                                 <span
                                                     className={
                                                         detail.jumlah_diterima &&
-                                                        detail.jumlah_diterima < detail.jumlah
-                                                            ? 'text-yellow-600 dark:text-yellow-400 font-medium'
+                                                        detail.jumlah_diterima <
+                                                            detail.jumlah
+                                                            ? 'font-medium text-yellow-600 dark:text-yellow-400'
                                                             : ''
                                                     }
                                                 >
-                                                    {detail.jumlah_diterima || detail.jumlah}{' '}
+                                                    {detail.jumlah_diterima ||
+                                                        detail.jumlah}{' '}
                                                     {detail.item?.satuan}
                                                 </span>
                                                 {detail.jumlah_diterima &&
-                                                    detail.jumlah_diterima < detail.jumlah && (
+                                                    detail.jumlah_diterima <
+                                                        detail.jumlah && (
                                                         <span className="ml-1 text-xs text-yellow-600 dark:text-yellow-400">
-                                                            (kurang {detail.jumlah - detail.jumlah_diterima})
+                                                            (kurang{' '}
+                                                            {detail.jumlah -
+                                                                detail.jumlah_diterima}
+                                                            )
                                                         </span>
                                                     )}
                                             </td>
                                         )}
                                         <td className="px-4 py-3 text-right">
-                                            {formatCurrency(detail.harga_satuan)}
+                                            {formatCurrency(
+                                                detail.harga_satuan,
+                                            )}
                                         </td>
                                         <td className="px-4 py-3 text-right font-medium">
                                             {formatCurrency(detail.subtotal)}
@@ -385,8 +473,10 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                                         Total:
                                     </td>
                                     <td
-                                        colSpan={purchase.status !== 'draft' ? 3 : 2}
-                                        className="px-4 py-3 text-right font-bold text-lg"
+                                        colSpan={
+                                            purchase.status !== 'draft' ? 3 : 2
+                                        }
+                                        className="px-4 py-3 text-right text-lg font-bold"
                                     >
                                         {formatCurrency(purchase.total_nilai)}
                                     </td>
@@ -401,10 +491,12 @@ export default function PurchaseShow({ purchase }: ShowProps) {
                     <div className="rounded-xl border bg-card p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h3 className="text-lg font-semibold">Selesaikan Pembelian</h3>
+                                <h3 className="text-lg font-semibold">
+                                    Selesaikan Pembelian
+                                </h3>
                                 <p className="text-sm text-muted-foreground">
-                                    Klik tombol di bawah untuk menyelesaikan pembelian dan mengupdate stok
-                                    barang.
+                                    Klik tombol di bawah untuk menyelesaikan
+                                    pembelian dan mengupdate stok barang.
                                 </p>
                             </div>
                             <button

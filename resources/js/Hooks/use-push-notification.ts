@@ -21,13 +21,17 @@ interface UsePushNotificationReturn {
 }
 
 export function usePushNotification(): UsePushNotificationReturn {
-    const [permission, setPermission] = useState<NotificationPermission>('default');
+    const [permission, setPermission] =
+        useState<NotificationPermission>('default');
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [vapidPublicKey, setVapidPublicKey] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const isSupported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    const isSupported =
+        'serviceWorker' in navigator &&
+        'PushManager' in window &&
+        'Notification' in window;
 
     useEffect(() => {
         if (isSupported) {
@@ -54,7 +58,8 @@ export function usePushNotification(): UsePushNotificationReturn {
     const checkSubscription = async () => {
         try {
             const registration = await navigator.serviceWorker.ready;
-            const subscription = await registration.pushManager.getSubscription();
+            const subscription =
+                await registration.pushManager.getSubscription();
             setIsSubscribed(!!subscription);
         } catch (err) {
             console.error('Error checking subscription:', err);
@@ -80,7 +85,10 @@ export function usePushNotification(): UsePushNotificationReturn {
 
             return result;
         } catch (err) {
-            const message = err instanceof Error ? err.message : 'Failed to request permission';
+            const message =
+                err instanceof Error
+                    ? err.message
+                    : 'Failed to request permission';
             setError(message);
             return 'denied';
         } finally {
@@ -90,7 +98,9 @@ export function usePushNotification(): UsePushNotificationReturn {
 
     const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
         const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-        const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+        const base64 = (base64String + padding)
+            .replace(/-/g, '+')
+            .replace(/_/g, '/');
         const rawData = window.atob(base64);
         const outputArray = new Uint8Array(rawData.length);
 
@@ -126,7 +136,8 @@ export function usePushNotification(): UsePushNotificationReturn {
                 applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
             };
 
-            subscription = await registration.pushManager.subscribe(subscribeOptions);
+            subscription =
+                await registration.pushManager.subscribe(subscribeOptions);
 
             // Send subscription to server
             const subscriptionData = subscription.toJSON();
@@ -134,9 +145,10 @@ export function usePushNotification(): UsePushNotificationReturn {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document
-                        .querySelector('meta[name="csrf-token"]')
-                        ?.getAttribute('content') || '',
+                    'X-CSRF-TOKEN':
+                        document
+                            .querySelector('meta[name="csrf-token"]')
+                            ?.getAttribute('content') || '',
                 },
                 body: JSON.stringify({
                     endpoint: subscriptionData.endpoint,
@@ -149,7 +161,8 @@ export function usePushNotification(): UsePushNotificationReturn {
             setIsSubscribed(true);
             return subscriptionData as PushSubscription;
         } catch (err) {
-            const message = err instanceof Error ? err.message : 'Failed to subscribe';
+            const message =
+                err instanceof Error ? err.message : 'Failed to subscribe';
             setError(message);
             return null;
         } finally {
@@ -167,7 +180,8 @@ export function usePushNotification(): UsePushNotificationReturn {
 
         try {
             const registration = await navigator.serviceWorker.ready;
-            const subscription = await registration.pushManager.getSubscription();
+            const subscription =
+                await registration.pushManager.getSubscription();
 
             if (subscription) {
                 // Unsubscribe from push service
@@ -178,9 +192,10 @@ export function usePushNotification(): UsePushNotificationReturn {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document
-                            .querySelector('meta[name="csrf-token"]')
-                            ?.getAttribute('content') || '',
+                        'X-CSRF-TOKEN':
+                            document
+                                .querySelector('meta[name="csrf-token"]')
+                                ?.getAttribute('content') || '',
                     },
                     body: JSON.stringify({
                         endpoint: subscription.endpoint,
@@ -190,7 +205,8 @@ export function usePushNotification(): UsePushNotificationReturn {
                 setIsSubscribed(false);
             }
         } catch (err) {
-            const message = err instanceof Error ? err.message : 'Failed to unsubscribe';
+            const message =
+                err instanceof Error ? err.message : 'Failed to unsubscribe';
             setError(message);
         } finally {
             setIsLoading(false);

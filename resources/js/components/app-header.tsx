@@ -30,13 +30,21 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useActiveUrl } from '@/hooks/use-active-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
-import assets from '@/routes/assets/index';
 import { dashboard } from '@/routes';
+import assets from '@/routes/assets/index';
 import items from '@/routes/items/index';
 import officeSupplies from '@/routes/office-supplies/index';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Box, Folder, LayoutGrid, Menu, Search, Settings } from 'lucide-react';
+import {
+    BookOpen,
+    Box,
+    Folder,
+    LayoutGrid,
+    Menu,
+    Search,
+    Settings,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 

@@ -91,12 +91,14 @@ export default function Register() {
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md transition-all duration-200"
+                                className="mt-2 w-full bg-gradient-to-r from-blue-600 to-blue-700 shadow-md transition-all duration-200 hover:from-blue-700 hover:to-blue-800"
                                 tabIndex={5}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-                                {processing ? 'Creating account...' : 'Create account'}
+                                {processing
+                                    ? 'Creating account...'
+                                    : 'Create account'}
                             </Button>
                         </div>
 

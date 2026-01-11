@@ -1,9 +1,9 @@
 import { AssetPhotoGallery } from '@/components/assets/AssetPhotoGallery';
 import { AssetPhotoUpload } from '@/components/assets/AssetPhotoUpload';
-import { Head } from '@inertiajs/react';
 import { usePageProps } from '@/hooks/use-page-props';
-import { useState } from 'react';
 import { PageProps } from '@/types';
+import { Head } from '@inertiajs/react';
+import { useState } from 'react';
 
 interface Asset {
     id: string;
@@ -66,7 +66,7 @@ export default function AssetShow() {
                     {/* Main Content Grid */}
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                         {/* Left Column: Asset Info */}
-                        <div className="lg:col-span-2 space-y-6">
+                        <div className="space-y-6 lg:col-span-2">
                             {/* Basic Info Card */}
                             <div className="rounded-lg bg-white p-6 shadow-sm">
                                 <h2 className="mb-4 text-lg font-semibold text-gray-900">
@@ -98,7 +98,8 @@ export default function AssetShow() {
                                                 className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
                                                     asset.kd_kondisi === '1'
                                                         ? 'bg-green-100 text-green-800'
-                                                        : asset.kd_kondisi === '2'
+                                                        : asset.kd_kondisi ===
+                                                            '2'
                                                           ? 'bg-yellow-100 text-yellow-800'
                                                           : 'bg-red-100 text-red-800'
                                                 }`}
@@ -147,7 +148,9 @@ export default function AssetShow() {
                                         <AssetPhotoUpload
                                             key={uploadKey}
                                             assetId={asset.id}
-                                            onUploadSuccess={handleUploadSuccess}
+                                            onUploadSuccess={
+                                                handleUploadSuccess
+                                            }
                                         />
                                         <button
                                             onClick={() => setShowUpload(false)}

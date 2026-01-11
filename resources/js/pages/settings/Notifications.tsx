@@ -36,15 +36,16 @@ interface PageProps {
 export default function NotificationSettings() {
     const { settings } = usePage<PageProps>().props;
 
-    const { data, setData, put, processing, errors, recentlySuccessful } = useForm({
-        whatsapp_enabled: settings.whatsapp_enabled,
-        push_enabled: settings.push_enabled,
-        notify_reorder_alert: settings.notify_reorder_alert,
-        notify_approval_needed: settings.notify_approval_needed,
-        notify_request_update: settings.notify_request_update,
-        quiet_hours_start: settings.quiet_hours_start || '',
-        quiet_hours_end: settings.quiet_hours_end || '',
-    });
+    const { data, setData, put, processing, errors, recentlySuccessful } =
+        useForm({
+            whatsapp_enabled: settings.whatsapp_enabled,
+            push_enabled: settings.push_enabled,
+            notify_reorder_alert: settings.notify_reorder_alert,
+            notify_approval_needed: settings.notify_approval_needed,
+            notify_request_update: settings.notify_request_update,
+            quiet_hours_start: settings.quiet_hours_start || '',
+            quiet_hours_end: settings.quiet_hours_end || '',
+        });
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -82,7 +83,10 @@ export default function NotificationSettings() {
                                 id="whatsapp_enabled"
                                 checked={data.whatsapp_enabled}
                                 onCheckedChange={(checked) =>
-                                    setData('whatsapp_enabled', checked as boolean)
+                                    setData(
+                                        'whatsapp_enabled',
+                                        checked as boolean,
+                                    )
                                 }
                             />
                         </div>
@@ -130,7 +134,10 @@ export default function NotificationSettings() {
                                 id="notify_reorder_alert"
                                 checked={data.notify_reorder_alert}
                                 onCheckedChange={(checked) =>
-                                    setData('notify_reorder_alert', checked as boolean)
+                                    setData(
+                                        'notify_reorder_alert',
+                                        checked as boolean,
+                                    )
                                 }
                             />
                         </div>
@@ -151,7 +158,10 @@ export default function NotificationSettings() {
                                 id="notify_approval_needed"
                                 checked={data.notify_approval_needed}
                                 onCheckedChange={(checked) =>
-                                    setData('notify_approval_needed', checked as boolean)
+                                    setData(
+                                        'notify_approval_needed',
+                                        checked as boolean,
+                                    )
                                 }
                             />
                         </div>
@@ -172,7 +182,10 @@ export default function NotificationSettings() {
                                 id="notify_request_update"
                                 checked={data.notify_request_update}
                                 onCheckedChange={(checked) =>
-                                    setData('notify_request_update', checked as boolean)
+                                    setData(
+                                        'notify_request_update',
+                                        checked as boolean,
+                                    )
                                 }
                             />
                         </div>
@@ -213,7 +226,10 @@ export default function NotificationSettings() {
                                     type="time"
                                     value={data.quiet_hours_end}
                                     onChange={(e) =>
-                                        setData('quiet_hours_end', e.target.value)
+                                        setData(
+                                            'quiet_hours_end',
+                                            e.target.value,
+                                        )
                                     }
                                 />
                             </div>

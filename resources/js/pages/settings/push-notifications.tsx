@@ -1,10 +1,10 @@
-import { Head } from '@inertiajs/react';
+import { usePushNotification } from '@/Hooks/use-push-notification';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import AppHeaderLayout from '@/layouts/app/app-header-layout';
-import { usePushNotification } from '@/Hooks/use-push-notification';
-import { Button } from '@/components/ui/button';
-import { Alert } from '@/components/ui/alert';
-import { Card } from '@/components/ui/card';
+import { Head } from '@inertiajs/react';
 
 export default function PushNotificationsSettings() {
     const {
@@ -36,7 +36,9 @@ export default function PushNotificationsSettings() {
             <AppHeaderLayout>
                 <div className="space-y-6">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Push Notifications</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            Push Notifications
+                        </h1>
                         <p className="mt-2 text-muted-foreground">
                             Manage your push notification preferences
                         </p>
@@ -44,27 +46,26 @@ export default function PushNotificationsSettings() {
 
                     {!isSupported && (
                         <Alert variant="destructive">
-                            Push notifications are not supported in your browser. Please use a modern
-                            browser like Chrome, Firefox, or Safari.
+                            Push notifications are not supported in your
+                            browser. Please use a modern browser like Chrome,
+                            Firefox, or Safari.
                         </Alert>
                     )}
 
-                    {error && (
-                        <Alert variant="destructive">
-                            {error}
-                        </Alert>
-                    )}
+                    {error && <Alert variant="destructive">{error}</Alert>}
 
                     <Card className="p-6">
                         <div className="space-y-4">
                             <div>
-                                <h2 className="text-lg font-semibold">Notification Status</h2>
+                                <h2 className="text-lg font-semibold">
+                                    Notification Status
+                                </h2>
                                 <p className="text-sm text-muted-foreground">
                                     {permission === 'granted' && isSubscribed
                                         ? 'You will receive push notifications for important updates.'
                                         : permission === 'denied'
-                                        ? 'Push notifications are blocked. Please enable them in your browser settings.'
-                                        : 'Enable push notifications to receive important updates.'}
+                                          ? 'Push notifications are blocked. Please enable them in your browser settings.'
+                                          : 'Enable push notifications to receive important updates.'}
                                 </p>
                             </div>
 
@@ -75,7 +76,9 @@ export default function PushNotificationsSettings() {
                                         disabled={isLoading}
                                         variant="outline"
                                     >
-                                        {isLoading ? 'Disabling...' : 'Disable Push Notifications'}
+                                        {isLoading
+                                            ? 'Disabling...'
+                                            : 'Disable Push Notifications'}
                                     </Button>
                                 ) : permission === 'denied' ? (
                                     <Button disabled variant="outline">
@@ -89,15 +92,15 @@ export default function PushNotificationsSettings() {
                                         {isLoading
                                             ? 'Enabling...'
                                             : permission === 'default'
-                                            ? 'Enable Push Notifications'
-                                            : 'Subscribe to Push Notifications'}
+                                              ? 'Enable Push Notifications'
+                                              : 'Subscribe to Push Notifications'}
                                     </Button>
                                 )}
                             </div>
 
                             <div className="space-y-2 text-sm text-muted-foreground">
                                 <p>You will receive notifications for:</p>
-                                <ul className="list-disc list-inside space-y-1 ml-2">
+                                <ul className="ml-2 list-inside list-disc space-y-1">
                                     <li>Reorder alerts (when stock is low)</li>
                                     <li>Approval needed notifications</li>
                                     <li>Request status updates</li>
