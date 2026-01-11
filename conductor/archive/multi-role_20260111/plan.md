@@ -1,6 +1,6 @@
 # Multi-Role Management - Implementation Plan
 
-## Phase 1: Backend Setup & Database
+## Phase 1: Backend Setup & Database [checkpoint: cc46e76]
 
 ### Task 1.1: Create Role Management Controller
 - [x] Write tests for RoleController index method (list roles with user count)
@@ -38,7 +38,7 @@
 
 - [x] **Task: Conductor - User Manual Verification 'Backend Setup & Database'** (Protocol in workflow.md)
 
-## Phase 2: Frontend Components & Pages
+## Phase 2: Frontend Components & Pages [checkpoint: cc46e76]
 
 ### Task 2.1: Create Role Management Page Component
 - [x] Write tests for RoleManagement component
@@ -75,7 +75,7 @@
 
 - [x] **Task: Conductor - User Manual Verification 'Frontend Components & Pages'** (Protocol in workflow.md)
 
-## Phase 3: Integration, Testing & Polish
+## Phase 3: Integration, Testing & Polish [checkpoint: cc46e76]
 
 ### Task 3.1: End-to-End Testing
 - [x] Write E2E test for viewing roles list
