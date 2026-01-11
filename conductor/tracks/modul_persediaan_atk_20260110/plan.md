@@ -263,38 +263,38 @@
 ## Phase 8: Laporan & Permissions
 
 ### Task 8.1: Create Monthly Report
-- [~] Add GET /reports/monthly route
-- [~] Filter by periode (bulan/tahun)
-- [~] Query all transactions:
+- [x] Add GET /reports/monthly route [2b82ea3]
+- [x] Filter by periode (bulan/tahun) [2b82ea3]
+- [x] Query all transactions:
   - Requests (approved)
   - Purchases (completed)
   - Stock Opnames
-- [~] Calculate summaries
-- [~] Create monthly report page
-- [~] Write tests for report queries
-- [~] Test report accuracy
+- [x] Calculate summaries [2b82ea3]
+- [x] Create monthly report page [2b82ea3]
+- [x] Write tests for report queries [2b82ea3]
+- [x] Test report accuracy [2b82ea3]
 
 ### Task 8.2: Create Report Exports
-- [~] Add GET /reports/monthly/pdf route
-- [~] Add GET /reports/monthly/excel route
-- [~] Generate PDF with cumulative data
-- [~] Generate Excel with transaction details
-- [~] Write tests for exports
-- [~] Test file downloads
+- [x] Add GET /reports/monthly/pdf route [2b82ea3]
+- [x] Add GET /reports/monthly/excel route [2b82ea3]
+- [x] Generate PDF with cumulative data [2b82ea3]
+- [x] Generate Excel with transaction details [2b82ea3]
+- [x] Write tests for exports [2b82ea3]
+- [x] Test file downloads [2b82ea3]
 
 ### Task 8.3: Define ATK Permissions
-- [~] Define permissions in PermissionsSeeder
-- [~] Add: manage_items, manage_purchases, create_request, approve_request_l1, approve_request_l2, approve_request_l3, manage_stock_opname, view_reports
-- [~] Assign permissions to roles
-- [~] Write tests for permissions
-- [~] Run seeder and verify
+- [x] Define permissions in PermissionsSeeder [2b82ea3]
+- [x] Add: manage_items, manage_purchases, create_request, approve_request_l1, approve_request_l2, approve_request_l3, manage_stock_opname, view_reports [2b82ea3]
+- [x] Assign permissions to roles [2b82ea3]
+- [x] Write tests for permissions [2b82ea3]
+- [x] Run seeder and verify [2b82ea3]
 
 ### Task 8.4: Apply Permissions & Update UI
-- [~] Add permission checks to all controllers
-- [~] Update UI based on permissions
-- [~] Hide/show features per role
-- [~] Write tests for permission-based access
-- [~] Test access per role
+- [x] Add permission checks to all controllers [2b82ea3]
+- [x] Update UI based on permissions [2b82ea3]
+- [x] Hide/show features per role [2b82ea3]
+- [x] Write tests for permission-based access [2b82ea3]
+- [x] Test access per role [2b82ea3]
 
 ### Task 8.5: Task: Conductor - User Manual Verification 'Phase 8: Laporan & Permissions' (Protocol in workflow.md)
 
