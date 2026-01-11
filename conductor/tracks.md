@@ -46,11 +46,19 @@ All completed tracks have been moved to `conductor/archive/`.
 **Description:** Role-Based Access Control dengan permission dinamis, granular, dan lengkap
 **Location:** [./conductor/archive/rbac_20260111/](./conductor/archive/rbac_20260111/)
 
+### [x] RBAC Refinement ✅
+**Description:** Remove users.view, roles.manage, settings.whatsapp dari kasubag_umum, hanya super_admin yang punya permission sistem
+**Location:** [./conductor/archive/rbac_refinement_20260111/](./conductor/archive/rbac_refinement_20260111/)
+
 ---
+
+## 🚧 New Tracks
+
+**(No new tracks)**
 
 ## 📊 Project Status
 
 **Overall Progress:** 100% COMPLETE ✅
-**Total Tracks:** 8
-**Tests:** 999+ passing
+**Total Tracks:** 9
+**Tests:** 1019 passing
 **Status:** PRODUCTION READY

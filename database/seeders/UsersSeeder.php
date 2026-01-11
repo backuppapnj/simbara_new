@@ -17,8 +17,9 @@ class UsersSeeder extends Seeder
     {
         $this->createUsersFromPegawaiData();
         $this->createSuperAdmin();
-        $this->createSampleUsers();
-        $this->createMultiRoleTestUsers();
+        // Demo users untuk testing - commented out, hanya pakai real pegawai
+        // $this->createSampleUsers();
+        // $this->createMultiRoleTestUsers();
     }
 
     /**
@@ -59,6 +60,7 @@ class UsersSeeder extends Seeder
                     $nip = isset($pegawai['nip']) ? $pegawai['nip'] : null;
                     $nama = isset($pegawai['nama']) ? $pegawai['nama'] : null;
                     $jabatan = isset($pegawai['jabatan']) ? $pegawai['jabatan'] : null;
+                    $unitKerja = isset($pegawai['unit_kerja']) ? $pegawai['unit_kerja'] : null;
 
                     if (! $nip || ! $nama || ! $jabatan) {
                         $this->command?->warn("Skip data #{$index}: NIP, Nama, atau Jabatan kosong.");
@@ -67,11 +69,11 @@ class UsersSeeder extends Seeder
                         continue;
                     }
 
-                    // Determine role based on jabatan
-                    $role = $this->determineRoleFromJabatan($nip, $jabatan);
+                    // Determine role based on jabatan and unit_kerja
+                    $role = $this->determineRoleFromJabatan($nip, $jabatan, $unitKerja);
 
                     // Generate email from NIP
-                    $email = $nip.'@simpa.pa-ppun.go.id';
+                    $email = $nip.'@pa-penajam.go.id';
 
                     // Check if user exists
                     $existingUser = User::where('email', $email)->first();
@@ -134,35 +136,57 @@ class UsersSeeder extends Seeder
     }
 
     /**
-     * Determine role based on jabatan.
+     * Determine role based on jabatan and unit_kerja.
      *
      * @param  string  $nip  NIP pegawai
      * @param  string  $jabatan  Jabatan pegawai
+     * @param  string|null  $unitKerja  Unit kerja pegawai
      */
-    protected function determineRoleFromJabatan(string $nip, string $jabatan): string
+    protected function determineRoleFromJabatan(string $nip, string $jabatan, ?string $unitKerja = null): string
     {
-        // Special case: MUHARDIANSYAH, S.Kom. with NIP 199107132020121003 -> superadmin
-        if ($nip === '199107132020121003' && str_contains($jabatan, 'Pranata Komputer')) {
-            return 'super_admin';
-        }
-
-        // Structural positions -> admin (using kasubag_umum as admin equivalent)
-        $structuralPositions = [
-            'Ketua',
-            'Wakil Ketua',
-            'Panitera',
-            'Sekretaris',
-            'Panitera Muda',
-            'Kepala Subbagian',
+        // Special case by NIP
+        $nipRoles = [
+            // ASHAR - Operator Persediaan (berdasarkan user Sakti Kemenkeu)
+            '199406072025211039' => 'operator_persediaan',
         ];
 
-        foreach ($structuralPositions as $position) {
-            if (str_contains($jabatan, $position)) {
-                return 'kasubag_umum'; // Using kasubag_umum as admin equivalent
+        if (isset($nipRoles[$nip])) {
+            return $nipRoles[$nip];
+        }
+
+        // Exact mapping based on jabatan
+        $roleMapping = [
+            // KPA (Kuasa Pengguna Anggaran) - Sekretaris
+            'kpa' => ['Sekretaris'],
+
+            // Kasubag Umum - Kepala Subbagian UMUM saja (bukan PTIP, Kepegawaian, dll)
+            'kasubag_umum' => ['Kepala Subbagian'],
+
+            // Operator BMN - Teknisi Sarana dan Prasarana
+            'operator_bmn' => ['Teknisi Sarana dan Prasarana'],
+        ];
+
+        // Check exact matches first with additional filtering for kasubag_umum
+        foreach ($roleMapping as $role => $positions) {
+            foreach ($positions as $position) {
+                if (str_contains($jabatan, $position)) {
+                    // Special case: Kepala Subbagian UMUM only
+                    if ($role === 'kasubag_umum') {
+                        // Must be in Subbagian Umum, not PTIP or other subbag
+                        if ($unitKerja && str_contains($unitKerja, 'Subbagian Umum dan Keuangan') && str_contains($unitKerja, 'Kepala Subbagian')) {
+                            return 'kasubag_umum';
+                        }
+
+                        // Other Kepala Subbagian -> pegawai
+                        continue;
+                    }
+
+                    return $role;
+                }
             }
         }
 
-        // Functional positions -> user (using pegawai as user equivalent)
+        // Default: pegawai (untuk Ketua, Wakil Ketua, Hakim, Panitera, Penata Layanan, dll)
         return 'pegawai';
     }
 
@@ -172,7 +196,7 @@ class UsersSeeder extends Seeder
     protected function createSuperAdmin(): void
     {
         $user = User::firstOrCreate(
-            ['email' => 'admin@demo.com'],
+            ['email' => 'admin@pa-penajam.go.id'],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),

@@ -10,6 +10,18 @@ use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
+// Helper function to create a user with specific permissions
+function createAtkUserWithPermissions(array $permissions): User
+{
+    $user = User::factory()->create();
+    foreach ($permissions as $permission) {
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => $permission]);
+        $user->givePermissionTo($permission);
+    }
+
+    return $user;
+}
+
 describe('AtkRequest Management', function () {
     describe('POST /atk-requests (Store)', function () {
         it('requires authentication', function () {
@@ -29,7 +41,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('creates a new request with valid data', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
             $department = Department::factory()->create();
             $item1 = Item::factory()->create(['stok' => 50]);
             $item2 = Item::factory()->create(['stok' => 30]);
@@ -91,7 +103,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates required fields', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
 
             $response = $this->actingAs($user)
                 ->postJson('/atk-requests', []);
@@ -101,7 +113,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates items is an array', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -116,7 +128,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates items array is not empty', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -131,7 +143,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates each item has item_id and jumlah_diminta', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -149,7 +161,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates item_id exists in items table', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -169,7 +181,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates jumlah_diminta is at least 1', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
             $department = Department::factory()->create();
             $item = Item::factory()->create();
 
@@ -190,7 +202,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('generates unique request number', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.create']);
             $department = Department::factory()->create();
             $item = Item::factory()->create();
 
@@ -233,7 +245,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('returns list of requests', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.view']);
 
             AtkRequest::factory()->count(3)->create(['user_id' => $user->id]);
 
@@ -245,8 +257,8 @@ describe('AtkRequest Management', function () {
         });
 
         it('returns only user own requests for regular users', function () {
-            $user1 = User::factory()->create();
-            $user2 = User::factory()->create();
+            $user1 = createAtkUserWithPermissions(['atk.view']);
+            $user2 = createAtkUserWithPermissions(['atk.view']);
 
             AtkRequest::factory()->count(2)->create(['user_id' => $user1->id]);
             AtkRequest::factory()->count(3)->create(['user_id' => $user2->id]);
@@ -269,7 +281,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('returns request details with request details', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.view']);
             $request = AtkRequest::factory()->create(['user_id' => $user->id]);
 
             // Verify the user ID matches
@@ -297,8 +309,8 @@ describe('AtkRequest Management', function () {
         });
 
         it('forbids viewing other users requests', function () {
-            $user1 = User::factory()->create();
-            $user2 = User::factory()->create();
+            $user1 = createAtkUserWithPermissions(['atk.view']);
+            $user2 = createAtkUserWithPermissions(['atk.view']);
             $request = AtkRequest::factory()->create(['user_id' => $user2->id]);
 
             $response = $this->actingAs($user1)
@@ -318,7 +330,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('approves request at level 1', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->pending()->create();
 
             $response = $this->actingAs($user)
@@ -340,7 +352,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('can only approve pending requests', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->level2Approved()->create();
 
             $response = $this->actingAs($user)
@@ -360,7 +372,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('approves request at level 2', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->level1Approved()->create();
 
             $response = $this->actingAs($user)
@@ -382,7 +394,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('can only approve level1 approved requests', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->pending()->create();
 
             $response = $this->actingAs($user)
@@ -402,7 +414,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('approves request at level 3', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->level2Approved()->create();
 
             $response = $this->actingAs($user)
@@ -424,7 +436,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('can only approve level2 approved requests', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->pending()->create();
 
             $response = $this->actingAs($user)
@@ -444,7 +456,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('rejects request with reason', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->pending()->create();
 
             $response = $this->actingAs($user)
@@ -468,7 +480,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('requires rejection reason', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->pending()->create();
 
             $response = $this->actingAs($user)
@@ -479,7 +491,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('can only reject pending or approved requests', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.approve']);
             $request = AtkRequest::factory()->rejected()->create();
 
             $response = $this->actingAs($user)
@@ -508,7 +520,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('distributes approved request with jumlah diberikan', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.distribute']);
             $request = AtkRequest::factory()->level3Approved()->create();
             $detail = RequestDetail::factory()->create([
                 'request_id' => $request->id,
@@ -547,7 +559,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('can only distribute level3 approved requests', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.distribute']);
             $request = AtkRequest::factory()->pending()->create();
             $detail = RequestDetail::factory()->create(['request_id' => $request->id]);
 
@@ -565,7 +577,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates jumlah_diberikan does not exceed jumlah_disetujui', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.distribute']);
             $request = AtkRequest::factory()->level3Approved()->create();
             $detail = RequestDetail::factory()->create([
                 'request_id' => $request->id,
@@ -588,7 +600,7 @@ describe('AtkRequest Management', function () {
         });
 
         it('validates items array is not empty', function () {
-            $user = User::factory()->create();
+            $user = createAtkUserWithPermissions(['atk.requests.distribute']);
             $request = AtkRequest::factory()->level3Approved()->create();
 
             $response = $this->actingAs($user)

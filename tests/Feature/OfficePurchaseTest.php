@@ -6,8 +6,21 @@ use App\Models\OfficeSupply;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 
 uses(RefreshDatabase::class);
+
+// Helper function to create a user with specific permissions
+function createOfficePurchaseUserWithPermissions(array $permissions): User
+{
+    $user = User::factory()->create();
+    foreach ($permissions as $permission) {
+        Permission::firstOrCreate(['name' => $permission]);
+        $user->givePermissionTo($permission);
+    }
+
+    return $user;
+}
 
 describe('OfficePurchase Management', function () {
     describe('POST /office-purchases (Store)', function () {
@@ -30,7 +43,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('creates a new purchase with valid data and auto-updates stock', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
             $supply1 = OfficeSupply::factory()->create(['stok' => 20]);
             $supply2 = OfficeSupply::factory()->create(['stok' => 15]);
 
@@ -120,7 +133,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('validates required fields', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
 
             $response = $this->actingAs($user)
                 ->postJson('/office-purchases', []);
@@ -130,7 +143,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('validates items is an array', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
 
             $response = $this->actingAs($user)
                 ->postJson('/office-purchases', [
@@ -144,7 +157,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('validates items array is not empty', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
 
             $response = $this->actingAs($user)
                 ->postJson('/office-purchases', [
@@ -158,7 +171,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('validates each item has supply_id and jumlah', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
 
             $response = $this->actingAs($user)
                 ->postJson('/office-purchases', [
@@ -175,7 +188,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('validates supply_id exists in office_supplies table', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
 
             $response = $this->actingAs($user)
                 ->postJson('/office-purchases', [
@@ -194,7 +207,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('validates jumlah is at least 1', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
             $supply = OfficeSupply::factory()->create();
 
             $response = $this->actingAs($user)
@@ -214,7 +227,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('auto-generates PO number', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
             $supply = OfficeSupply::factory()->create();
 
             $response = $this->actingAs($user)
@@ -236,7 +249,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('calculates total_nilai from item subtotals', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
             $supply = OfficeSupply::factory()->create();
 
             $response = $this->actingAs($user)
@@ -262,7 +275,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('handles transaction rollback on failure', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
             $supply = OfficeSupply::factory()->create(['stok' => 20]);
 
             // Mock a failure by using invalid data that will cause an error
@@ -301,7 +314,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('allows duplicate items in a single purchase', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.purchases']);
             $supply = OfficeSupply::factory()->create(['stok' => 20]);
 
             $response = $this->actingAs($user)
@@ -345,7 +358,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('returns list of purchases', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.view']);
 
             OfficePurchase::factory()->count(3)->create();
 
@@ -357,7 +370,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('filters by date range', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.view']);
 
             OfficePurchase::factory()->create(['tanggal' => '2024-01-01']);
             OfficePurchase::factory()->create(['tanggal' => '2024-01-15']);
@@ -381,7 +394,7 @@ describe('OfficePurchase Management', function () {
         });
 
         it('returns purchase details with items', function () {
-            $user = User::factory()->create();
+            $user = createOfficePurchaseUserWithPermissions(['office.view']);
             $purchase = OfficePurchase::factory()->create();
 
             \App\Models\OfficePurchaseDetail::factory()->count(2)->create(['purchase_id' => $purchase->id]);

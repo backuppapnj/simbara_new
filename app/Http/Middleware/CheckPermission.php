@@ -37,9 +37,9 @@ class CheckPermission
         foreach ($items as $item) {
             $item = trim($item);
 
+            // Check if it's a permission (explicitly marked with permission: prefix)
             if (str_starts_with($item, 'permission:')) {
                 $perm = substr($item, strlen('permission:'));
-
                 try {
                     if ($user->hasPermissionTo($perm)) {
                         return $next($request);
@@ -47,7 +47,17 @@ class CheckPermission
                 } catch (PermissionDoesNotExist) {
                     // Permission does not exist, continue checking
                 }
+            } elseif (str_contains($item, '.')) {
+                // Treat as permission if it contains a dot (e.g., "atk.purchases.view")
+                try {
+                    if ($user->hasPermissionTo($item)) {
+                        return $next($request);
+                    }
+                } catch (PermissionDoesNotExist) {
+                    // Permission does not exist, continue checking
+                }
             } else {
+                // Treat as role
                 if ($user->hasRole($item)) {
                     return $next($request);
                 }

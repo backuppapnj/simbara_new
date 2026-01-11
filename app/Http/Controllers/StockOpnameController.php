@@ -149,6 +149,9 @@ class StockOpnameController extends Controller
                 'approved_at' => now(),
             ]);
 
+            // Load stock opname details with items to ensure we have fresh data
+            $stockOpname->load('stockOpnameDetails.item');
+
             foreach ($stockOpname->stockOpnameDetails as $detail) {
                 if ($detail->selisih !== 0) {
                     $item = $detail->item;
@@ -165,8 +168,8 @@ class StockOpnameController extends Controller
                         'keterangan' => "Penyesuaian stock opname {$stockOpname->no_so}",
                     ]);
 
-                    // Update item stock
-                    $item->increment('stok', $detail->selisih);
+                    // Update item stock - use update() to ensure the change is applied
+                    $item->update(['stok' => $item->stok + $detail->selisih]);
                 }
             }
 

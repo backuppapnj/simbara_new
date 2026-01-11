@@ -7,13 +7,14 @@ This application implements a comprehensive Role-Based Access Control (RBAC) sys
 ## Table of Contents
 
 1. [Roles](#roles)
-2. [Permissions](#permissions)
-3. [Super Admin Wildcard Access](#super-admin-wildcard-access)
-4. [Permission Middleware](#permission-middleware)
-5. [Performance Optimization](#performance-optimization)
-6. [Security Best Practices](#security-best-practices)
-7. [Usage Examples](#usage-examples)
-8. [Testing](#testing)
+2. [3-Level Approval Workflow](#3-level-approval-workflow)
+3. [Permissions](#permissions)
+4. [Super Admin Wildcard Access](#super-admin-wildcard-access)
+5. [Permission Middleware](#permission-middleware)
+6. [Performance Optimization](#performance-optimization)
+7. [Security Best Practices](#security-best-practices)
+8. [Usage Examples](#usage-examples)
+9. [Testing](#testing)
 
 ## Roles
 
@@ -31,9 +32,11 @@ The application defines 6 predefined roles with hierarchical access:
 - **Permissions**: `approve requests`, `view reports`, `manage budget`
 
 ### 3. kasubag_umum (Kepala Subbagian Umum)
-- **Description**: General subdivision head with administrative oversight
-- **Access**: Can manage office supplies, approve certain requests, view reports
-- **Permissions**: `manage office supplies`, `approve requests`, `view reports`
+- **Description**: General subdivision head with administrative oversight for assets and supplies
+- **Access**: Can manage assets, office supplies, and ATK items with full CRUD operations
+- **Permissions**: `assets.*`, `atk.*`, `office.*` (full management of these modules)
+- **Restrictions**: Does NOT have system administration permissions (users.view, roles.manage, settings.whatsapp)
+- **Note**: This role focuses on operational management, not system administration
 
 ### 4. operator_bmn
 - **Description**: Asset management operator
@@ -50,9 +53,113 @@ The application defines 6 predefined roles with hierarchical access:
 - **Access**: Can view assets, create requests, view own data
 - **Permissions**: `view assets`, `create requests`, `view own data`
 
+## 3-Level Approval Workflow
+
+The application implements a streamlined 3-level approval workflow for ATK and office supply requests:
+
+### Workflow Stages
+
+#### Level 1: Request Creation
+- **Actor**: pegawai
+- **Action**: Creates ATK or office supply requests
+- **Permissions Required**: `atk.requests.create` or `office.requests.create`
+- **Outcome**: Request created with status "pending"
+
+#### Level 2: Initial Approval
+- **Actor**: operator_persediaan
+- **Action**: Reviews and approves/rejects requests at the inventory level
+- **Permissions Required**: `atk.requests.approve` or `office.requests.approve`
+- **Outcome**: Request status updated to "approved" or "rejected"
+
+#### Level 3: Final Approval
+- **Actor**: kpa (Kuasa Pengguna Anggaran)
+- **Action**: Provides final budgetary approval
+- **Permissions Required**: `atk.requests.approve` or `office.requests.approve`
+- **Outcome**: Request marked as "finally approved" and ready for distribution
+
+### Key Points
+
+- **kasubag_umum is NOT in the approval chain**: This role manages assets and supplies but does not participate in the request approval workflow
+- **operator_persediaan acts as gatekeeper**: Validates inventory availability and request validity before KPA review
+- **kpa has final authority**: Budget approval rests with the KPA role
+- **super_admin can override**: The super_admin role has wildcard access and can intervene at any stage if needed
+
+### Permission Matrix for Approval Workflow
+
+| Role | Create Request | Level 1 Approval | Level 2 Approval | Distribution |
+|------|---------------|------------------|------------------|--------------|
+| pegawai | ✓ | - | - | - |
+| operator_persediaan | ✓ | ✓ | - | ✓ |
+| kpa | - | ✓ | ✓ (Final) | - |
+| kasubag_umum | - | - | - | - |
+| operator_bmn | - | - | - | - |
+| super_admin | ✓ | ✓ | ✓ | ✓ |
+
 ## Permissions
 
 Permissions define specific actions that users can perform. The system supports:
+
+### Complete Permission Matrix by Role
+
+| Module/Permission | super_admin | kpa | kasubag_umum | operator_bmn | operator_persediaan | pegawai |
+|-------------------|-------------|-----|--------------|--------------|---------------------|---------|
+| **Assets Module** | | | | | | |
+| assets.view | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| assets.create | ✓ | - | ✓ | ✓ | - | - |
+| assets.edit | ✓ | - | ✓ | ✓ | - | - |
+| assets.delete | ✓ | - | ✓ | ✓ | - | - |
+| assets.import | ✓ | - | ✓ | ✓ | - | - |
+| assets.export | ✓ | ✓ | ✓ | ✓ | - | - |
+| assets.photos.* | ✓ | - | ✓ | ✓ | - | - |
+| assets.maintenance.* | ✓ | - | ✓ | ✓ | - | - |
+| assets.reports.* | ✓ | ✓ | ✓ | ✓ | - | - |
+| **ATK Module** | | | | | | |
+| atk.view | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| atk.create | ✓ | - | ✓ | - | ✓ | - |
+| atk.edit | ✓ | - | ✓ | - | ✓ | - |
+| atk.delete | ✓ | - | ✓ | - | ✓ | - |
+| atk.stock.view | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| atk.items.* | ✓ | - | ✓ | - | ✓ | - |
+| atk.purchases.view | ✓ | ✓ | ✓ | - | ✓ | - |
+| atk.purchases.create | ✓ | - | ✓ | - | ✓ | - |
+| atk.purchases.approve | ✓ | ✓ | ✓ | - | - | - |
+| atk.requests.view | ✓ | ✓ | ✓ | - | ✓ | - |
+| atk.requests.create | ✓ | - | ✓ | - | ✓ | ✓ |
+| atk.requests.approve | ✓ | ✓ | ✓ | - | ✓ (Level 1) | - |
+| atk.requests.reject | ✓ | ✓ | ✓ | - | ✓ | - |
+| atk.requests.distribute | ✓ | - | ✓ | - | ✓ | - |
+| atk.reports.* | ✓ | ✓ | ✓ | - | ✓ | - |
+| **Office Module** | | | | | | |
+| office.view | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| office.* | ✓ | - | ✓ | - | ✓ | - |
+| **Stock Opnames** | | | | | | |
+| stock_opnames.* | ✓ | ✓ | ✓ | - | ✓ | - |
+| **User Management** | | | | | | |
+| users.view | ✓ | - | ✗ | - | - | - |
+| users.* | ✓ | - | ✗ | - | - | - |
+| **Role Management** | | | | | | |
+| roles.view | ✓ | - | ✗ | - | - | - |
+| roles.manage | ✓ | - | ✗ | - | - | - |
+| **Permission Management** | | | | | | |
+| permissions.view | ✓ | - | ✗ | - | - | - |
+| permissions.manage | ✓ | - | ✗ | - | - | - |
+| **Settings** | | | | | | |
+| settings.view | ✓ | - | ✗ | - | - | - |
+| settings.whatsapp | ✓ | - | ✗ | - | - | - |
+| settings.general | ✓ | - | ✗ | - | - | - |
+
+**Legend:**
+- ✓ = Has permission
+- - = No permission
+- ✗ = Explicitly denied (system administration permissions restricted from kasubag_umum)
+
+**Key Observations:**
+1. **super_admin**: Has all permissions via wildcard `*`
+2. **kasubag_umum**: Full access to assets, ATK, and office modules, but NO system administration permissions
+3. **kpa**: Can view and approve requests, view reports, but cannot create/edit/delete
+4. **operator_persediaan**: Manages ATK and office supplies, Level 1 approval authority
+5. **operator_bmn**: Manages assets only
+6. **pegawai**: Basic view and create request permissions only
 
 ### Permission Structure
 

@@ -30,7 +30,7 @@ class ItemPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('atk.create');
+        return $user->can('atk.items.create');
     }
 
     /**
@@ -38,7 +38,7 @@ class ItemPolicy
      */
     public function update(User $user, Item $item): bool
     {
-        return $user->can('atk.edit');
+        return $user->can('atk.items.edit');
     }
 
     /**
@@ -46,7 +46,7 @@ class ItemPolicy
      */
     public function delete(User $user, Item $item): bool
     {
-        return $user->can('atk.delete');
+        return $user->can('atk.items.delete');
     }
 
     /**
@@ -54,7 +54,7 @@ class ItemPolicy
      */
     public function restore(User $user, Item $item): bool
     {
-        return $user->can('atk.delete');
+        return $user->can('atk.items.delete');
     }
 
     /**
@@ -62,6 +62,6 @@ class ItemPolicy
      */
     public function forceDelete(User $user, Item $item): bool
     {
-        return $user->can('atk.delete');
+        return $user->can('atk.items.delete');
     }
 }

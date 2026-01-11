@@ -14,7 +14,7 @@ class StockOpnamePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('stock_opname.view');
+        return $user->can('stock_opnames.view');
     }
 
     /**
@@ -22,7 +22,7 @@ class StockOpnamePolicy
      */
     public function view(User $user, StockOpname $stockOpname): bool
     {
-        return $user->can('stock_opname.view');
+        return $user->can('stock_opnames.view');
     }
 
     /**
@@ -30,7 +30,7 @@ class StockOpnamePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('stock_opname.create');
+        return $user->can('stock_opnames.create');
     }
 
     /**
@@ -40,7 +40,7 @@ class StockOpnamePolicy
     {
         // Only allow updates for draft status
         if ($stockOpname->status === 'draft') {
-            return $user->can('stock_opname.create');
+            return $user->can('stock_opnames.edit');
         }
 
         return false;
@@ -53,7 +53,7 @@ class StockOpnamePolicy
     {
         // Only allow deletion for draft status
         if ($stockOpname->status === 'draft') {
-            return $user->can('stock_opname.create');
+            return $user->can('stock_opnames.delete');
         }
 
         return false;
@@ -68,7 +68,7 @@ class StockOpnamePolicy
             return false;
         }
 
-        return $user->can('stock_opname.submit');
+        return $user->can('stock_opnames.create');
     }
 
     /**
@@ -76,11 +76,11 @@ class StockOpnamePolicy
      */
     public function approve(User $user, StockOpname $stockOpname): bool
     {
-        if ($stockOpname->status !== 'submitted') {
+        if ($stockOpname->status !== 'completed') {
             return false;
         }
 
-        return $user->can('stock_opname.approve');
+        return $user->can('stock_opnames.approve');
     }
 
     /**
@@ -88,6 +88,6 @@ class StockOpnamePolicy
      */
     public function export(User $user, StockOpname $stockOpname): bool
     {
-        return $user->can('stock_opname.export');
+        return $user->can('stock_opnames.view');
     }
 }

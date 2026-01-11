@@ -5,6 +5,8 @@ use App\Models\AssetMaintenance;
 use App\Models\Location;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
@@ -13,8 +15,16 @@ use function Pest\Laravel\post;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    // Clear permission cache
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    // Create super_admin role
+    $superAdminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+
+    // Create and authenticate user with super_admin role (bypasses permission checks)
     $user = User::factory()->create();
     $user->markEmailAsVerified();
+    $user->assignRole($superAdminRole);
     actingAs($user);
 });
 

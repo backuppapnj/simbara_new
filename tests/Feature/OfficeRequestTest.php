@@ -1,14 +1,27 @@
 <?php
 
 use App\Models\Department;
-use App\Models\OfficeMutation;
 use App\Models\OfficeRequest;
 use App\Models\OfficeRequestDetail;
 use App\Models\OfficeSupply;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 uses(RefreshDatabase::class);
+
+// Helper function to create a user with specific permissions
+function createUserWithPermissions(array $permissions): User
+{
+    $user = User::factory()->create();
+    foreach ($permissions as $permission) {
+        Permission::firstOrCreate(['name' => $permission]);
+        $user->givePermissionTo($permission);
+    }
+
+    return $user;
+}
 
 describe('OfficeRequest Management', function () {
     describe('POST /office-requests (Store)', function () {
@@ -31,7 +44,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('creates a new request with valid data', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
             $department = Department::factory()->create();
             $supply1 = OfficeSupply::factory()->create(['stok' => 50]);
             $supply2 = OfficeSupply::factory()->create(['stok' => 30]);
@@ -93,7 +106,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('validates required fields', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
 
             $response = $this->actingAs($user)
                 ->postJson('/office-requests', []);
@@ -103,7 +116,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('validates items is an array', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -118,7 +131,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('validates items array is not empty', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -133,7 +146,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('validates each item has supply_id and jumlah', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -151,7 +164,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('validates supply_id exists in office_supplies table', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
             $department = Department::factory()->create();
 
             $response = $this->actingAs($user)
@@ -171,7 +184,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('validates jumlah is at least 1', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
             $department = Department::factory()->create();
             $supply = OfficeSupply::factory()->create();
 
@@ -192,7 +205,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('generates unique request number', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.create']);
             $department = Department::factory()->create();
             $supply = OfficeSupply::factory()->create();
 
@@ -236,7 +249,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('returns list of requests', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.view']);
 
             OfficeRequest::factory()->count(3)->create(['user_id' => $user->id]);
 
@@ -248,8 +261,8 @@ describe('OfficeRequest Management', function () {
         });
 
         it('returns only user own requests for regular users', function () {
-            $user1 = User::factory()->create();
-            $user2 = User::factory()->create();
+            $user1 = createUserWithPermissions(['office.view']);
+            $user2 = createUserWithPermissions(['office.view']);
 
             OfficeRequest::factory()->count(2)->create(['user_id' => $user1->id]);
             OfficeRequest::factory()->count(3)->create(['user_id' => $user2->id]);
@@ -272,7 +285,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('returns request details with request details', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.view']);
             $request = OfficeRequest::factory()->create(['user_id' => $user->id]);
 
             OfficeRequestDetail::factory()->count(2)->create(['request_id' => $request->id]);
@@ -297,8 +310,8 @@ describe('OfficeRequest Management', function () {
         });
 
         it('forbids viewing other users requests', function () {
-            $user1 = User::factory()->create();
-            $user2 = User::factory()->create();
+            $user1 = createUserWithPermissions(['office.view']);
+            $user2 = createUserWithPermissions(['office.view']);
             $request = OfficeRequest::factory()->create(['user_id' => $user2->id]);
 
             $response = $this->actingAs($user1)
@@ -318,7 +331,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('approves request and creates mutations with stock reduction', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.approve']);
             $supply1 = OfficeSupply::factory()->create(['stok' => 50]);
             $supply2 = OfficeSupply::factory()->create(['stok' => 30]);
             $request = OfficeRequest::factory()->pending()->create();
@@ -391,7 +404,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('can only approve pending requests', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.approve']);
             $request = OfficeRequest::factory()->completed()->create();
 
             $response = $this->actingAs($user)
@@ -401,7 +414,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('handles insufficient stock gracefully', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.approve']);
             $supply = OfficeSupply::factory()->create(['stok' => 5]);
             $request = OfficeRequest::factory()->pending()->create();
 
@@ -439,7 +452,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('rejects request with reason', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.approve']);
             $request = OfficeRequest::factory()->pending()->create();
 
             $response = $this->actingAs($user)
@@ -463,7 +476,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('requires rejection reason', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.approve']);
             $request = OfficeRequest::factory()->pending()->create();
 
             $response = $this->actingAs($user)
@@ -474,7 +487,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('can only reject pending requests', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.approve']);
             $request = OfficeRequest::factory()->rejected()->create();
 
             $response = $this->actingAs($user)
@@ -486,7 +499,7 @@ describe('OfficeRequest Management', function () {
         });
 
         it('does not create mutations on rejection', function () {
-            $user = User::factory()->create();
+            $user = createUserWithPermissions(['office.requests.approve']);
             $supply = OfficeSupply::factory()->create(['stok' => 50]);
             $request = OfficeRequest::factory()->pending()->create();
 

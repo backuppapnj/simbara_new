@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreStockOpnameRequest extends FormRequest
 {
@@ -55,20 +53,5 @@ class StoreStockOpnameRequest extends FormRequest
             'details.*.stok_sistem.required' => 'Stok sistem wajib diisi.',
             'details.*.stok_fisik.required' => 'Stok fisik wajib diisi.',
         ];
-    }
-
-    /**
-     * Handle a failed validation attempt.
-     *
-     *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException
-     */
-    protected function failedValidation(Validator $validator): void
-    {
-        throw new HttpResponseException(
-            redirect()->back()
-                ->withInput()
-                ->withErrors($validator)
-        );
     }
 }

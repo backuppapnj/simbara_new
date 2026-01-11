@@ -2,12 +2,31 @@
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    // Create required permissions
+    $permissions = [
+        'atk.purchases.view',
+        'atk.purchases.create',
+        'atk.purchases.approve',
+    ];
+
+    foreach ($permissions as $permission) {
+        Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+    }
+});
 
 describe('PurchaseController', function () {
     beforeEach(function () {
         $this->user = \App\Models\User::factory()->create();
+        $this->user->givePermissionTo(['atk.purchases.view', 'atk.purchases.create', 'atk.purchases.approve']);
+        $this->user->load('permissions');
         $this->actingAs($this->user);
     });
 
@@ -139,10 +158,34 @@ describe('PurchaseController', function () {
     });
 
     describe('POST /purchases/{id}/receive', function () {
-        it('updates purchase status to received', function () {
+        it('updates purchase status to received when all items are received', function () {
             $purchase = \App\Models\Purchase::factory()->draft()->create();
             \App\Models\PurchaseDetail::factory()->for($purchase)->count(2)->create();
 
+            // Receive all items
+            $items = $purchase->purchaseDetails->map(function ($detail) {
+                return [
+                    'purchase_detail_id' => $detail->id,
+                    'jumlah_diterima' => $detail->jumlah,
+                ];
+            })->toArray();
+
+            $response = $this->post("/purchases/{$purchase->id}/receive", [
+                'items' => $items,
+            ]);
+
+            $response->assertStatus(302);
+            $this->assertDatabaseHas('purchases', [
+                'id' => $purchase->id,
+                'status' => 'received',
+            ]);
+        });
+
+        it('keeps purchase status as draft when not all items are received', function () {
+            $purchase = \App\Models\Purchase::factory()->draft()->create();
+            \App\Models\PurchaseDetail::factory()->for($purchase)->count(2)->create();
+
+            // Receive only one item
             $response = $this->post("/purchases/{$purchase->id}/receive", [
                 'items' => [
                     [
@@ -155,7 +198,7 @@ describe('PurchaseController', function () {
             $response->assertStatus(302);
             $this->assertDatabaseHas('purchases', [
                 'id' => $purchase->id,
-                'status' => 'received',
+                'status' => 'draft',
             ]);
         });
 

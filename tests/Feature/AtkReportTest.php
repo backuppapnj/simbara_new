@@ -8,11 +8,24 @@ use App\Models\StockMutation;
 use App\Models\StockOpname;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
 
 uses(RefreshDatabase::class);
 
-test('can view stock card report for an item', function () {
+// Helper function to create a user with specific permissions
+function createAtkReportUserWithPermissions(array $permissions): User
+{
     $user = User::factory()->create();
+    foreach ($permissions as $permission) {
+        Permission::firstOrCreate(['name' => $permission]);
+        $user->givePermissionTo($permission);
+    }
+
+    return $user;
+}
+
+test('can view stock card report for an item', function () {
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
     $item = Item::factory()->create([
         'kode_barang' => 'ATK-001',
         'nama_barang' => 'Kertas A4',
@@ -74,7 +87,7 @@ test('can view stock card report for an item', function () {
 });
 
 test('can view monthly summary report', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
 
     // Create purchases
     $purchase = Purchase::factory()->create([
@@ -121,7 +134,7 @@ test('can view monthly summary report', function () {
 });
 
 test('can export stock card to pdf', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
     $item = Item::factory()->create([
         'kode_barang' => 'ATK-001',
         'nama_barang' => 'Kertas A4',
@@ -139,7 +152,7 @@ test('can export stock card to pdf', function () {
 });
 
 test('can export monthly report to pdf', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
 
     $response = $this->actingAs($user)->getJson('/atk-reports/monthly/pdf?'.http_build_query([
         'bulan' => now()->month,
@@ -151,7 +164,7 @@ test('can export monthly report to pdf', function () {
 });
 
 test('can export monthly report to excel', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
 
     $response = $this->actingAs($user)->getJson('/atk-reports/monthly/excel?'.http_build_query([
         'bulan' => now()->month,
@@ -163,7 +176,7 @@ test('can export monthly report to excel', function () {
 });
 
 test('can export request history report', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
     $request = AtkRequest::factory()->create([
         'tanggal' => now()->subDays(5),
         'status' => 'diterima',
@@ -195,7 +208,7 @@ test('can export request history report', function () {
 });
 
 test('can export purchase history report', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
     Purchase::factory()->count(3)->create([
         'tanggal' => now()->subDays(5),
         'status' => 'completed',
@@ -222,7 +235,7 @@ test('can export purchase history report', function () {
 });
 
 test('can export distribution report', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
     $request = AtkRequest::factory()->create([
         'status' => 'diserahkan',
         'distributed_at' => now(),
@@ -255,7 +268,7 @@ test('can export distribution report', function () {
 });
 
 test('can get low stock items report', function () {
-    $user = User::factory()->create();
+    $user = createAtkReportUserWithPermissions(['atk.reports']);
     Item::factory()->create([
         'nama_barang' => 'Item A',
         'stok' => 10,

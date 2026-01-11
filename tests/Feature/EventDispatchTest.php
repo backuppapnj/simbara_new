@@ -17,9 +17,18 @@ use Illuminate\Support\Str;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    // Create permissions first
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.create', 'guard_name' => 'web']);
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'atk.requests.approve', 'guard_name' => 'web']);
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'office.requests.create', 'guard_name' => 'web']);
+
     $this->user = User::factory()->create([
         'phone' => '628123456789',
     ]);
+    $this->user->givePermissionTo('atk.create');
+    $this->user->givePermissionTo('atk.requests.approve');
+    $this->user->givePermissionTo('office.requests.create');
+    $this->user->load('permissions');
     $this->department = Department::factory()->create();
 });
 

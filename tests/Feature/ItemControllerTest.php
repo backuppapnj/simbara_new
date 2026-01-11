@@ -3,8 +3,17 @@
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    // Seed roles and permissions
+    $this->seed(\Database\Seeders\RolesSeeder::class);
+    $this->seed(\Database\Seeders\PermissionsSeeder::class);
+});
 
 describe('ItemController', function () {
     describe('Index', function () {
@@ -15,7 +24,8 @@ describe('ItemController', function () {
         });
 
         it('displays items list to authenticated users', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             Item::factory()->count(3)->create();
 
             $response = $this->actingAs($user)
@@ -25,7 +35,8 @@ describe('ItemController', function () {
         });
 
         it('paginates items by 15 per page', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             Item::factory()->count(20)->create();
 
             $response = $this->actingAs($user)
@@ -35,7 +46,8 @@ describe('ItemController', function () {
         });
 
         it('can search items by name', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             Item::factory()->create(['nama_barang' => 'Kertas A4']);
             Item::factory()->create(['nama_barang' => 'Pulpen Hitam']);
 
@@ -46,7 +58,8 @@ describe('ItemController', function () {
         });
 
         it('can filter items by category', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             Item::factory()->create(['kategori' => 'Alat Tulis']);
             Item::factory()->create(['kategori' => 'Kertas']);
 
@@ -66,6 +79,7 @@ describe('ItemController', function () {
 
         it('creates a new item with valid data', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.create');
 
             $response = $this->actingAs($user)
                 ->post(route('items.store'), [
@@ -92,6 +106,7 @@ describe('ItemController', function () {
 
         it('requires kode_barang', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.create');
 
             $response = $this->actingAs($user)
                 ->post(route('items.store'), [
@@ -104,6 +119,7 @@ describe('ItemController', function () {
 
         it('requires nama_barang', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.create');
 
             $response = $this->actingAs($user)
                 ->post(route('items.store'), [
@@ -116,6 +132,7 @@ describe('ItemController', function () {
 
         it('requires satuan', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.create');
 
             $response = $this->actingAs($user)
                 ->post(route('items.store'), [
@@ -128,6 +145,7 @@ describe('ItemController', function () {
 
         it('requires numeric stok values', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.create');
 
             $response = $this->actingAs($user)
                 ->post(route('items.store'), [
@@ -144,6 +162,7 @@ describe('ItemController', function () {
 
         it('requires numeric harga values', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.create');
 
             $response = $this->actingAs($user)
                 ->post(route('items.store'), [
@@ -160,6 +179,7 @@ describe('ItemController', function () {
 
         it('validates unique kode_barang', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.create');
             Item::factory()->create(['kode_barang' => 'ATK-0001']);
 
             $response = $this->actingAs($user)
@@ -184,6 +204,7 @@ describe('ItemController', function () {
 
         it('updates an existing item', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.edit');
             $item = Item::factory()->create([
                 'nama_barang' => 'Kertas A4',
             ]);
@@ -213,6 +234,7 @@ describe('ItemController', function () {
 
         it('requires kode_barang on update', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.edit');
             $item = Item::factory()->create();
 
             $response = $this->actingAs($user)
@@ -236,6 +258,7 @@ describe('ItemController', function () {
 
         it('soft deletes an item', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.delete');
             $item = Item::factory()->create();
 
             $response = $this->actingAs($user)
@@ -250,6 +273,7 @@ describe('ItemController', function () {
 
         it('cannot delete non-existent item', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('atk.items.delete');
             $nonExistentId = (string) \Illuminate\Support\Str::ulid();
 
             $response = $this->actingAs($user)
@@ -269,7 +293,8 @@ describe('ItemController', function () {
         });
 
         it('displays stock mutations for an item', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             $item = Item::factory()->create();
 
             $response = $this->actingAs($user)
@@ -279,7 +304,8 @@ describe('ItemController', function () {
         });
 
         it('paginates mutations', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             $item = Item::factory()->create();
             \App\Models\StockMutation::factory()->count(20)->create(['item_id' => $item->id]);
 
@@ -290,7 +316,8 @@ describe('ItemController', function () {
         });
 
         it('can filter by mutation type', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             $item = Item::factory()->create();
 
             $response = $this->actingAs($user)
@@ -300,7 +327,8 @@ describe('ItemController', function () {
         });
 
         it('calculates running balance for mutations', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             $item = Item::factory()->create(['stok' => 0]);
 
             // Create multiple mutations
@@ -344,7 +372,8 @@ describe('ItemController', function () {
         });
 
         it('can filter by date range', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             $item = Item::factory()->create();
 
             // Create mutations on different dates
@@ -374,7 +403,8 @@ describe('ItemController', function () {
         });
 
         it('includes item data in mutations response', function () {
-            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user = User::factory()->create();
+            $user->givePermissionTo('atk.view');
             $item = Item::factory()->create([
                 'kode_barang' => 'ATK-001',
                 'nama_barang' => 'Kertas A4',

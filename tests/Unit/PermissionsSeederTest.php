@@ -220,10 +220,12 @@ describe('PermissionsSeeder', function () {
 
             expect($officePermissions->count())->toBeGreaterThan(0);
 
-            // Kasubag should have users.view and roles.manage
-            expect($kasubagRole->permissions->pluck('name'))->toContain('users.view');
-            expect($kasubagRole->permissions->pluck('name'))->toContain('roles.manage');
-            expect($kasubagRole->permissions->pluck('name'))->toContain('settings.whatsapp');
+            // Kasubag should NOT have system administration permissions
+            expect($kasubagRole->permissions->pluck('name'))->not->toContain('users.view');
+            expect($kasubagRole->permissions->pluck('name'))->not->toContain('roles.manage');
+            expect($kasubagRole->permissions->pluck('name'))->not->toContain('settings.whatsapp');
+            expect($kasubagRole->permissions->pluck('name'))->not->toContain('permissions.view');
+            expect($kasubagRole->permissions->pluck('name'))->not->toContain('permissions.manage');
         });
 
         it('assigns correct permissions to operator_bmn role', function () {

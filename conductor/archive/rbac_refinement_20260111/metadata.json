@@ -1,0 +1,8 @@
+{
+  "track_id": "rbac_refinement_20260111",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-01-11T20:15:48+08:00",
+  "updated_at": "2026-01-11T20:15:48+08:00",
+  "description": "Refinement RBAC dan Permissions Sistem - Remove users.view, roles.manage, settings.whatsapp dari kasubag_umum, hanya super_admin yang punya permission sistem, operator_persediaan sudah sesuai"
+}

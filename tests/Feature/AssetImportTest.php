@@ -6,33 +6,60 @@ use App\Models\User;
 use App\Services\AssetImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    // Create required permissions
+    $permissions = [
+        'assets.import',
+        'assets.edit',
+    ];
+
+    foreach ($permissions as $permission) {
+        Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+    }
+});
 
 describe('AssetImport', function () {
     describe('ImportAssetRequest', function () {
         it('requires json_file field', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.import');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
             $response = $this->actingAs($user)
                 ->post(route('assets.import.process'), []);
 
+            $response->assertStatus(302);
             $response->assertSessionHasErrors('json_file');
         });
 
         it('validates json_file is a file', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.import');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
             $response = $this->actingAs($user)
                 ->post(route('assets.import.process'), [
                     'json_file' => 'not a file',
                 ]);
 
+            $response->assertStatus(302);
             $response->assertSessionHasErrors('json_file');
         });
 
         it('validates json_file is json format', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.import');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $file = UploadedFile::fake()->create('assets.txt', 100);
 
             $response = $this->actingAs($user)
@@ -40,11 +67,15 @@ describe('AssetImport', function () {
                     'json_file' => $file,
                 ]);
 
+            $response->assertStatus(302);
             $response->assertSessionHasErrors('json_file');
         });
 
         it('validates json_file max size', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.import');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $file = UploadedFile::fake()->create('assets.json', 20000); // 20MB
 
             $response = $this->actingAs($user)
@@ -52,11 +83,15 @@ describe('AssetImport', function () {
                     'json_file' => $file,
                 ]);
 
+            $response->assertStatus(302);
             $response->assertSessionHasErrors('json_file');
         });
 
         it('accepts valid json file', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.import');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $file = UploadedFile::fake()->createWithContent('assets.json', json_encode([
                 'metadata' => ['generated_at' => now(), 'total_records' => 1],
                 'data' => [
@@ -75,6 +110,7 @@ describe('AssetImport', function () {
                     'json_file' => $file,
                 ]);
 
+            $response->assertStatus(302);
             $response->assertSessionHasNoErrors();
         });
     });
@@ -302,6 +338,7 @@ describe('AssetImport', function () {
             $user = User::factory()->create([
                 'email_verified_at' => now(),
             ]);
+            $user->givePermissionTo('assets.import');
 
             $response = $this->actingAs($user)
                 ->get(route('assets.import'));
@@ -320,6 +357,9 @@ describe('AssetImport', function () {
             $user = User::factory()->create([
                 'email_verified_at' => now(),
             ]);
+            $user->givePermissionTo('assets.import');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $fileContent = json_encode([
                 'metadata' => ['generated_at' => now(), 'total_records' => 2],
                 'data' => [
@@ -358,6 +398,9 @@ describe('AssetImport', function () {
             $user = User::factory()->create([
                 'email_verified_at' => now(),
             ]);
+            $user->givePermissionTo('assets.import');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $file = UploadedFile::fake()->createWithContent('assets.json', 'invalid json');
 
             $response = $this->actingAs($user)
@@ -371,7 +414,10 @@ describe('AssetImport', function () {
 
     describe('AssetController Update Location', function () {
         it('updates asset location and creates history', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.edit');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $oldLocation = Location::factory()->create();
             $newLocation = Location::factory()->create();
             $asset = Asset::factory()->create(['lokasi_id' => $oldLocation->id]);
@@ -397,7 +443,10 @@ describe('AssetImport', function () {
         });
 
         it('validates lokasi_id is required', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.edit');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -409,7 +458,10 @@ describe('AssetImport', function () {
         });
 
         it('validates lokasi_id exists', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $user->givePermissionTo('assets.edit');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)

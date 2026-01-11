@@ -3,10 +3,23 @@
 use App\Models\Asset;
 use App\Models\AssetMaintenance;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 describe('AssetMaintenanceController', function () {
+    beforeEach(function () {
+        // Create required permissions
+        Permission::firstOrCreate(['name' => 'assets.maintenance.create', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'assets.maintenance.view', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'assets.maintenance.edit', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'assets.maintenance.delete', 'guard_name' => 'web']);
+
+        // Clear permission cache
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+    });
     describe('Store', function () {
         it('requires authentication', function () {
             $asset = Asset::factory()->create();
@@ -18,6 +31,10 @@ describe('AssetMaintenanceController', function () {
 
         it('creates maintenance record successfully', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -43,6 +60,10 @@ describe('AssetMaintenanceController', function () {
 
         it('validates required fields', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -54,6 +75,10 @@ describe('AssetMaintenanceController', function () {
 
         it('validates jenis_perawatan is in allowed types', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -69,6 +94,10 @@ describe('AssetMaintenanceController', function () {
 
         it('accepts valid maintenance types', function (string $type) {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -89,6 +118,10 @@ describe('AssetMaintenanceController', function () {
 
         it('validates biaya is numeric when provided', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -105,6 +138,10 @@ describe('AssetMaintenanceController', function () {
 
         it('validates biaya is non-negative', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -121,6 +158,10 @@ describe('AssetMaintenanceController', function () {
 
         it('allows biaya to be optional', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -136,6 +177,10 @@ describe('AssetMaintenanceController', function () {
 
         it('validates keterangan max length', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -152,6 +197,10 @@ describe('AssetMaintenanceController', function () {
 
         it('returns success message after creation', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.create');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $response = $this->actingAs($user)
@@ -179,6 +228,10 @@ describe('AssetMaintenanceController', function () {
 
         it('returns maintenances for an asset', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.view');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
             AssetMaintenance::factory()->count(3)->create(['asset_id' => $asset->id]);
 
@@ -193,6 +246,10 @@ describe('AssetMaintenanceController', function () {
 
         it('paginates maintenance results', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.view');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
             AssetMaintenance::factory()->count(25)->create(['asset_id' => $asset->id]);
 
@@ -207,6 +264,10 @@ describe('AssetMaintenanceController', function () {
 
         it('orders by tanggal descending', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.view');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
 
             $oldMaintenance = AssetMaintenance::factory()->create([
@@ -242,6 +303,10 @@ describe('AssetMaintenanceController', function () {
 
         it('updates maintenance record successfully', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.edit');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
             $maintenance = AssetMaintenance::factory()->create([
                 'asset_id' => $asset->id,
@@ -272,6 +337,10 @@ describe('AssetMaintenanceController', function () {
 
         it('returns success message after update', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.edit');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
             $maintenance = AssetMaintenance::factory()->create(['asset_id' => $asset->id]);
 
@@ -299,6 +368,10 @@ describe('AssetMaintenanceController', function () {
 
         it('deletes maintenance record successfully', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.delete');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
             $maintenance = AssetMaintenance::factory()->create(['asset_id' => $asset->id]);
 
@@ -315,6 +388,10 @@ describe('AssetMaintenanceController', function () {
 
         it('returns success message after deletion', function () {
             $user = User::factory()->create();
+            $user->givePermissionTo('assets.maintenance.delete');
+            $user->load('permissions');
+
+            $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
             $asset = Asset::factory()->create();
             $maintenance = AssetMaintenance::factory()->create(['asset_id' => $asset->id]);
 

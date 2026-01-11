@@ -127,7 +127,13 @@ class PurchaseController extends Controller
                 ]);
             }
 
-            $purchase->update(['status' => 'received']);
+            // Only update status to 'received' if all purchase details have been received
+            $allDetails = $purchase->purchaseDetails;
+            $allReceived = $allDetails->every(fn ($detail) => $detail->jumlah_diterima !== null);
+
+            if ($allReceived) {
+                $purchase->update(['status' => 'received']);
+            }
 
             // Return JSON for API requests
             if ($request->wantsJson()) {

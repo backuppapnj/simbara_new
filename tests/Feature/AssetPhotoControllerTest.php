@@ -5,8 +5,25 @@ use App\Models\AssetPhoto;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\PermissionRegistrar;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
+beforeEach(function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    // Create required permissions
+    $permissions = [
+        'assets.photos',
+    ];
+
+    foreach ($permissions as $permission) {
+        \Spatie\Permission\Models\Permission::firstOrCreate(
+            ['name' => $permission, 'guard_name' => 'web'],
+            ['name' => $permission, 'guard_name' => 'web']
+        );
+    }
+});
 
 describe('AssetPhotoController', function () {
     describe('Index', function () {
@@ -19,7 +36,7 @@ describe('AssetPhotoController', function () {
         });
 
         it('returns photos for an asset', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
             AssetPhoto::factory()->count(3)->create(['asset_id' => $asset->id]);
 
@@ -43,7 +60,7 @@ describe('AssetPhotoController', function () {
         it('uploads a photo successfully', function () {
             Storage::fake('public');
 
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
 
             // Create a minimal valid JPEG file (1x1 pixel black image)
@@ -85,7 +102,7 @@ describe('AssetPhotoController', function () {
         it('validates file type', function () {
             Storage::fake('public');
 
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
             $file = UploadedFile::fake()->create('document.pdf', 1000);
 
@@ -101,7 +118,7 @@ describe('AssetPhotoController', function () {
         it('validates file size', function () {
             Storage::fake('public');
 
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
 
             // Create a large JPEG file (10MB) by padding a valid JPEG
@@ -135,7 +152,7 @@ describe('AssetPhotoController', function () {
         it('marks first photo as primary', function () {
             Storage::fake('public');
 
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
 
             // Create a minimal valid JPEG file (1x1 pixel black image)
@@ -182,7 +199,7 @@ describe('AssetPhotoController', function () {
         });
 
         it('updates photo caption', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
             $photo = AssetPhoto::factory()->create([
                 'asset_id' => $asset->id,
@@ -203,7 +220,7 @@ describe('AssetPhotoController', function () {
         });
 
         it('marks photo as primary', function () {
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
             $photo1 = AssetPhoto::factory()->create([
                 'asset_id' => $asset->id,
@@ -246,7 +263,7 @@ describe('AssetPhotoController', function () {
         it('deletes a photo successfully', function () {
             Storage::fake('public');
 
-            $user = User::factory()->create();
+            $user = User::factory()->create()->givePermissionTo('assets.photos');
             $asset = Asset::factory()->create();
             $photo = AssetPhoto::factory()->create([
                 'asset_id' => $asset->id,

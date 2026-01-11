@@ -4,12 +4,26 @@ use App\Models\OfficeSupply;
 use App\Models\OfficeUsage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
 
 describe('Office Usage Recording', function () {
     beforeEach(function () {
+        // Clear permission cache
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        // Create required permissions
+        Permission::firstOrCreate(['name' => 'office.usage.log', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'office.view', 'guard_name' => 'web']);
+
+        // Clear permission cache again after creating permissions
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
         $this->user = User::factory()->create(['email_verified_at' => now()]);
+        $this->user->givePermissionTo(['office.usage.log', 'office.view']);
+        $this->user->load('permissions');
         $this->actingAs($this->user);
         $this->supply = OfficeSupply::factory()->create(['stok' => 50]);
     });
@@ -122,7 +136,18 @@ describe('Office Usage Recording', function () {
 
 describe('POST /office-mutations/quick-deduct (Quick Deduct)', function () {
     beforeEach(function () {
+        // Clear permission cache
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        // Create required permissions
+        Permission::firstOrCreate(['name' => 'office.usage.log', 'guard_name' => 'web']);
+
+        // Clear permission cache again after creating permissions
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
+
         $this->user = User::factory()->create(['email_verified_at' => now()]);
+        $this->user->givePermissionTo('office.usage.log');
+        $this->user->load('permissions');
         $this->actingAs($this->user);
         $this->supply = OfficeSupply::factory()->create(['stok' => 50]);
     });

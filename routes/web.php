@@ -52,13 +52,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->middleware('permission:atk.view')
             ->name('index');
         Route::post('/', [\App\Http\Controllers\ItemController::class, 'store'])
-            ->middleware('permission:atk.create')
+            ->middleware('permission:atk.items.create')
             ->name('store');
         Route::put('/{item}', [\App\Http\Controllers\ItemController::class, 'update'])
-            ->middleware('permission:atk.edit')
+            ->middleware('permission:atk.items.edit')
             ->name('update');
         Route::delete('/{item}', [\App\Http\Controllers\ItemController::class, 'destroy'])
-            ->middleware('permission:atk.delete')
+            ->middleware('permission:atk.items.delete')
             ->name('destroy');
         Route::get('/{item}/mutations', [\App\Http\Controllers\ItemController::class, 'mutations'])
             ->middleware('permission:atk.view')
@@ -107,19 +107,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Asset Maintenances
         Route::prefix('{id}/maintenance')->name('maintenance.')->group(function () {
             Route::post('/', [\App\Http\Controllers\AssetController::class, 'maintenanceStore'])
-                ->middleware('permission:assets.maintenance')
+                ->middleware('permission:assets.maintenance.create')
                 ->name('store');
         });
 
         Route::prefix('{assetId}/maintenances')->name('maintenances.')->group(function () {
             Route::get('/', [\App\Http\Controllers\AssetController::class, 'maintenancesIndex'])
-                ->middleware('permission:assets.view')
+                ->middleware('permission:assets.maintenance.view')
                 ->name('index');
             Route::put('/{maintenanceId}', [\App\Http\Controllers\AssetController::class, 'maintenancesUpdate'])
-                ->middleware('permission:assets.maintenance')
+                ->middleware('permission:assets.maintenance.edit')
                 ->name('update');
             Route::delete('/{maintenanceId}', [\App\Http\Controllers\AssetController::class, 'maintenancesDestroy'])
-                ->middleware('permission:assets.maintenance')
+                ->middleware('permission:assets.maintenance.delete')
                 ->name('destroy');
         });
 
@@ -139,25 +139,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Stock Opnames
     Route::prefix('stock-opnames')->name('stock-opnames.')->group(function () {
         Route::get('/', [\App\Http\Controllers\StockOpnameController::class, 'index'])
-            ->middleware('permission:stock_opname.view')
+            ->middleware('permission:stock_opnames.view')
             ->name('index');
         Route::get('/create', [\App\Http\Controllers\StockOpnameController::class, 'create'])
-            ->middleware('permission:stock_opname.create')
+            ->middleware('permission:stock_opnames.create')
             ->name('create');
         Route::post('/', [\App\Http\Controllers\StockOpnameController::class, 'store'])
-            ->middleware('permission:stock_opname.create')
+            ->middleware('permission:stock_opnames.create')
             ->name('store');
         Route::get('/{stockOpname}', [\App\Http\Controllers\StockOpnameController::class, 'show'])
-            ->middleware('permission:stock_opname.view')
+            ->middleware('permission:stock_opnames.view')
             ->name('show');
         Route::post('/{stockOpname}/submit', [\App\Http\Controllers\StockOpnameController::class, 'submit'])
-            ->middleware('permission:stock_opname.submit')
+            ->middleware('permission:stock_opnames.create')
             ->name('submit');
         Route::post('/{stockOpname}/approve', [\App\Http\Controllers\StockOpnameController::class, 'approve'])
-            ->middleware('permission:stock_opname.approve')
+            ->middleware('permission:stock_opnames.approve')
             ->name('approve');
         Route::get('/{stockOpname}/ba-pdf', [\App\Http\Controllers\StockOpnameController::class, 'generateBaPdf'])
-            ->middleware('permission:stock_opname.export')
+            ->middleware('permission:stock_opnames.view')
             ->name('ba-pdf');
     });
 
@@ -271,22 +271,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ATK Purchases Management
     Route::prefix('purchases')->name('purchases.')->group(function () {
         Route::get('/', [\App\Http\Controllers\PurchaseController::class, 'index'])
-            ->middleware('permission:atk.purchases')
+            ->middleware('permission:atk.purchases.view')
             ->name('index');
         Route::get('/create', [\App\Http\Controllers\PurchaseController::class, 'create'])
-            ->middleware('permission:atk.purchases')
+            ->middleware('permission:atk.purchases.create')
             ->name('create');
         Route::post('/', [\App\Http\Controllers\PurchaseController::class, 'store'])
-            ->middleware('permission:atk.purchases')
+            ->middleware('permission:atk.purchases.create')
             ->name('store');
         Route::get('/{purchase}', [\App\Http\Controllers\PurchaseController::class, 'show'])
-            ->middleware('permission:atk.purchases')
+            ->middleware('permission:atk.purchases.view')
             ->name('show');
         Route::post('/{purchase}/receive', [\App\Http\Controllers\PurchaseController::class, 'receive'])
-            ->middleware('permission:atk.purchases')
+            ->middleware('permission:atk.purchases.approve')
             ->name('receive');
         Route::post('/{purchase}/complete', [\App\Http\Controllers\PurchaseController::class, 'complete'])
-            ->middleware('permission:atk.purchases')
+            ->middleware('permission:atk.purchases.approve')
             ->name('complete');
     });
 

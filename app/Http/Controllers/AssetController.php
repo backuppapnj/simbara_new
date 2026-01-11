@@ -8,6 +8,7 @@ use App\Http\Requests\ImportAssetRequest;
 use App\Http\Requests\StoreAssetPhotoRequest;
 use App\Http\Requests\StoreMaintenanceRequest;
 use App\Http\Requests\UpdateAssetPhotoRequest;
+use App\Http\Requests\UpdateLocationRequest;
 use App\Http\Requests\UpdateMaintenanceRequest;
 use App\Models\Asset;
 use App\Models\AssetMaintenance;
@@ -190,26 +191,21 @@ class AssetController extends Controller
     /**
      * Update asset location.
      */
-    public function updateLocation(Request $request, string $id)
+    public function updateLocation(UpdateLocationRequest $request, string $id)
     {
-        $request->validate([
-            'lokasi_id' => ['required', 'exists:locations,id'],
-            'keterangan' => ['nullable', 'string', 'max:500'],
-        ]);
-
         $asset = Asset::findOrFail($id);
         $oldLocationId = $asset->lokasi_id;
 
         $asset->update([
-            'lokasi_id' => $request->input('lokasi_id'),
+            'lokasi_id' => $request->validated('lokasi_id'),
         ]);
 
         // Create history record
         $asset->histories()->create([
             'lokasi_id_lama' => $oldLocationId,
-            'lokasi_id_baru' => $request->input('lokasi_id'),
+            'lokasi_id_baru' => $request->validated('lokasi_id'),
             'user_id' => $request->user()->id,
-            'keterangan' => $request->input('keterangan'),
+            'keterangan' => $request->validated('keterangan'),
         ]);
 
         return back()->with('success', 'Lokasi aset berhasil diperbarui');
