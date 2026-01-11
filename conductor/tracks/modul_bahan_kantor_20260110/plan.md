@@ -76,14 +76,14 @@
 ## Phase 3: Workflow Pembelian (Direct Update)
 
 ### Task 3.1: Create Pembelian Form
-- [~] Create purchase form component
-- [~] Add dynamic supply rows (supply, jumlah)
-- [~] Create POST /office-purchases route
-- [~] Save OfficePurchase + OfficePurchaseDetails
-- [~] Auto-create OfficeMutations (jenis: masuk)
-- [~] Auto-update stok in OfficeSupplies
-- [~] Write tests for purchase creation
-- [~] Test stok update logic
+- [x] Create purchase form component (0343a54)
+- [x] Add dynamic supply rows (supply, jumlah) (0343a54)
+- [x] Create POST /office-purchases route (0343a54)
+- [x] Save OfficePurchase + OfficePurchaseDetails (0343a54)
+- [x] Auto-create OfficeMutations (jenis: masuk) (0343a54)
+- [x] Auto-update stok in OfficeSupplies (0343a54)
+- [x] Write tests for purchase creation (0343a54)
+- [x] Test stok update logic (0343a54)
 
 ### Task 3.2: Create Purchase List & Detail Views
 - [ ] Create Index.tsx with purchase list
