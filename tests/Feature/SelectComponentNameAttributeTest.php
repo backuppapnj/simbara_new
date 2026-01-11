@@ -3,11 +3,26 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Database\Seeders\PermissionsSeeder;
+use Database\Seeders\RolesSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\PermissionRegistrar;
+
+uses(RefreshDatabase::class);
 
 use function Pest\Laravel\actingAs;
 
 beforeEach(function () {
-    $user = User::where('email', 'admin@pa-penajam.go.id')->first();
+    // Clear permission cache
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    // Seed roles and permissions
+    (new RolesSeeder)->run();
+    (new PermissionsSeeder)->run();
+
+    // Create a user with super_admin role (has all permissions)
+    $user = User::factory()->create();
+    $user->assignRole('super_admin');
     actingAs($user);
 });
 
