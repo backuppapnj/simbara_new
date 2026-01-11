@@ -12,8 +12,10 @@ use App\Http\Requests\UpdateMaintenanceRequest;
 use App\Models\Asset;
 use App\Models\AssetMaintenance;
 use App\Models\AssetPhoto;
+use App\Models\Location;
 use App\Services\AssetImportService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class AssetController extends Controller
@@ -124,9 +126,36 @@ class AssetController extends Controller
         // Paginate
         $assets = $query->paginate(50);
 
+        // Get filter options
+        $locations = Cache::remember('locations-list', 3600, function () {
+            return Location::orderBy('nama_ruangan')->get(['id', 'nama_ruangan', 'gedung', 'lantai']);
+        });
+
+        $kondisiOptions = [
+            ['value' => '1', 'label' => 'Baik'],
+            ['value' => '2', 'label' => 'Rusak Ringan'],
+            ['value' => '3', 'label' => 'Rusak Berat'],
+        ];
+
+        $statusOptions = [
+            ['value' => '01', 'label' => 'Di atas kertas'],
+            ['value' => '02', 'label' => 'Digunakan sendiri untuk operasional'],
+            ['value' => '03', 'label' => 'Disewakan untuk operasional'],
+            ['value' => '04', 'label' => 'Dipinjamkan untuk operasional'],
+            ['value' => '05', 'label' => 'Tidak dipakai'],
+            ['value' => '06', 'label' => 'Dihibahkan'],
+            ['value' => '07', 'label' => 'Dijual'],
+            ['value' => '08', 'label' => 'Sudah dimusnahkan'],
+        ];
+
         return Inertia::render('Assets/Index', [
             'assets' => $assets,
-            'filters' => $request->only(['search', 'kondisi', 'lokasi', 'status']),
+            'filters' => $request->only(['search', 'kondisi', 'lokasi', 'status', 'sort', 'direction']),
+            'filterOptions' => [
+                'locations' => $locations,
+                'kondisi' => $kondisiOptions,
+                'status' => $statusOptions,
+            ],
         ]);
     }
 

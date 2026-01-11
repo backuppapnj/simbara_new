@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApprovalNeeded;
+use App\Events\RequestCreated;
 use App\Http\Requests\DistributeAtkRequest;
 use App\Http\Requests\RejectAtkRequest;
 use App\Http\Requests\StoreAtkRequest;
-use App\Http\Resources\AtkRequestCollection;
 use App\Http\Resources\AtkRequestResource;
 use App\Models\AtkRequest;
+use App\Models\Department;
 use App\Models\Item;
 use App\Models\RequestDetail;
 use App\Models\StockMutation;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class AtkRequestController extends Controller
 {
     /**
      * Display a listing of the requests.
      */
-    public function index(): AtkRequestCollection
+    public function index(Request $request)
     {
         $user = auth()->user();
 
@@ -38,9 +42,60 @@ class AtkRequestController extends Controller
             $query->where('user_id', $user->id);
         }
 
+        // Filter by status
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by department
+        if ($request->has('department_id') && $request->department_id) {
+            $query->where('department_id', $request->department_id);
+        }
+
+        // Search by requester name or request number
+        if ($request->has('search') && $request->search) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('no_permintaan', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('name', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
         $requests = $query->latest()->paginate(20);
 
-        return new AtkRequestCollection($requests);
+        return Inertia::render('atk-requests/index', [
+            'requests' => $requests,
+            'filters' => $request->only(['status', 'department_id', 'search']),
+            'can' => [
+                'approve_level1' => $user->can('approve_request_l1'),
+                'approve_level2' => $user->can('approve_request_l2'),
+                'approve_level3' => $user->can('approve_request_l3'),
+            ],
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new request.
+     */
+    public function create()
+    {
+        $user = auth()->user();
+
+        $items = Item::query()
+            ->where('stok', '>', 0)
+            ->orderBy('kategori')
+            ->orderBy('nama_barang')
+            ->get();
+
+        $departments = Department::orderBy('name')->get();
+
+        return Inertia::render('atk-requests/create', [
+            'items' => $items,
+            'departments' => $departments,
+            'user_department_id' => $user->department_id,
+        ]);
     }
 
     /**
@@ -74,6 +129,9 @@ class AtkRequestController extends Controller
 
             return $atkRequest;
         });
+
+        // Dispatch event after request is created
+        RequestCreated::dispatch($atkRequest);
 
         return (new AtkRequestResource($atkRequest->load(['requestDetails.item'])))
             ->response()
@@ -133,6 +191,9 @@ class AtkRequestController extends Controller
             'level1_approval_at' => now(),
         ]);
 
+        // Dispatch event for level 2 approval
+        ApprovalNeeded::dispatch($atkRequest, 2, 'Kasubag Umum');
+
         $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
 
         return new AtkRequestResource($atkRequest);
@@ -155,6 +216,9 @@ class AtkRequestController extends Controller
             'level2_approval_by' => $user->id,
             'level2_approval_at' => now(),
         ]);
+
+        // Dispatch event for level 3 approval
+        ApprovalNeeded::dispatch($atkRequest, 3, 'KPA');
 
         $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
 

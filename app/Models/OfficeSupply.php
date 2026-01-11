@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\OfficeSupplyObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -38,6 +39,8 @@ class OfficeSupply extends Model
                 $supply->id = (string) Str::ulid();
             }
         });
+
+        static::observe(OfficeSupplyObserver::class);
     }
 
     /**

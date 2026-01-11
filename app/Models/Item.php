@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\ItemObserver;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,16 @@ class Item extends Model
         'harga_rata_rata',
         'harga_jual',
     ];
+
+    /**
+     * The "booting" method of the model.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::observe(ItemObserver::class);
+    }
 
     /**
      * Get the attributes that should be cast.

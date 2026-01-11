@@ -1,5 +1,37 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { toast } from 'sonner';
+import {
+    Download,
+    FileDown,
+    FileText,
+    Filter,
+    RefreshCw,
+} from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
+import { route } from 'ziggy-js';
+import { type BreadcrumbItem } from '@/types';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Aset',
+        href: '/assets',
+    },
+    {
+        title: 'Laporan',
+        href: '/assets/reports',
+    },
+];
 
 type ReportType =
     | 'sakti_siman'
@@ -13,38 +45,45 @@ interface ReportOption {
     id: ReportType;
     label: string;
     description: string;
+    format: string;
 }
 
 const reportOptions: ReportOption[] = [
     {
         id: 'sakti_siman',
-        label: 'Format SAKTI/SIMAN',
-        description: 'Export lengkap sesuai format SAKTI/SIMAN untuk impor ke sistem Kemenkeu',
+        label: 'Export SAKTI/SIMAN',
+        description: 'Format standar Kemenkeu untuk integrasi SAKTI/SIMAN',
+        format: 'CSV',
     },
     {
         id: 'by_location',
-        label: 'Laporan Per Lokasi',
-        description: 'Daftar aset dikelompokkan berdasarkan lokasi/ruangan',
+        label: 'Per Lokasi',
+        description: 'Laporan aset dikelompokkan berdasarkan lokasi/ruangan',
+        format: 'CSV',
     },
     {
         id: 'by_category',
-        label: 'Laporan Per Kategori',
-        description: 'Daftar aset dikelompokkan berdasarkan kode barang (14-digit Kemenkeu)',
+        label: 'Per Kategori',
+        description: 'Laporan aset dikelompokkan berdasarkan klasifikasi 14 digit',
+        format: 'CSV',
     },
     {
         id: 'by_condition',
-        label: 'Laporan Per Kondisi',
-        description: 'Daftar aset dikelompokkan berdasarkan kondisi (Baik/Rusak Ringan/Rusak Berat)',
+        label: 'Per Kondisi',
+        description: 'Laporan aset dikelompokkan berdasarkan kondisi (Baik, Rusak, dll)',
+        format: 'CSV',
     },
     {
         id: 'maintenance_history',
         label: 'Riwayat Perawatan',
-        description: 'Riwayat perawatan dan biaya perawatan aset',
+        description: 'Laporan riwayat perawatan dan perbaikan aset',
+        format: 'CSV',
     },
     {
         id: 'value_summary',
         label: 'Ringkasan Nilai',
-        description: 'Ringkasan nilai aset per kategori dengan total dan rata-rata',
+        description: 'Ringkasan nilai aset dan buku per kategori',
+        format: 'CSV',
     },
 ];
 
@@ -52,54 +91,141 @@ export default function AssetReports() {
     const [selectedReport, setSelectedReport] = useState<ReportType>('sakti_siman');
     const [previewData, setPreviewData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
+    const [exporting, setExporting] = useState(false);
 
     const filterForm = useForm({
-        date_from: '',
-        date_to: '',
-        lokasi_id: '',
-        kd_brg: '',
-        kd_kondisi: '',
+        start_date: '',
+        end_date: '',
+        location: '',
+        category: '',
+        condition: '',
     });
 
     const handlePreview = async () => {
         setLoading(true);
+        setPreviewData(null);
         try {
-            const response = await fetch('/assets/reports/preview', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
-                },
-                body: JSON.stringify({
+            await filterForm.post('/assets/reports/preview', {
+                data: {
                     report_type: selectedReport,
                     ...filterForm.data(),
-                }),
+                },
+                onSuccess: (page) => {
+                    const data = (page.props as any).preview;
+                    setPreviewData(data);
+                    toast.success('Data preview berhasil dimuat');
+                },
+                onError: () => {
+                    toast.error('Gagal memuat data preview');
+                },
             });
-            const data = await response.json();
-            setPreviewData(data);
         } catch (error) {
-            console.error('Error previewing report:', error);
+            toast.error('Terjadi kesalahan saat memuat preview');
         } finally {
             setLoading(false);
         }
     };
 
     const handleExport = () => {
-        const params = new URLSearchParams();
-        Object.entries(filterForm.data()).forEach(([key, value]) => {
-            if (value) params.append(key, value);
-        });
+        setExporting(true);
+        try {
+            const exportRoutes: Record<ReportType, string> = {
+                sakti_siman: 'assets.reports.export.sakti-siman',
+                by_location: 'assets.reports.export.by-location',
+                by_category: 'assets.reports.export.by-category',
+                by_condition: 'assets.reports.export.by-condition',
+                maintenance_history: 'assets.reports.export.maintenance-history',
+                value_summary: 'assets.reports.export.value-summary',
+            };
 
-        const exportUrls: Record<ReportType, string> = {
-            sakti_siman: `/assets/reports/export/sakti-siman?${params.toString()}`,
-            by_location: `/assets/reports/export/by-location?${params.toString()}`,
-            by_category: `/assets/reports/export/by-category?${params.toString()}`,
-            by_condition: `/assets/reports/export/by-condition?${params.toString()}`,
-            maintenance_history: `/assets/reports/export/maintenance-history?${params.toString()}`,
-            value_summary: `/assets/reports/export/value-summary?${params.toString()}`,
-        };
+            const url = route(exportRoutes[selectedReport]);
+            const params = new URLSearchParams();
+            Object.entries(filterForm.data()).forEach(([key, value]) => {
+                if (value) params.append(key, value as string);
+            });
 
-        window.location.href = exportUrls[selectedReport];
+            const fullUrl = `${url}?${params.toString()}`;
+            window.open(fullUrl, '_blank');
+            toast.success('Laporan sedang diunduh');
+        } catch (error) {
+            toast.error('Gagal mengunduh laporan');
+        } finally {
+            setExporting(false);
+        }
+    };
+
+    const renderPreviewTable = () => {
+        if (!previewData) return null;
+
+        if (previewData.summary && previewData.summary.length > 0) {
+            const firstItem = previewData.summary[0];
+            const columns = Object.keys(firstItem);
+
+            return (
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            {columns.map((col: string) => (
+                                <TableHead key={col} className="capitalize">
+                                    {col.replace(/_/g, ' ')}
+                                </TableHead>
+                            ))}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {previewData.summary.map((row: any, idx: number) => (
+                            <TableRow key={idx}>
+                                {columns.map((col: string) => (
+                                    <TableCell key={col}>
+                                        {typeof row[col] === 'number' && (col.includes('nilai') || col.includes('value'))
+                                            ? `Rp ${row[col].toLocaleString('id-ID')}`
+                                            : row[col]}
+                                        </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            );
+        }
+
+        if (previewData.data && previewData.data.length > 0) {
+            const firstItem = previewData.data[0];
+            const columns = Object.keys(firstItem).slice(0, 8);
+
+            return (
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            {columns.map((col: string) => (
+                                <TableHead key={col} className="capitalize">
+                                    {col.replace(/_/g, ' ')}
+                                </TableHead>
+                            ))}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {previewData.data.slice(0, 10).map((row: any, idx: number) => (
+                            <TableRow key={idx}>
+                                {columns.map((col: string) => (
+                                    <TableCell key={col}>
+                                        {typeof row[col] === 'number' && (col.includes('nilai') || col.includes('value') || col.includes('rph'))
+                                            ? `Rp ${row[col].toLocaleString('id-ID')}`
+                                            : row[col]?.toString() || '-'}
+                                        </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            );
+        }
+
+        return (
+            <div className="flex h-64 items-center justify-center text-muted-foreground">
+                Tidak ada data untuk ditampilkan
+            </div>
+        );
     };
 
     return (

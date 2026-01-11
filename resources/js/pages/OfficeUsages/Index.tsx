@@ -1,11 +1,38 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { DataTable, type Column } from '@/components/enhanced/data-table';
+import { Calendar, Package, User, MinusCircle, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { index, store, quickDeduct } from '@/actions/App/Http/Controllers/OfficeUsageController';
+import { index as supplyIndex } from '@/actions/App/Http/Controllers/OfficeSupplyController';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/dialog';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Office Usages',
-        href: '/office-usages',
+        title: 'Pemakaian Bahan Kantor',
+        href: index().url,
     },
 ];
 
@@ -41,21 +68,376 @@ interface IndexProps {
 }
 
 export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
+    const [usageDialog, setUsageDialog] = useState(false);
+    const [quickDeductDialog, setQuickDeductDialog] = useState(false);
+
+    const usageForm = useForm({
+        supply_id: '',
+        jumlah: '',
+        tanggal: new Date().toISOString().split('T')[0],
+        keperluan: '',
+    });
+
+    const quickDeductForm = useForm({
+        supply_id: '',
+        jumlah: '',
+        keterangan: '',
+    });
+
+    const handleDateFilter = (field: 'date_from' | 'date_to', value: string) => {
+        router.get(index().url, { ...filters, [field]: value || null }, { preserveState: true });
+    };
+
+    const handleUsageSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        usageForm.post(store(), {
+            onSuccess: () => {
+                setUsageDialog(false);
+                usageForm.reset();
+            },
+        });
+    };
+
+    const handleQuickDeductSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        quickDeductForm.post(quickDeduct(), {
+            onSuccess: () => {
+                setQuickDeductDialog(false);
+                quickDeductForm.reset();
+            },
+        });
+    };
+
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        });
+    };
+
+    const columns: Column<Usage>[] = [
+        {
+            id: 'tanggal',
+            header: 'Tanggal',
+            accessor: 'tanggal',
+            sortable: true,
+            cell: (usage) => (
+                <div className="flex items-center gap-2">
+                    <Calendar className="size-4 text-muted-foreground" />
+                    <span>{formatDate(usage.tanggal)}</span>
+                </div>
+            ),
+        },
+        {
+            id: 'supply',
+            header: 'Item',
+            accessor: 'supply.nama_barang',
+            sortable: true,
+            cell: (usage) => (
+                <div className="flex items-center gap-2">
+                    <Package className="size-4 text-muted-foreground" />
+                    <div>
+                        <div className="font-medium">{usage.supply.nama_barang}</div>
+                        <div className="text-sm text-muted-foreground">{usage.supply.satuan}</div>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            id: 'jumlah',
+            header: 'Jumlah',
+            accessor: 'jumlah',
+            sortable: true,
+            cell: (usage) => (
+                <Badge variant="outline">
+                    {usage.jumlah} {usage.supply.satuan}
+                </Badge>
+            ),
+        },
+        {
+            id: 'keperluan',
+            header: 'Keperluan',
+            accessor: 'keperluan',
+            cell: (usage) => (
+                <span className="text-sm">{usage.keperluan || '-'}</span>
+            ),
+        },
+        {
+            id: 'user',
+            header: 'User',
+            accessor: 'user.name',
+            sortable: true,
+            cell: (usage) => (
+                <div className="flex items-center gap-2">
+                    <User className="size-4 text-muted-foreground" />
+                    <span>{usage.user.name}</span>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Pemakaian Bahan Kantor" />
 
             <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
-                <div>
-                    <h1 className="text-2xl font-bold">Pemakaian Bahan Kantor</h1>
-                    <p className="text-muted-foreground">Riwayat pemakaian bahan kantor</p>
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold">Pemakaian Bahan Kantor</h1>
+                        <p className="text-muted-foreground">Riwayat pemakaian bahan kantor</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => setQuickDeductDialog(true)}>
+                            <MinusCircle className="mr-2 size-4" />
+                            Quick Deduct
+                        </Button>
+                        <Button onClick={() => setUsageDialog(true)}>
+                            <Plus className="mr-2 size-4" />
+                            Catat Pemakaian
+                        </Button>
+                    </div>
                 </div>
 
-                <div className="rounded-md border p-4">
-                    <p className="text-sm text-muted-foreground">
-                        Menampilkan {usages.total} catatan pemakaian
-                    </p>
+                {/* Stats */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-lg border p-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Total Pemakaian</p>
+                                <p className="text-2xl font-bold">{usages.total}</p>
+                            </div>
+                            <Package className="size-8 text-muted-foreground" />
+                        </div>
+                    </div>
+                    <div className="rounded-lg border p-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Bulan Ini</p>
+                                <p className="text-2xl font-bold">
+                                    {usages.data.filter(
+                                        (u) => new Date(u.tanggal).getMonth() === new Date().getMonth()
+                                    ).length}
+                                </p>
+                            </div>
+                            <Calendar className="size-8 text-muted-foreground" />
+                        </div>
+                    </div>
                 </div>
+
+                {/* Date Filters */}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                    <div className="flex items-center gap-2">
+                        <Label htmlFor="date_from">Dari:</Label>
+                        <Input
+                            id="date_from"
+                            type="date"
+                            value={filters.date_from || ''}
+                            onChange={(e) => handleDateFilter('date_from', e.target.value)}
+                            className="w-[180px]"
+                        />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Label htmlFor="date_to">Sampai:</Label>
+                        <Input
+                            id="date_to"
+                            type="date"
+                            value={filters.date_to || ''}
+                            onChange={(e) => handleDateFilter('date_to', e.target.value)}
+                            className="w-[180px]"
+                        />
+                    </div>
+                    {(filters.date_from || filters.date_to) && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                                router.get(index().url, { date_from: null, date_to: null })
+                            }
+                        >
+                            Reset Filter
+                        </Button>
+                    )}
+                </div>
+
+                {/* Table */}
+                <DataTable
+                    data={usages.data}
+                    columns={columns}
+                    searchable={false}
+                    pagination={false}
+                    emptyMessage="Tidak ada data pemakaian"
+                />
+
+                {/* Pagination */}
+                {usages.last_page > 1 && (
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground">
+                            Halaman {usages.current_page} dari {usages.last_page}
+                        </p>
+                        <div className="flex gap-2">
+                            {Array.from({ length: usages.last_page }).map((_, i) => (
+                                <Button
+                                    key={i}
+                                    variant={usages.current_page === i + 1 ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() =>
+                                        router.get(index().url, { ...filters, page: i + 1 })
+                                    }
+                                >
+                                    {i + 1}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Usage Dialog */}
+                <AlertDialog open={usageDialog} onOpenChange={setUsageDialog}>
+                    <AlertDialogContent className="max-w-md">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Catat Pemakaian Bahan Kantor</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Catat pemakaian bahan kantor dengan lengkap
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <form onSubmit={handleUsageSubmit} className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="usage_supply_id">Bahan Kantor</Label>
+                                <Select
+                                    value={usageForm.data.supply_id}
+                                    onValueChange={(value) => usageForm.setData('supply_id', value)}
+                                >
+                                    <SelectTrigger id="usage_supply_id">
+                                        <SelectValue placeholder="Pilih bahan kantor" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="">Pilih bahan kantor</SelectItem>
+                                        <SelectItem value="sample-1">Kertas A4</SelectItem>
+                                        <SelectItem value="sample-2">Pulpen Hitam</SelectItem>
+                                        <SelectItem value="sample-3">Spidol Whiteboard</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                {usageForm.errors.supply_id && (
+                                    <p className="text-sm text-destructive">{usageForm.errors.supply_id}</p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="usage_jumlah">Jumlah</Label>
+                                <Input
+                                    id="usage_jumlah"
+                                    type="number"
+                                    min="1"
+                                    value={usageForm.data.jumlah}
+                                    onChange={(e) => usageForm.setData('jumlah', e.target.value)}
+                                />
+                                {usageForm.errors.jumlah && (
+                                    <p className="text-sm text-destructive">{usageForm.errors.jumlah}</p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="usage_tanggal">Tanggal</Label>
+                                <Input
+                                    id="usage_tanggal"
+                                    type="date"
+                                    value={usageForm.data.tanggal}
+                                    onChange={(e) => usageForm.setData('tanggal', e.target.value)}
+                                />
+                                {usageForm.errors.tanggal && (
+                                    <p className="text-sm text-destructive">{usageForm.errors.tanggal}</p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="usage_keperluan">Keperluan</Label>
+                                <Textarea
+                                    id="usage_keperluan"
+                                    placeholder="Jelaskan keperluan pemakaian..."
+                                    value={usageForm.data.keperluan}
+                                    onChange={(e) => usageForm.setData('keperluan', e.target.value)}
+                                />
+                                {usageForm.errors.keperluan && (
+                                    <p className="text-sm text-destructive">{usageForm.errors.keperluan}</p>
+                                )}
+                            </div>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel type="button" onClick={() => setUsageDialog(false)}>
+                                    Batal
+                                </AlertDialogCancel>
+                                <Button type="submit" disabled={usageForm.processing}>
+                                    {usageForm.processing ? 'Menyimpan...' : 'Simpan'}
+                                </Button>
+                            </AlertDialogFooter>
+                        </form>
+                    </AlertDialogContent>
+                </AlertDialog>
+
+                {/* Quick Deduct Dialog */}
+                <AlertDialog open={quickDeductDialog} onOpenChange={setQuickDeductDialog}>
+                    <AlertDialogContent className="max-w-md">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Quick Deduct Stok</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Kurangi stok dengan cepat tanpa mencatat pemakaian lengkap
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <form onSubmit={handleQuickDeductSubmit} className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="qd_supply_id">Bahan Kantor</Label>
+                                <Select
+                                    value={quickDeductForm.data.supply_id}
+                                    onValueChange={(value) => quickDeductForm.setData('supply_id', value)}
+                                >
+                                    <SelectTrigger id="qd_supply_id">
+                                        <SelectValue placeholder="Pilih bahan kantor" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="">Pilih bahan kantor</SelectItem>
+                                        <SelectItem value="sample-1">Kertas A4</SelectItem>
+                                        <SelectItem value="sample-2">Pulpen Hitam</SelectItem>
+                                        <SelectItem value="sample-3">Spidol Whiteboard</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                {quickDeductForm.errors.supply_id && (
+                                    <p className="text-sm text-destructive">{quickDeductForm.errors.supply_id}</p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="qd_jumlah">Jumlah</Label>
+                                <Input
+                                    id="qd_jumlah"
+                                    type="number"
+                                    min="1"
+                                    value={quickDeductForm.data.jumlah}
+                                    onChange={(e) => quickDeductForm.setData('jumlah', e.target.value)}
+                                />
+                                {quickDeductForm.errors.jumlah && (
+                                    <p className="text-sm text-destructive">{quickDeductForm.errors.jumlah}</p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="qd_keterangan">Keterangan</Label>
+                                <Textarea
+                                    id="qd_keterangan"
+                                    placeholder="Keterangan singkat..."
+                                    value={quickDeductForm.data.keterangan}
+                                    onChange={(e) => quickDeductForm.setData('keterangan', e.target.value)}
+                                />
+                                {quickDeductForm.errors.keterangan && (
+                                    <p className="text-sm text-destructive">{quickDeductForm.errors.keterangan}</p>
+                                )}
+                            </div>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel type="button" onClick={() => setQuickDeductDialog(false)}>
+                                    Batal
+                                </AlertDialogCancel>
+                                <Button type="submit" disabled={quickDeductForm.processing}>
+                                    {quickDeductForm.processing ? 'Memproses...' : 'Kurangi Stok'}
+                                </Button>
+                            </AlertDialogFooter>
+                        </form>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </AppLayout>
     );

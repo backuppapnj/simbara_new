@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OfficeRequestCreated;
 use App\Http\Requests\RejectOfficeRequestRequest;
 use App\Http\Requests\StoreOfficeRequestRequest;
 use App\Http\Resources\OfficeRequestCollection;
@@ -74,6 +75,9 @@ class OfficeRequestController extends Controller
 
             return $officeRequest;
         });
+
+        // Dispatch event after request is created
+        OfficeRequestCreated::dispatch($officeRequest);
 
         return (new OfficeRequestResource($officeRequest->load(['details.supply'])))
             ->response()

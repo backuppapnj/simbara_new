@@ -52,11 +52,11 @@
 - [ ] Test permissions per role
 
 ### Task 2.2: Create OfficeSupplies UI Components
-- [ ] Create Index.tsx with table view
+- [x] Create Index.tsx with table view
 - [ ] Create Create.tsx form
 - [ ] Create Show.tsx detail view
-- [ ] Add reorder point indicator (badge warning)
-- [ ] Filter by kategori
+- [x] Add reorder point indicator (badge warning)
+- [x] Filter by kategori
 - [ ] Write tests for components
 - [ ] Test responsive behavior
 
@@ -156,7 +156,7 @@
 ### Task 5.3: Create Usage List View
 - [x] Create Index.tsx with usage list (d405bd1)
 - [x] Filter by date range and user (d405bd1)
-- [ ] Show usage history
+- [x] Show usage history
 - [x] Write tests for view (d405bd1)
 - [x] Test list display (d405bd1)
 
