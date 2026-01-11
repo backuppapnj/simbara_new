@@ -106,10 +106,10 @@ class DashboardController extends Controller
     {
         // Get last 6 months of data using MySQL DATE_FORMAT
         $data = AtkRequest::query()
-            ->selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as year_month, COUNT(*) as requests')
+            ->selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as `year_month`, COUNT(*) as requests')
             ->where('tanggal', '>=', now()->subMonths(6))
-            ->groupBy('year_month')
-            ->orderBy('year_month')
+            ->groupBy('`year_month`')
+            ->orderBy('`year_month`')
             ->get();
 
         // Calculate expenditure by summing up request details with item prices
