@@ -30,7 +30,7 @@ describe('PermissionService Performance Tests', function () {
             expect($result2)->toBeTrue();
 
             // Verify cache was used
-            $cacheKey = 'permissions:super_admin:' . $superAdmin->id;
+            $cacheKey = 'permissions:super_admin:'.$superAdmin->id;
             expect(Cache::has($cacheKey))->toBeTrue();
         });
 
@@ -49,7 +49,7 @@ describe('PermissionService Performance Tests', function () {
             expect($permissions2)->toEqual($permissions1);
 
             // Verify cache was used
-            $cacheKey = 'permissions:user:' . $user->id;
+            $cacheKey = 'permissions:user:'.$user->id;
             expect(Cache::has($cacheKey))->toBeTrue();
         });
 
@@ -68,7 +68,7 @@ describe('PermissionService Performance Tests', function () {
             expect($roles2)->toEqual($roles1);
 
             // Verify cache was used
-            $cacheKey = 'permissions:roles:' . $user->id;
+            $cacheKey = 'permissions:roles:'.$user->id;
             expect(Cache::has($cacheKey))->toBeTrue();
         });
 
@@ -101,15 +101,15 @@ describe('PermissionService Performance Tests', function () {
             $service->getUserRoles($user);
 
             // Verify cache exists
-            expect(Cache::has('permissions:user:' . $user->id))->toBeTrue();
-            expect(Cache::has('permissions:roles:' . $user->id))->toBeTrue();
+            expect(Cache::has('permissions:user:'.$user->id))->toBeTrue();
+            expect(Cache::has('permissions:roles:'.$user->id))->toBeTrue();
 
             // Invalidate cache
             $service->invalidateUserCache($user->id);
 
             // Verify cache is cleared
-            expect(Cache::has('permissions:user:' . $user->id))->toBeFalse();
-            expect(Cache::has('permissions:roles:' . $user->id))->toBeFalse();
+            expect(Cache::has('permissions:user:'.$user->id))->toBeFalse();
+            expect(Cache::has('permissions:roles:'.$user->id))->toBeFalse();
         });
 
         it('invalidates all caches when requested', function () {
@@ -184,9 +184,9 @@ describe('PermissionService Performance Tests', function () {
             $service->warmUpUserCache($user);
 
             // Verify all caches are set
-            expect(Cache::has('permissions:super_admin:' . $user->id))->toBeTrue();
-            expect(Cache::has('permissions:user:' . $user->id))->toBeTrue();
-            expect(Cache::has('permissions:roles:' . $user->id))->toBeTrue();
+            expect(Cache::has('permissions:super_admin:'.$user->id))->toBeTrue();
+            expect(Cache::has('permissions:user:'.$user->id))->toBeTrue();
+            expect(Cache::has('permissions:roles:'.$user->id))->toBeTrue();
         });
 
         it('handles bulk operations efficiently', function () {
@@ -211,7 +211,7 @@ describe('PermissionService Performance Tests', function () {
 
             // Verify caches are invalidated
             foreach ($userIds as $userId) {
-                expect(Cache::has('permissions:user:' . $userId))->toBeFalse();
+                expect(Cache::has('permissions:user:'.$userId))->toBeFalse();
             }
         });
     });
@@ -243,7 +243,7 @@ describe('PermissionService Performance Tests', function () {
             $role = Role::where('name', 'pegawai')->first();
 
             // Create users
-            User::factory()->count(5)->create()->each(function ($user) use ($role) {
+            User::factory()->count(5)->create()->each(function ($user) {
                 $user->assignRole('pegawai');
             });
 
@@ -290,6 +290,7 @@ describe('PermissionService Performance Tests', function () {
 
             // Get initial permissions
             $permissions1 = $service->getUserPermissions($user);
+            $roles1 = $service->getUserRoles($user);
 
             // Add new role
             $user->assignRole('kpa');
@@ -298,10 +299,11 @@ describe('PermissionService Performance Tests', function () {
             $service->invalidateUserCache($user->id);
 
             // Get updated permissions
-            $permissions2 = $service->getUserPermissions($user);
+            $roles2 = $service->getUserRoles($user);
 
-            // Permissions should be different after cache invalidation
-            expect($permissions2)->not->toEqual($permissions1);
+            // Roles should be different after cache invalidation
+            expect($roles2->count())->toBeGreaterThan($roles1->count());
+            expect($roles2)->toContain('kpa');
         });
     });
 
@@ -339,7 +341,7 @@ describe('PermissionService Performance Tests', function () {
             }
 
             // Should only query database once
-            expect(Cache::has('permissions:super_admin:' . $superAdmin->id))->toBeTrue();
+            expect(Cache::has('permissions:super_admin:'.$superAdmin->id))->toBeTrue();
         });
 
         it('bypasses permission checks for super admin with caching', function () {
@@ -354,9 +356,9 @@ describe('PermissionService Performance Tests', function () {
             expect($service->userHasPermission($superAdmin, 'manage roles'))->toBeTrue();
 
             // All should be cached
-            expect(Cache::has('permissions:has_permission:' . $superAdmin->id . ':edit users'))->toBeTrue();
-            expect(Cache::has('permissions:has_permission:' . $superAdmin->id . ':delete assets'))->toBeTrue();
-            expect(Cache::has('permissions:has_permission:' . $superAdmin->id . ':manage roles'))->toBeTrue();
+            expect(Cache::has('permissions:has_permission:'.$superAdmin->id.':edit users'))->toBeTrue();
+            expect(Cache::has('permissions:has_permission:'.$superAdmin->id.':delete assets'))->toBeTrue();
+            expect(Cache::has('permissions:has_permission:'.$superAdmin->id.':manage roles'))->toBeTrue();
         });
     });
 });

@@ -30,7 +30,7 @@ describe('RolePermissionController', function () {
             $role = Role::where('name', 'pegawai')->first();
 
             $response = $this->actingAs($superAdmin)
-                ->get(route('admin.roles.permissions.index', $role));
+                ->getJson(route('admin.roles.permissions.index', $role));
 
             $response->assertSuccessful();
         });

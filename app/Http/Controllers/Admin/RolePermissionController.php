@@ -109,7 +109,9 @@ class RolePermissionController extends Controller
                 $role->syncPermissions($allPermissions);
             } else {
                 // Sync the provided permissions for other roles
-                $role->syncPermissions($validated['permission_ids']);
+                // Default to empty array if not provided
+                $permissionIds = $validated['permission_ids'] ?? [];
+                $role->syncPermissions($permissionIds);
             }
         });
 

@@ -25,7 +25,7 @@ describe('PermissionController', function () {
             $superAdmin->assignRole('super_admin');
 
             $response = $this->actingAs($superAdmin)
-                ->get(route('admin.permissions.index'));
+                ->getJson(route('admin.permissions.index'));
 
             $response->assertSuccessful();
         });
