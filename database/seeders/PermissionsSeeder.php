@@ -119,6 +119,7 @@ class PermissionsSeeder extends Seeder
             '*.reports.view',
             '*.reports.export',
             'atk.requests.approve',
+            'atk.requests.distribute',
             'office.requests.approve',
         ],
         'kasubag_umum' => [
