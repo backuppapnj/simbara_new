@@ -17,7 +17,15 @@ import {
     RefreshCw,
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
-import { route } from 'ziggy-js';
+import {
+    exportSaktiSiman,
+    exportByLocation,
+    exportByCategory,
+    exportByCondition,
+    exportMaintenanceHistory,
+    exportValueSummary,
+    preview,
+} from '@/actions/App/Http/Controllers/AssetReportController';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
@@ -105,7 +113,7 @@ export default function AssetReports() {
         setLoading(true);
         setPreviewData(null);
         try {
-            await filterForm.post('/assets/reports/preview', {
+            await filterForm.post(preview().url, {
                 data: {
                     report_type: selectedReport,
                     ...filterForm.data(),
@@ -129,22 +137,22 @@ export default function AssetReports() {
     const handleExport = () => {
         setExporting(true);
         try {
-            const exportRoutes: Record<ReportType, string> = {
-                sakti_siman: 'assets.reports.export.sakti-siman',
-                by_location: 'assets.reports.export.by-location',
-                by_category: 'assets.reports.export.by-category',
-                by_condition: 'assets.reports.export.by-condition',
-                maintenance_history: 'assets.reports.export.maintenance-history',
-                value_summary: 'assets.reports.export.value-summary',
+            const exportActions: Record<ReportType, () => { url: string; method: string }> = {
+                sakti_siman: exportSaktiSiman,
+                by_location: exportByLocation,
+                by_category: exportByCategory,
+                by_condition: exportByCondition,
+                maintenance_history: exportMaintenanceHistory,
+                value_summary: exportValueSummary,
             };
 
-            const url = route(exportRoutes[selectedReport]);
+            const exportAction = exportActions[selectedReport];
             const params = new URLSearchParams();
             Object.entries(filterForm.data()).forEach(([key, value]) => {
                 if (value) params.append(key, value as string);
             });
 
-            const fullUrl = `${url}?${params.toString()}`;
+            const fullUrl = `${exportAction().url}?${params.toString()}`;
             window.open(fullUrl, '_blank');
             toast.success('Laporan sedang diunduh');
         } catch (error) {
@@ -229,238 +237,188 @@ export default function AssetReports() {
     };
 
     return (
-        <>
-            <Head title="Laporan Aset BMN" />
-            <div className="min-h-screen bg-gray-50 py-8">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="mb-8">
-                        <h1 className="text-2xl font-semibold text-gray-900">Laporan Aset BMN</h1>
-                        <p className="mt-2 text-gray-600">
-                            Pilih jenis laporan dan atur filter untuk mengekspor data aset.
-                        </p>
-                    </div>
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Laporan Aset" />
 
-                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                        {/* Report Selection */}
-                        <div className="lg:col-span-1 space-y-6">
-                            <div className="bg-white rounded-lg shadow p-6">
-                                <h2 className="text-lg font-medium text-gray-900 mb-4">Jenis Laporan</h2>
-                                <div className="space-y-3">
-                                    {reportOptions.map((option) => (
-                                        <label
-                                            key={option.id}
-                                            className={`flex flex-col p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                                                selectedReport === option.id
-                                                    ? 'border-blue-500 bg-blue-50'
-                                                    : 'border-gray-200 hover:border-gray-300'
-                                            }`}
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="report_type"
-                                                value={option.id}
-                                                checked={selectedReport === option.id}
-                                                onChange={(e) => setSelectedReport(e.target.value as ReportType)}
-                                                className="sr-only"
-                                            />
-                                            <span className="font-medium text-gray-900">{option.label}</span>
-                                            <span className="text-sm text-gray-500 mt-1">{option.description}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Filters */}
-                            <div className="bg-white rounded-lg shadow p-6">
-                                <h2 className="text-lg font-medium text-gray-900 mb-4">Filter</h2>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label htmlFor="date_from" className="block text-sm font-medium text-gray-700">
-                                            Tanggal Awal
-                                        </label>
-                                        <input
-                                            type="date"
-                                            id="date_from"
-                                            value={filterForm.data('date_from')}
-                                            onChange={(e) => filterForm.setData('date_from', e.target.value)}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="date_to" className="block text-sm font-medium text-gray-700">
-                                            Tanggal Akhir
-                                        </label>
-                                        <input
-                                            type="date"
-                                            id="date_to"
-                                            value={filterForm.data('date_to')}
-                                            onChange={(e) => filterForm.setData('date_to', e.target.value)}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="kd_brg" className="block text-sm font-medium text-gray-700">
-                                            Kode Barang
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="kd_brg"
-                                            placeholder="Contoh: 2010104026"
-                                            value={filterForm.data('kd_brg')}
-                                            onChange={(e) => filterForm.setData('kd_brg', e.target.value)}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="kd_kondisi" className="block text-sm font-medium text-gray-700">
-                                            Kondisi
-                                        </label>
-                                        <select
-                                            id="kd_kondisi"
-                                            value={filterForm.data('kd_kondisi')}
-                                            onChange={(e) => filterForm.setData('kd_kondisi', e.target.value)}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                        >
-                                            <option value="">Semua Kondisi</option>
-                                            <option value="1">1 - Baik</option>
-                                            <option value="2">2 - Rusak Ringan</option>
-                                            <option value="3">3 - Rusak Berat</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex gap-3">
-                                <button
-                                    type="button"
-                                    onClick={handlePreview}
-                                    disabled={loading}
-                                    className="flex-1 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                                >
-                                    {loading ? 'Memuat...' : 'Preview'}
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleExport}
-                                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                >
-                                    Export CSV
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Preview */}
-                        <div className="lg:col-span-2">
-                            <div className="bg-white rounded-lg shadow p-6">
-                                <h2 className="text-lg font-medium text-gray-900 mb-4">Preview</h2>
-
-                                {!previewData ? (
-                                    <div className="text-center py-12 text-gray-500">
-                                        <svg
-                                            className="mx-auto h-12 w-12 text-gray-400"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                            />
-                                        </svg>
-                                        <p className="mt-2">Klik "Preview" untuk melihat data laporan</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        <div className="bg-gray-50 rounded-lg p-4">
-                                            <p className="text-sm font-medium text-gray-700">Tipe Laporan: {previewData.report_type}</p>
-                                            <p className="text-sm text-gray-600 mt-1">
-                                                Total: {previewData.total ?? previewData.total_assets ?? 0} records
-                                            </p>
-                                        </div>
-
-                                        {previewData.data && (
-                                            <div className="overflow-x-auto">
-                                                <table className="min-w-full divide-y divide-gray-200">
-                                                    <thead className="bg-gray-50">
-                                                        <tr>
-                                                            {Object.keys(previewData.data[0] || {}).map((key) => (
-                                                                <th
-                                                                    key={key}
-                                                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                                                >
-                                                                    {key}
-                                                                </th>
-                                                            ))}
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="bg-white divide-y divide-gray-200">
-                                                        {previewData.data.slice(0, 10).map((row: any, index: number) => (
-                                                            <tr key={index}>
-                                                                {Object.values(row).map((value: any, i) => (
-                                                                    <td
-                                                                        key={i}
-                                                                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                                                                    >
-                                                                        {value?.toString() || '-'}
-                                                                    </td>
-                                                                ))}
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                                {previewData.data.length > 10 && (
-                                                    <p className="text-sm text-gray-500 mt-2">
-                                                        Menampilkan 10 dari {previewData.data.length} records
-                                                    </p>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {previewData.summary && (
-                                            <div className="overflow-x-auto">
-                                                <table className="min-w-full divide-y divide-gray-200">
-                                                    <thead className="bg-gray-50">
-                                                        <tr>
-                                                            {Object.keys(previewData.summary[0] || {}).map((key) => (
-                                                                <th
-                                                                    key={key}
-                                                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                                                >
-                                                                    {key}
-                                                                </th>
-                                                            ))}
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="bg-white divide-y divide-gray-200">
-                                                        {previewData.summary.map((row: any, index: number) => (
-                                                            <tr key={index}>
-                                                                {Object.values(row).map((value: any, i) => (
-                                                                    <td
-                                                                        key={i}
-                                                                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                                                                    >
-                                                                        {value?.toString() || '-'}
-                                                                    </td>
-                                                                ))}
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+            <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
+                {/* Header */}
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Laporan Aset</h1>
+                    <p className="text-muted-foreground">
+                        Generate dan unduh berbagai laporan aset dalam format CSV
+                    </p>
                 </div>
+
+                {/* Report Type Selector */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Pilih Jenis Laporan</CardTitle>
+                        <CardDescription>
+                            Pilih jenis laporan yang ingin anda generate
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <Select value={selectedReport} onValueChange={(value) => setSelectedReport(value as ReportType)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Pilih jenis laporan" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {reportOptions.map((option) => (
+                                    <SelectItem key={option.id} value={option.id}>
+                                        <div className="flex items-center gap-2">
+                                            <FileText className="h-4 w-4" />
+                                            <div>
+                                                <div className="font-medium">{option.label}</div>
+                                                <div className="text-sm text-muted-foreground">{option.description}</div>
+                                            </div>
+                                            <div className="ml-auto text-xs bg-muted px-2 py-1 rounded">
+                                                {option.format}
+                                            </div>
+                                        </div>
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </CardContent>
+                </Card>
+
+                {/* Filters */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Filter className="h-5 w-5" />
+                            Filter Laporan
+                        </CardTitle>
+                        <CardDescription>
+                            Atur filter untuk mempersempit data laporan (opsional)
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Tanggal Mulai</label>
+                                <input
+                                    type="date"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    value={filterForm.data('start_date')}
+                                    onChange={(e) => filterForm.setData('start_date', e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Tanggal Akhir</label>
+                                <input
+                                    type="date"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    value={filterForm.data('end_date')}
+                                    onChange={(e) => filterForm.setData('end_date', e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {selectedReport !== 'maintenance_history' && (
+                            <div className="grid gap-4 md:grid-cols-3">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Lokasi</label>
+                                    <input
+                                        type="text"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        placeholder="Cth: Ruang Aula"
+                                        value={filterForm.data('location')}
+                                        onChange={(e) => filterForm.setData('location', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Kategori (Kode Barang)</label>
+                                    <input
+                                        type="text"
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        placeholder="Cth: 1.3.2.01.01.001"
+                                        value={filterForm.data('category')}
+                                        onChange={(e) => filterForm.setData('category', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Kondisi</label>
+                                    <select
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        value={filterForm.data('condition')}
+                                        onChange={(e) => filterForm.setData('condition', e.target.value)}
+                                    >
+                                        <option value="">Semua Kondisi</option>
+                                        <option value="Baik">Baik</option>
+                                        <option value="Rusak Ringan">Rusak Ringan</option>
+                                        <option value="Rusak Berat">Rusak Berat</option>
+                                    </select>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex gap-2">
+                            <Button onClick={handlePreview} disabled={loading} className="flex-1">
+                                {loading ? (
+                                    <>
+                                        <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                        Memuat...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Filter className="mr-2 h-4 w-4" />
+                                        Preview Data
+                                    </>
+                                )}
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => {
+                                    filterForm.reset();
+                                    setPreviewData(null);
+                                }}
+                            >
+                                Reset
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Preview & Export */}
+                {previewData && (
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle>Preview Laporan</CardTitle>
+                                    <CardDescription>
+                                        {previewData.report_type} - Menampilkan {previewData.data?.length || previewData.summary?.length || 0} dari {previewData.total || previewData.total_assets || 0} data
+                                    </CardDescription>
+                                </div>
+                                <Button
+                                    onClick={handleExport}
+                                    disabled={exporting}
+                                    variant="default"
+                                    size="sm"
+                                >
+                                    {exporting ? (
+                                        <>
+                                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                            Mendownload...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FileDown className="mr-2 h-4 w-4" />
+                                            Export CSV
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="rounded-md border">
+                                {renderPreviewTable()}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
-        </>
+        </AppLayout>
     );
 }

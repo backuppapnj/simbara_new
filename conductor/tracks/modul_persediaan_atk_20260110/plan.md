@@ -151,12 +151,12 @@
 - [x] Test approval workflow
 
 ### Task 4.3: Create Request List & Views
-- [ ] Create Index.tsx with request list
-- [ ] Filter by status and user
-- [ ] Create Show.tsx with request details
-- [ ] Show approval timeline
-- [ ] Add action buttons (approve/reject) based on role
-- [ ] Write tests for views
+- [x] Create Index.tsx with request list
+- [x] Filter by status and user
+- [x] Create Show.tsx with request details
+- [x] Show approval timeline
+- [x] Add action buttons (approve/reject) based on role
+- [ ] Write tests for views (requires built frontend)
 - [ ] Test permission-based UI
 
 ### Task 4.4: Implement Stok Check on Approval
