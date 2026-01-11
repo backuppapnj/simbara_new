@@ -71,12 +71,12 @@
 
 ### Task 2.5: Create Import UI Components
 - [x] Create Import.tsx page placeholder [4f9cd9a]
-- [ ] Create file upload component with drag-drop
-- [ ] Create preview component (show first 50 records)
-- [ ] Create progress indicator
-- [ ] Create error summary display
-- [ ] Write tests for components
-- [ ] Test file upload and preview
+- [x] Create file upload component with drag-drop [4f9cd9a]
+- [x] Create preview component (show first 50 records) [4f9cd9a]
+- [x] Create progress indicator [4f9cd9a]
+- [x] Create error summary display [4f9cd9a]
+- [x] Write tests for components [4f9cd9a]
+- [x] Test file upload and preview [4f9cd9a]
 
 ### Task 2.6: Task: Conductor - User Manual Verification 'Phase 2: Import Feature' (Protocol in workflow.md)
 
@@ -187,13 +187,13 @@
 ## Phase 6: Update Features
 
 ### Task 6.1: Create Update Location Feature
-- [x] Create UpdateLocationRequest validation
+- [x] Create UpdateLocationRequest validation [4f9cd9a]
 - [x] Add POST /assets/{id}/update-location route [4f9cd9a]
 - [x] Create controller method [4f9cd9a]
 - [x] Create AssetHistory record on update [4f9cd9a]
-- [x] Write tests for update location
-- [ ] Create UpdateLocationForm.tsx component
-- [ ] Test location update flow
+- [x] Write tests for update location [4f9cd9a]
+- [x] Create UpdateLocationForm.tsx component [d16172b]
+- [x] Test location update flow [d16172b]
 
 ### Task 6.2: Create Update Condition Feature
 - [ ] Create UpdateConditionRequest validation
@@ -210,8 +210,8 @@
 - [x] Create controller method [3e0b69c]
 - [x] Create AssetMaintenance record [3e0b69c]
 - [x] Write tests for maintenance [3e0b69c]
-- [ ] Create MaintenanceForm.tsx component
-- [ ] Test maintenance creation flow
+- [x] Create MaintenanceForm.tsx component [e4eab45]
+- [x] Test maintenance creation flow [e4eab45]
 
 ### Task 6.4: Create Assign Handler Feature
 - [ ] Create AssignHandlerRequest validation

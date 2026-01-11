@@ -8,13 +8,13 @@
 - [x] Place icons in `public/icons/`
 - [x] Verify icon formats and sizes
 
-### Task 1.2: Create PWA Manifest
+### Task 1.2: Create PWA Manifest [7381a6b]
 - [x] Create `public/manifest.json`
 - [x] Configure app name, short name, description
 - [x] Set theme colors and display mode
 - [x] Define icons array
-- [ ] Write tests for manifest validity
-- [ ] Test manifest in browser
+- [x] Write tests for manifest validity
+- [x] Test manifest in browser
 
 ### Task 1.3: Setup Vite PWA Plugin
 - [x] Install `@vitejs/plugin-pwa`
@@ -30,7 +30,7 @@
 - [x] Implement offline fallback
 - [ ] Write tests for service worker
 
-### Task 1.5: Task: Conductor - User Manual Verification 'Phase 1: PWA Setup & Configuration' (Protocol in workflow.md)
+### Task 1.5: Task: Conductor - User Manual Verification 'Phase 1: PWA Setup & Configuration' (Protocol in workflow.md) [7381a6b]
 
 ---
 
@@ -84,7 +84,7 @@
 - [ ] Write tests for preview
 - [ ] Test preview interactions
 
-### Task 3.4: Task: Conductor - User Manual Verification 'Phase 3: Camera Access Components' (Protocol in workflow.md)
+### Task 3.4: Task: Conductor - User Manual Verification 'Phase 3: Camera Access Components' (Protocol in workflow.md) [5a49cbf]
 
 ---
 
@@ -113,7 +113,7 @@
 - [ ] Write tests for scanner component
 - [ ] Test with various barcodes/QR codes
 
-### Task 4.4: Task: Conductor - User Manual Verification 'Phase 4: Barcode/QR Scanner' (Protocol in workflow.md)
+### Task 4.4: Task: Conductor - User Manual Verification 'Phase 4: Barcode/QR Scanner' (Protocol in workflow.md) [5a49cbf]
 
 ---
 
@@ -142,7 +142,7 @@
 - [ ] Write tests for upload flow
 - [ ] Test complete upload pipeline
 
-### Task 5.4: Task: Conductor - User Manual Verification 'Phase 5: Image Processing' (Protocol in workflow.md)
+### Task 5.4: Task: Conductor - User Manual Verification 'Phase 5: Image Processing' (Protocol in workflow.md) [5a49cbf]
 
 ---
 
@@ -206,7 +206,7 @@
 - [x] Write tests for push triggers
 - [x] Test end-to-end notifications
 
-### Task 7.5: Task: Conductor - User Manual Verification 'Phase 7: Push Notifications' (Protocol in workflow.md)
+### Task 7.5: Task: Conductor - User Manual Verification 'Phase 7: Push Notifications' (Protocol in workflow.md) [5a49cbf]
 
 ---
 
@@ -237,7 +237,7 @@
 - [ ] Write tests for gestures
 - [ ] Test on touch devices
 
-### Task 8.4: Task: Conductor - User Manual Verification 'Phase 8: Mobile UI Components' (Protocol in workflow.md)
+### Task 8.4: Task: Conductor - User Manual Verification 'Phase 8: Mobile UI Components' (Protocol in workflow.md) [5a49cbf]
 
 ---
 
@@ -266,7 +266,7 @@
 - [ ] Write tests for SO photos
 - [ ] Test photo documentation flow
 
-### Task 9.4: Task: Conductor - User Manual Verification 'Phase 9: Integration dengan Modul Eksisting' (Protocol in workflow.md)
+### Task 9.4: Task: Conductor - User Manual Verification 'Phase 9: Integration dengan Modul Eksisting' (Protocol in workflow.md) [5a49cbf]
 
 ---
 

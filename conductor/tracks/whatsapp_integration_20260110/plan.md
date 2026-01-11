@@ -185,17 +185,17 @@
 ## Phase 8: Integration dengan Modul ATK & Bahan Kantor
 
 ### Task 8.1: Trigger Events from ATK Module
-- [ ] Dispatch RequestCreated event saat request dibuat
-- [ ] Dispatch ApprovalNeeded event saat butuh approval L2/L3
-- [ ] Dispatch ReorderPointAlert saat stok <= minimal
-- [ ] Write tests for event dispatch
-- [ ] Test events are triggered correctly
+- [x] Dispatch RequestCreated event saat request dibuat [2b82ea3]
+- [x] Dispatch ApprovalNeeded event saat butuh approval L2/L3 [2b82ea3]
+- [x] Dispatch ReorderPointAlert saat stok <= minimal [2b82ea3]
+- [x] Write tests for event dispatch [2b82ea3]
+- [x] Test events are triggered correctly [2b82ea3]
 
 ### Task 8.2: Trigger Events from Bahan Kantor Module
-- [ ] Dispatch events untuk office requests
-- [ ] Dispatch reorder alert untuk office supplies
-- [ ] Write tests for events
-- [ ] Test event triggering
+- [x] Dispatch events untuk office requests [3a68502]
+- [x] Dispatch reorder alert untuk office supplies [3a68502]
+- [x] Write tests for events [3a68502]
+- [x] Test event triggering [3a68502]
 
 ### Task 8.3: Task: Conductor - User Manual Verification 'Phase 8: Integration dengan Modul ATK & Bahan Kantor' (Protocol in workflow.md)
 
@@ -226,10 +226,10 @@
 - [ ] Test database connections
 
 ### Task 9.4: Run Complete Test Suite
-- [ ] Execute `php artisan test --compact`
+- [x] Execute `php artisan test --compact` [38f5fb0]
 - [ ] Execute `npm run test` for frontend tests
-- [ ] Verify coverage >80%
-- [ ] Fix any failing tests
-- [ ] Run `vendor/bin/pint --dirty`
+- [x] Verify coverage >80% [38f5fb0]
+- [x] Fix any failing tests [38f5fb0]
+- [x] Run `vendor/bin/pint --dirty` [38f5fb0]
 
 ### Task 9.5: Task: Conductor - User Manual Verification 'Phase 9: Final Testing & Monitoring' (Protocol in workflow.md)
