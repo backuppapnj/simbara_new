@@ -144,7 +144,7 @@ Plan ini mencakup perbaikan menyeluruh untuk seluruh suite test E2E Playwright y
 **Commit:** f76c68e
 
 - [x] **Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)**
-  [checkpoint: PENDING]
+**Checkpoint SHA:** 4f580fb1f644e8118b4408a3d0fddc3b06849a95
 
 ---
 
