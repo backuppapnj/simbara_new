@@ -36,11 +36,20 @@ export default function NotificationLogDetail({ log }: Props) {
         }
     }
 
-    return (
-        <>
-            <Head title={`Notification Log #${log.id}`} />
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Admin',
+            href: '/admin/notification-logs',
+        },
+        {
+            title: 'Notification Log Detail',
+            href: '',
+        },
+    ]
 
-            <Layout>
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title={`Notification Log #${log.id}`} />
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
                         <h1 className="text-3xl font-bold">Notification Log Detail</h1>
@@ -106,7 +115,6 @@ export default function NotificationLogDetail({ log }: Props) {
                         </dl>
                     </div>
                 </div>
-            </Layout>
-        </>
+        </AppLayout>
     )
 }

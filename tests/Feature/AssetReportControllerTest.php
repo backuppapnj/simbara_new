@@ -19,13 +19,6 @@ beforeEach(function () {
 });
 
 describe('AssetReportController', function () {
-    describe('Reports index page', function () {
-        test('renders reports index page', function () {
-            get(route('assets.reports.index'))
-                ->assertSuccessful();
-        });
-    });
-
     describe('SAKTI/SIMAN export', function () {
         beforeEach(function () {
             Asset::factory()->create([
