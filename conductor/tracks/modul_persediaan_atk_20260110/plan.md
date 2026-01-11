@@ -313,7 +313,16 @@
 - [x] Write tests for permission-based access [2b82ea3]
 - [x] Test access per role [2b82ea3]
 
-### Task 8.5: Task: Conductor - User Manual Verification 'Phase 8: Laporan & Permissions' (Protocol in workflow.md)
+### Task 8.5: Create Reports UI Page
+- [x] Create Atk/Reports.tsx page with shadcn/ui components [COMPLETED]
+- [x] Implement report type selector (stock card, monthly, requests, purchases, distributions, low stock) [COMPLETED]
+- [x] Add filter form (date range, item, user, supplier, status, month/year) [COMPLETED]
+- [x] Implement preview functionality with table display [COMPLETED]
+- [x] Implement export functionality with PDF/CSV download buttons [COMPLETED]
+- [x] Add loading states and error handling with toast notifications [COMPLETED]
+- [x] Style with Tailwind CSS for responsive design [COMPLETED]
+
+### Task 8.6: Task: Conductor - User Manual Verification 'Phase 8: Laporan & Permissions' (Protocol in workflow.md)
 
 ---
 
