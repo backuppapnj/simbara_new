@@ -173,6 +173,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{purchase}/receive', [\App\Http\Controllers\PurchaseController::class, 'receive'])->name('receive');
         Route::post('/{purchase}/complete', [\App\Http\Controllers\PurchaseController::class, 'complete'])->name('complete');
     });
+
+    // ATK Reports & Analytics
+    Route::prefix('atk-reports')->name('atk-reports.')->group(function () {
+        Route::get('/stock-card/{item}', [\App\Http\Controllers\AtkReportController::class, 'stockCard'])->name('stock-card');
+        Route::get('/stock-card/{item}/pdf', [\App\Http\Controllers\AtkReportController::class, 'stockCardPdf'])->name('stock-card-pdf');
+        Route::get('/monthly', [\App\Http\Controllers\AtkReportController::class, 'monthly'])->name('monthly');
+        Route::get('/monthly/pdf', [\App\Http\Controllers\AtkReportController::class, 'monthlyPdf'])->name('monthly-pdf');
+        Route::get('/monthly/excel', [\App\Http\Controllers\AtkReportController::class, 'monthlyExcel'])->name('monthly-excel');
+        Route::get('/requests', [\App\Http\Controllers\AtkReportController::class, 'requests'])->name('requests');
+        Route::get('/purchases', [\App\Http\Controllers\AtkReportController::class, 'purchases'])->name('purchases');
+        Route::get('/distributions', [\App\Http\Controllers\AtkReportController::class, 'distributions'])->name('distributions');
+        Route::get('/low-stock', [\App\Http\Controllers\AtkReportController::class, 'lowStock'])->name('low-stock');
+    });
 });
 
 // Push Subscription Routes (API)

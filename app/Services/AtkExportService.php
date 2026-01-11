@@ -287,6 +287,8 @@ class AtkExportService
         $csv = "\xEF\xBB\xBF"; // UTF-8 BOM
         foreach ($rows as $row) {
             $csv .= implode(',', array_map(function ($cell) {
+                $cell = (string) $cell;
+
                 return '"'.str_replace('"', '""', $cell).'"';
             }, $row))."\n";
         }
