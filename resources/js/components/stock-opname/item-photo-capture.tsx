@@ -5,7 +5,7 @@ import { CameraCapture } from '@/components/camera/camera-capture';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Camera, Loader2, Upload, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export interface CapturedPhoto {
     dataUrl: string;
@@ -14,6 +14,7 @@ export interface CapturedPhoto {
 }
 
 interface ItemPhotoCaptureProps {
+    photos?: CapturedPhoto[];
     onPhotosChange?: (photos: CapturedPhoto[]) => void;
     maxPhotos?: number;
     className?: string;
@@ -21,14 +22,20 @@ interface ItemPhotoCaptureProps {
 }
 
 export function ItemPhotoCapture({
+    photos: initialPhotos = [],
     onPhotosChange,
     maxPhotos = 3,
     className,
     disabled = false,
 }: ItemPhotoCaptureProps) {
     const [showCamera, setShowCamera] = useState(false);
-    const [photos, setPhotos] = useState<CapturedPhoto[]>([]);
+    const [photos, setPhotos] = useState<CapturedPhoto[]>(initialPhotos);
     const [isUploading, setIsUploading] = useState(false);
+
+    // Sync internal state with prop changes
+    useEffect(() => {
+        setPhotos(initialPhotos);
+    }, [initialPhotos]);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

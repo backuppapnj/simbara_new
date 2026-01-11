@@ -384,12 +384,14 @@ describe('ItemController', function () {
             $response = $this->actingAs($user)
                 ->get(route('items.mutations', $item));
 
-            $response->assertStatus(200);
-
-            $itemData = $response->viewData('item');
-            $this->assertEquals('ATK-001', $itemData->kode_barang);
-            $this->assertEquals('Kertas A4', $itemData->nama_barang);
-            $this->assertEquals(150, $itemData->stok);
+            $response->assertStatus(200)
+                ->assertInertia(fn ($page) => $page
+                    ->component('items/Mutations')
+                    ->has('item')
+                    ->where('item.kode_barang', 'ATK-001')
+                    ->where('item.nama_barang', 'Kertas A4')
+                    ->where('item.stok', 150)
+                );
         });
     });
 });

@@ -302,6 +302,7 @@ export default function Create({ items }: CreateProps) {
                                             </th>
                                             <th className="px-4 py-2 text-center font-medium">Selisih</th>
                                             <th className="px-4 py-2 text-left font-medium">Keterangan</th>
+                                            <th className="px-4 py-2 text-center font-medium">Foto</th>
                                             <th className="px-4 py-2 text-center font-medium">Aksi</th>
                                         </tr>
                                     </thead>
@@ -309,74 +310,108 @@ export default function Create({ items }: CreateProps) {
                                         {data.details.map((detail, index) => {
                                             const item = items.find((i) => i.id === detail.item_id);
                                             const selisih = calculateSelisih(index);
+                                            const isExpanded = expandedItems.has(index);
+                                            const hasPhotos = detail.photos && detail.photos.length > 0;
 
                                             return (
-                                                <tr key={index} className="border-t">
-                                                    <td className="px-4 py-2">
-                                                        <div className="font-medium">{item?.nama_barang}</div>
-                                                        <div className="text-xs text-muted-foreground">
-                                                            {item?.kode_barang}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-4 py-2 text-center">
-                                                        <input
-                                                            type="number"
-                                                            value={detail.stok_sistem}
-                                                            readOnly
-                                                            className="w-20 rounded-md border bg-muted px-2 py-1 text-center"
-                                                        />
-                                                    </td>
-                                                    <td className="px-4 py-2 text-center">
-                                                        <input
-                                                            type="number"
-                                                            value={detail.stok_fisik}
-                                                            onChange={(e) =>
-                                                                handleDetailChange(
-                                                                    index,
-                                                                    'stok_fisik',
-                                                                    parseInt(e.target.value) || 0
-                                                                )
-                                                            }
-                                                            className="w-20 rounded-md border bg-background px-2 py-1 text-center"
-                                                            min="0"
-                                                            required
-                                                        />
-                                                    </td>
-                                                    <td className="px-4 py-2 text-center font-medium">
-                                                        <span
-                                                            className={
-                                                                selisih > 0
-                                                                    ? 'text-green-600 dark:text-green-400'
-                                                                    : selisih < 0
-                                                                      ? 'text-red-600 dark:text-red-400'
-                                                                      : ''
-                                                            }
-                                                        >
-                                                            {selisih > 0 && '+'}
-                                                            {selisih}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-4 py-2">
-                                                        <input
-                                                            type="text"
-                                                            value={detail.keterangan}
-                                                            onChange={(e) =>
-                                                                handleDetailChange(index, 'keterangan', e.target.value)
-                                                            }
-                                                            className="w-full rounded-md border bg-background px-2 py-1"
-                                                            placeholder="Keterangan selisih..."
-                                                        />
-                                                    </td>
-                                                    <td className="px-4 py-2 text-center">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => handleRemoveItem(index)}
-                                                            className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700"
-                                                        >
-                                                            <Trash2 className="h-3 w-3" />
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                <>
+                                                    <tr key={index} className="border-t">
+                                                        <td className="px-4 py-2">
+                                                            <div className="font-medium">{item?.nama_barang}</div>
+                                                            <div className="text-xs text-muted-foreground">
+                                                                {item?.kode_barang}
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-4 py-2 text-center">
+                                                            <input
+                                                                type="number"
+                                                                value={detail.stok_sistem}
+                                                                readOnly
+                                                                className="w-20 rounded-md border bg-muted px-2 py-1 text-center"
+                                                            />
+                                                        </td>
+                                                        <td className="px-4 py-2 text-center">
+                                                            <input
+                                                                type="number"
+                                                                value={detail.stok_fisik}
+                                                                onChange={(e) =>
+                                                                    handleDetailChange(
+                                                                        index,
+                                                                        'stok_fisik',
+                                                                        parseInt(e.target.value) || 0
+                                                                    )
+                                                                }
+                                                                className="w-20 rounded-md border bg-background px-2 py-1 text-center"
+                                                                min="0"
+                                                                required
+                                                            />
+                                                        </td>
+                                                        <td className="px-4 py-2 text-center font-medium">
+                                                            <span
+                                                                className={
+                                                                    selisih > 0
+                                                                        ? 'text-green-600 dark:text-green-400'
+                                                                        : selisih < 0
+                                                                          ? 'text-red-600 dark:text-red-400'
+                                                                          : ''
+                                                                }
+                                                            >
+                                                                {selisih > 0 && '+'}
+                                                                {selisih}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 py-2">
+                                                            <input
+                                                                type="text"
+                                                                value={detail.keterangan}
+                                                                onChange={(e) =>
+                                                                    handleDetailChange(index, 'keterangan', e.target.value)
+                                                                }
+                                                                className="w-full rounded-md border bg-background px-2 py-1"
+                                                                placeholder="Keterangan selisih..."
+                                                            />
+                                                        </td>
+                                                        <td className="px-4 py-2 text-center">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => toggleItemExpanded(index)}
+                                                                className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
+                                                            >
+                                                                <Camera className="h-3 w-3" />
+                                                                {hasPhotos ? `(${detail.photos.length})` : 'Tambah'}
+                                                            </button>
+                                                        </td>
+                                                        <td className="px-4 py-2 text-center">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleRemoveItem(index)}
+                                                                className="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700"
+                                                            >
+                                                                <Trash2 className="h-3 w-3" />
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+
+                                                    {/* Expandable Photo Row */}
+                                                    {isExpanded && (
+                                                        <tr className="border-t bg-muted/30">
+                                                            <td colSpan={7} className="px-4 py-4">
+                                                                <div className="max-w-2xl">
+                                                                    <h4 className="mb-3 text-sm font-medium">
+                                                                        Foto Dokumentasi Barang
+                                                                    </h4>
+                                                                    <ItemPhotoCapture
+                                                                        photos={detail.photos}
+                                                                        onPhotosChange={(photos) =>
+                                                                            handleDetailChange(index, 'photos', photos)
+                                                                        }
+                                                                        maxPhotos={3}
+                                                                    />
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                </>
                                             );
                                         })}
                                     </tbody>
