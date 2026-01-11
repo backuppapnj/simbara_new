@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DistributeAtkRequest;
 use App\Http\Requests\RejectAtkRequest;
 use App\Http\Requests\StoreAtkRequest;
 use App\Http\Resources\AtkRequestCollection;
 use App\Http\Resources\AtkRequestResource;
 use App\Models\AtkRequest;
+use App\Models\Item;
 use App\Models\RequestDetail;
+use App\Models\StockMutation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -190,7 +193,7 @@ class AtkRequestController extends Controller
 
         // Validate status - can only reject pending or approved requests
         $validStatuses = ['pending', 'level1_approved', 'level2_approved'];
-        if (!in_array($atkRequest->status, $validStatuses)) {
+        if (! in_array($atkRequest->status, $validStatuses)) {
             abort(422, 'Request can only be rejected if it is pending or approved.');
         }
 
@@ -200,6 +203,112 @@ class AtkRequestController extends Controller
         ]);
 
         $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
+
+        return new AtkRequestResource($atkRequest);
+    }
+
+    /**
+     * Distribute items to request.
+     */
+    public function distribute(DistributeAtkRequest $request, AtkRequest $atkRequest): AtkRequestResource
+    {
+        $validated = $request->validated();
+        $user = auth()->user();
+
+        // Validate status
+        if ($atkRequest->status !== 'level3_approved') {
+            abort(422, 'Request can only be distributed if status is level3_approved.');
+        }
+
+        $atkRequest = DB::transaction(function () use ($atkRequest, $validated, $user) {
+            // Update request details with jumlah diberikan
+            foreach ($validated['items'] as $item) {
+                $detail = RequestDetail::where('id', $item['detail_id'])
+                    ->where('request_id', $atkRequest->id)
+                    ->firstOrFail();
+
+                $detail->update([
+                    'jumlah_diberikan' => $item['jumlah_diberikan'],
+                ]);
+            }
+
+            // Update request status
+            $atkRequest->update([
+                'status' => 'diserahkan',
+                'distributed_by' => $user->id,
+                'distributed_at' => now(),
+            ]);
+
+            return $atkRequest;
+        });
+
+        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'distributedBy', 'requestDetails.item']);
+
+        return new AtkRequestResource($atkRequest);
+    }
+
+    /**
+     * Confirm receipt of distributed items.
+     */
+    public function confirmReceive(AtkRequest $atkRequest): AtkRequestResource
+    {
+        $user = auth()->user();
+
+        // Validate status
+        if ($atkRequest->status !== 'diserahkan') {
+            abort(422, 'Request can only be confirmed if status is diserahkan.');
+        }
+
+        // Only the request owner can confirm
+        if ($atkRequest->user_id != $user->id) {
+            abort(403, 'Only the request owner can confirm receipt.');
+        }
+
+        $atkRequest = DB::transaction(function () use ($atkRequest) {
+            // Get all request details with items
+            $details = RequestDetail::with('item')
+                ->where('request_id', $atkRequest->id)
+                ->whereNotNull('jumlah_diberikan')
+                ->get();
+
+            // Create stock mutations and update item stock
+            foreach ($details as $detail) {
+                $item = $detail->item;
+                $jumlahDiberikan = $detail->jumlah_diberikan;
+
+                if ($jumlahDiberikan > 0 && $item) {
+                    $stokSebelum = $item->stok;
+                    $stokSesudah = $stokSebelum - $jumlahDiberikan;
+
+                    // Create stock mutation
+                    StockMutation::create([
+                        'item_id' => $item->id,
+                        'jenis_mutasi' => 'keluar',
+                        'jumlah' => $jumlahDiberikan,
+                        'stok_sebelum' => $stokSebelum,
+                        'stok_sesudah' => $stokSesudah,
+                        'referensi_id' => $atkRequest->id,
+                        'referensi_tipe' => 'atk_request',
+                        'keterangan' => "Distribusi ATK Permintaan {$atkRequest->no_permintaan}",
+                    ]);
+
+                    // Update item stock
+                    $item->update([
+                        'stok' => $stokSesudah,
+                    ]);
+                }
+            }
+
+            // Update request status
+            $atkRequest->update([
+                'status' => 'diterima',
+                'received_at' => now(),
+            ]);
+
+            return $atkRequest;
+        });
+
+        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'distributedBy', 'requestDetails.item']);
 
         return new AtkRequestResource($atkRequest);
     }

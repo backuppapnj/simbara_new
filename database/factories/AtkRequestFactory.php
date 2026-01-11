@@ -90,4 +90,16 @@ class AtkRequestFactory extends Factory
             'status' => 'rejected',
         ]);
     }
+
+    /**
+     * Indicate that the request has been distributed.
+     */
+    public function diserahkan(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'diserahkan',
+            'distributed_by' => \App\Models\User::factory(),
+            'distributed_at' => now(),
+        ]);
+    }
 }

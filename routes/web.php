@@ -121,6 +121,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{atkRequest}/approve-level2', [\App\Http\Controllers\AtkRequestController::class, 'approveLevel2'])->name('approve-level2');
         Route::post('/{atkRequest}/approve-level3', [\App\Http\Controllers\AtkRequestController::class, 'approveLevel3'])->name('approve-level3');
         Route::post('/{atkRequest}/reject', [\App\Http\Controllers\AtkRequestController::class, 'reject'])->name('reject');
+
+        // Distribution routes
+        Route::post('/{atkRequest}/distribute', [\App\Http\Controllers\AtkRequestController::class, 'distribute'])->name('distribute');
+        Route::post('/{atkRequest}/confirm-receive', [\App\Http\Controllers\AtkRequestController::class, 'confirmReceive'])->name('confirm-receive');
     });
 
     // Office Supplies Management

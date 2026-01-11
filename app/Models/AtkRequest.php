@@ -27,6 +27,9 @@ class AtkRequest extends Model
         'level2_approval_at',
         'level3_approval_by',
         'level3_approval_at',
+        'distributed_by',
+        'distributed_at',
+        'received_at',
         'keterangan',
         'alasan_penolakan',
     ];
@@ -57,6 +60,8 @@ class AtkRequest extends Model
             'level1_approval_at' => 'datetime',
             'level2_approval_at' => 'datetime',
             'level3_approval_at' => 'datetime',
+            'distributed_at' => 'datetime',
+            'received_at' => 'datetime',
         ];
     }
 
@@ -106,5 +111,13 @@ class AtkRequest extends Model
     public function level3Approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'level3_approval_by');
+    }
+
+    /**
+     * User who distributed the items.
+     */
+    public function distributedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'distributed_by');
     }
 }

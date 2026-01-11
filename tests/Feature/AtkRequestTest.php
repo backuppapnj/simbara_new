@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\RequestDetail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -487,6 +488,233 @@ describe('AtkRequest Management', function () {
                 ]);
 
             $response->assertUnprocessable();
+        });
+    });
+
+    describe('POST /atk-requests/{id}/distribute', function () {
+        it('requires authentication', function () {
+            $request = AtkRequest::factory()->level3Approved()->create();
+
+            $response = $this->postJson("/atk-requests/{$request->id}/distribute", [
+                'items' => [
+                    [
+                        'detail_id' => RequestDetail::factory()->create(['request_id' => $request->id])->id,
+                        'jumlah_diberikan' => 5,
+                    ],
+                ],
+            ]);
+
+            $response->assertUnauthorized();
+        });
+
+        it('distributes approved request with jumlah diberikan', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->level3Approved()->create();
+            $detail = RequestDetail::factory()->create([
+                'request_id' => $request->id,
+                'jumlah_diminta' => 10,
+                'jumlah_disetujui' => 10,
+            ]);
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/distribute", [
+                    'items' => [
+                        [
+                            'detail_id' => $detail->id,
+                            'jumlah_diberikan' => 8,
+                        ],
+                    ],
+                ]);
+
+            $response->assertOk()
+                ->assertJson([
+                    'data' => [
+                        'status' => 'diserahkan',
+                        'distributed_by' => $user->id,
+                    ],
+                ]);
+
+            $this->assertDatabaseHas('atk_requests', [
+                'id' => $request->id,
+                'status' => 'diserahkan',
+                'distributed_by' => $user->id,
+            ]);
+
+            $this->assertDatabaseHas('request_details', [
+                'id' => $detail->id,
+                'jumlah_diberikan' => 8,
+            ]);
+        });
+
+        it('can only distribute level3 approved requests', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->pending()->create();
+            $detail = RequestDetail::factory()->create(['request_id' => $request->id]);
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/distribute", [
+                    'items' => [
+                        [
+                            'detail_id' => $detail->id,
+                            'jumlah_diberikan' => 5,
+                        ],
+                    ],
+                ]);
+
+            $response->assertUnprocessable();
+        });
+
+        it('validates jumlah_diberikan does not exceed jumlah_disetujui', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->level3Approved()->create();
+            $detail = RequestDetail::factory()->create([
+                'request_id' => $request->id,
+                'jumlah_diminta' => 10,
+                'jumlah_disetujui' => 8,
+            ]);
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/distribute", [
+                    'items' => [
+                        [
+                            'detail_id' => $detail->id,
+                            'jumlah_diberikan' => 10,
+                        ],
+                    ],
+                ]);
+
+            $response->assertUnprocessable()
+                ->assertJsonValidationErrors(['items.0.jumlah_diberikan']);
+        });
+
+        it('validates items array is not empty', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->level3Approved()->create();
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/distribute", [
+                    'items' => [],
+                ]);
+
+            $response->assertUnprocessable()
+                ->assertJsonValidationErrors(['items']);
+        });
+    });
+
+    describe('POST /atk-requests/{id}/confirm-receive', function () {
+        it('requires authentication', function () {
+            $request = AtkRequest::factory()->diserahkan()->create();
+
+            $response = $this->postJson("/atk-requests/{$request->id}/confirm-receive");
+
+            $response->assertUnauthorized();
+        });
+
+        it('confirms receipt and creates stock mutations', function () {
+            $user = User::factory()->create();
+            $item = Item::factory()->create(['stok' => 100]);
+            $request = AtkRequest::factory()->diserahkan()->create(['user_id' => $user->id]);
+            $detail = RequestDetail::factory()->create([
+                'request_id' => $request->id,
+                'item_id' => $item->id,
+                'jumlah_diminta' => 10,
+                'jumlah_disetujui' => 10,
+                'jumlah_diberikan' => 8,
+            ]);
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/confirm-receive");
+
+            $response->assertOk()
+                ->assertJson([
+                    'data' => [
+                        'status' => 'diterima',
+                    ],
+                ]);
+
+            $this->assertDatabaseHas('atk_requests', [
+                'id' => $request->id,
+                'status' => 'diterima',
+            ]);
+
+            // Verify stock was reduced
+            $item->refresh();
+            expect($item->stok)->toBe(92);
+
+            // Verify stock mutation was created
+            $this->assertDatabaseHas('stock_mutations', [
+                'item_id' => $item->id,
+                'jenis_mutasi' => 'keluar',
+                'jumlah' => 8,
+                'stok_sebelum' => 100,
+                'stok_sesudah' => 92,
+                'referensi_id' => $request->id,
+                'referensi_tipe' => 'atk_request',
+            ]);
+        });
+
+        it('can only confirm diserahkan requests', function () {
+            $user = User::factory()->create();
+            $request = AtkRequest::factory()->pending()->create(['user_id' => $user->id]);
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/confirm-receive");
+
+            $response->assertUnprocessable();
+        });
+
+        it('only request owner can confirm receipt', function () {
+            $user1 = User::factory()->create();
+            $user2 = User::factory()->create();
+            $request = AtkRequest::factory()->diserahkan()->create(['user_id' => $user1->id]);
+
+            $response = $this->actingAs($user2)
+                ->postJson("/atk-requests/{$request->id}/confirm-receive");
+
+            $response->assertForbidden();
+        });
+
+        it('handles multiple items in confirmation', function () {
+            $user = User::factory()->create();
+            $item1 = Item::factory()->create(['stok' => 50]);
+            $item2 = Item::factory()->create(['stok' => 30]);
+            $request = AtkRequest::factory()->diserahkan()->create(['user_id' => $user->id]);
+            $detail1 = RequestDetail::factory()->create([
+                'request_id' => $request->id,
+                'item_id' => $item1->id,
+                'jumlah_diberikan' => 5,
+            ]);
+            $detail2 = RequestDetail::factory()->create([
+                'request_id' => $request->id,
+                'item_id' => $item2->id,
+                'jumlah_diberikan' => 3,
+            ]);
+
+            $response = $this->actingAs($user)
+                ->postJson("/atk-requests/{$request->id}/confirm-receive");
+
+            $response->assertOk();
+
+            $item1->refresh();
+            $item2->refresh();
+            expect($item1->stok)->toBe(45);
+            expect($item2->stok)->toBe(27);
+
+            $this->assertDatabaseHas('stock_mutations', [
+                'item_id' => $item1->id,
+                'jenis_mutasi' => 'keluar',
+                'jumlah' => 5,
+                'stok_sebelum' => 50,
+                'stok_sesudah' => 45,
+            ]);
+
+            $this->assertDatabaseHas('stock_mutations', [
+                'item_id' => $item2->id,
+                'jenis_mutasi' => 'keluar',
+                'jumlah' => 3,
+                'stok_sebelum' => 30,
+                'stok_sesudah' => 27,
+            ]);
         });
     });
 });

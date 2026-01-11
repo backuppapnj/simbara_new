@@ -156,20 +156,20 @@
 ## Phase 5: Distribusi & Konfirmasi
 
 ### Task 5.1: Create Distribusi Feature
-- [ ] Add POST /requests/{id}/distribute route
-- [ ] Update status to 'diserahkan'
-- [ ] Create distribute form (input jumlah diberikan)
-- [ ] Don't create StockMutations yet (wait for confirmation)
-- [ ] Write tests for distribusi
-- [ ] Test distribusi flow
+- [~] Add POST /requests/{id}/distribute route
+- [~] Update status to 'diserahkan'
+- [~] Create distribute form (input jumlah diberikan)
+- [~] Don't create StockMutations yet (wait for confirmation)
+- [~] Write tests for distribusi
+- [~] Test distribusi flow
 
 ### Task 5.2: Create Konfirmasi Terima
-- [ ] Add POST /requests/{id}/confirm-receive route
-- [ ] Update status to 'diterima'
-- [ ] Create StockMutations (jenis: keluar)
-- [ ] Update item stok
-- [ ] Write tests for confirmation
-- [ ] Test stok reduction
+- [~] Add POST /requests/{id}/confirm-receive route
+- [~] Update status to 'diterima'
+- [~] Create StockMutations (jenis: keluar)
+- [~] Update item stok
+- [~] Write tests for confirmation
+- [~] Test stok reduction
 
 ### Task 5.3: Add Status Tracking UI
 - [ ] Create status timeline component
@@ -263,38 +263,38 @@
 ## Phase 8: Laporan & Permissions
 
 ### Task 8.1: Create Monthly Report
-- [ ] Add GET /reports/monthly route
-- [ ] Filter by periode (bulan/tahun)
-- [ ] Query all transactions:
+- [~] Add GET /reports/monthly route
+- [~] Filter by periode (bulan/tahun)
+- [~] Query all transactions:
   - Requests (approved)
   - Purchases (completed)
   - Stock Opnames
-- [ ] Calculate summaries
-- [ ] Create monthly report page
-- [ ] Write tests for report queries
-- [ ] Test report accuracy
+- [~] Calculate summaries
+- [~] Create monthly report page
+- [~] Write tests for report queries
+- [~] Test report accuracy
 
 ### Task 8.2: Create Report Exports
-- [ ] Add GET /reports/monthly/pdf route
-- [ ] Add GET /reports/monthly/excel route
-- [ ] Generate PDF with cumulative data
-- [ ] Generate Excel with transaction details
-- [ ] Write tests for exports
-- [ ] Test file downloads
+- [~] Add GET /reports/monthly/pdf route
+- [~] Add GET /reports/monthly/excel route
+- [~] Generate PDF with cumulative data
+- [~] Generate Excel with transaction details
+- [~] Write tests for exports
+- [~] Test file downloads
 
 ### Task 8.3: Define ATK Permissions
-- [ ] Define permissions in PermissionsSeeder
-- [ ] Add: manage_items, manage_purchases, create_request, approve_request_l1, approve_request_l2, approve_request_l3, manage_stock_opname, view_reports
-- [ ] Assign permissions to roles
-- [ ] Write tests for permissions
-- [ ] Run seeder and verify
+- [~] Define permissions in PermissionsSeeder
+- [~] Add: manage_items, manage_purchases, create_request, approve_request_l1, approve_request_l2, approve_request_l3, manage_stock_opname, view_reports
+- [~] Assign permissions to roles
+- [~] Write tests for permissions
+- [~] Run seeder and verify
 
 ### Task 8.4: Apply Permissions & Update UI
-- [ ] Add permission checks to all controllers
-- [ ] Update UI based on permissions
-- [ ] Hide/show features per role
-- [ ] Write tests for permission-based access
-- [ ] Test access per role
+- [~] Add permission checks to all controllers
+- [~] Update UI based on permissions
+- [~] Hide/show features per role
+- [~] Write tests for permission-based access
+- [~] Test access per role
 
 ### Task 8.5: Task: Conductor - User Manual Verification 'Phase 8: Laporan & Permissions' (Protocol in workflow.md)
 
