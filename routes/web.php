@@ -113,6 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ATK Requests Management
     Route::prefix('atk-requests')->name('atk-requests.')->group(function () {
         Route::get('/', [\App\Http\Controllers\AtkRequestController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\AtkRequestController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\AtkRequestController::class, 'store'])->name('store');
         Route::get('/{atkRequest}', [\App\Http\Controllers\AtkRequestController::class, 'show'])->name('show');
 
@@ -168,6 +169,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ATK Purchases Management
     Route::prefix('purchases')->name('purchases.')->group(function () {
         Route::get('/', [\App\Http\Controllers\PurchaseController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\PurchaseController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\PurchaseController::class, 'store'])->name('store');
         Route::get('/{purchase}', [\App\Http\Controllers\PurchaseController::class, 'show'])->name('show');
         Route::post('/{purchase}/receive', [\App\Http\Controllers\PurchaseController::class, 'receive'])->name('receive');

@@ -103,9 +103,26 @@
 
 ### Task 3.4: Create Purchase List & Detail Views
 - [x] Create GET /purchases route (index with status filter)
+- [x] Create GET /purchases/create route (create form with items dropdown)
 - [x] Create GET /purchases/{id} route (show purchase details)
-- [x] Add Inertia pages (Index.tsx, Show.tsx)
+- [x] Add Inertia pages (Index.tsx, Show.tsx, Create.tsx)
 - [x] Load purchaseDetails with item relationships
+- [x] Implement Purchase Index page with:
+  - Table with columns: No Pembelian, Tanggal, Supplier, Total Items, Total Nilai, Status
+  - Filter: Status (draft, received, completed), Supplier search
+  - Actions: View detail, Receive (draft), Complete (received)
+  - Pagination
+- [x] Implement Purchase Show page with:
+  - Purchase info display (tanggal, supplier, total nilai, keterangan)
+  - Receive form with editable jumlah_diterima per item
+  - Complete button for received purchases
+  - Items table with calculations
+- [x] Implement Purchase Create page with:
+  - Form: tanggal, supplier, keterangan
+  - Dynamic items list with add/remove
+  - Item dropdown from master data
+  - Auto-calculate subtotals and total
+  - Validation for required fields
 
 ### Task 3.5: Task: Conductor - User Manual Verification 'Phase 3: Workflow Pengadaan' (Protocol in workflow.md)
 

@@ -38,6 +38,20 @@ class PurchaseController extends Controller
     }
 
     /**
+     * Show the form for creating a new purchase.
+     */
+    public function create(): Response
+    {
+        $items = Item::select('id', 'kode_barang', 'nama_barang', 'satuan', 'harga_rata_rata')
+            ->orderBy('nama_barang')
+            ->get();
+
+        return Inertia::render('Purchases/Create', [
+            'items' => $items,
+        ]);
+    }
+
+    /**
      * Store a newly created purchase in storage.
      */
     public function store(StorePurchaseRequest $request): RedirectResponse
