@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApprovalNeeded;
 use App\Events\RequestCreated;
 use App\Http\Requests\DistributeAtkRequest;
 use App\Http\Requests\RejectAtkRequest;
@@ -198,6 +199,11 @@ class AtkRequestController extends Controller
             'level1_approval_at' => now(),
         ]);
 
+        // Dispatch event for level 2 approval
+        if (class_exists(ApprovalNeeded::class)) {
+            ApprovalNeeded::dispatch($atkRequest, 2, 'Kasubag Umum');
+        }
+
         return redirect()->back()->with('success', 'Permintaan disetujui di Level 1.');
     }
 
@@ -218,6 +224,11 @@ class AtkRequestController extends Controller
             'level2_approval_by' => $user->id,
             'level2_approval_at' => now(),
         ]);
+
+        // Dispatch event for level 3 approval
+        if (class_exists(ApprovalNeeded::class)) {
+            ApprovalNeeded::dispatch($atkRequest, 3, 'KPA');
+        }
 
         return redirect()->back()->with('success', 'Permintaan disetujui di Level 2.');
     }

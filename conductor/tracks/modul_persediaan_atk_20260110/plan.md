@@ -238,8 +238,21 @@
 - [x] Create Show.tsx with SO details
 - [x] Show selisih summary
 - [x] Add action buttons (submit, approve, download BA)
+- [x] Add photo capture per item (CameraCapture integration)
+- [x] Show captured photos preview with max 3 photos per item
+- [x] Photo count indicator and delete photo functionality
+- [x] Enhanced summary: Total items, Selisih positif, Selisih negatif, Dengan Foto
+- [x] Photos gallery per item with modal view
 - [ ] Write tests for views (requires built frontend)
 - [ ] Test permission-based actions
+
+**Implementation Notes:**
+- Created stock_opname_photos table with migration
+- Created StockOpnamePhoto model with relationship to StockOpnameDetail
+- Updated StockOpnameDetail model to include photos relationship
+- Updated StockOpnameController to handle photo uploads with FormData
+- Updated Create page to convert CapturedPhoto array to File objects
+- Enhanced Show page with photo gallery modal and improved statistics
 
 ### Task 6.5: Task: Conductor - User Manual Verification 'Phase 6: Stock Opname' (Protocol in workflow.md)
 

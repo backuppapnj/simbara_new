@@ -347,6 +347,9 @@ export default function Show({ stockOpname }: ShowProps) {
                                     <th className="px-6 py-3 text-center font-medium">Stok Fisik</th>
                                     <th className="px-6 py-3 text-center font-medium">Selisih</th>
                                     <th className="px-6 py-3 text-left font-medium">Keterangan</th>
+                                    {hasPhotos && (
+                                        <th className="px-6 py-3 text-center font-medium">Foto</th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -381,12 +384,115 @@ export default function Show({ stockOpname }: ShowProps) {
                                         <td className="px-6 py-3 text-muted-foreground">
                                             {detail.keterangan || '-'}
                                         </td>
+                                        {hasPhotos && (
+                                            <td className="px-6 py-3 text-center">
+                                                {detail.photos && detail.photos.length > 0 ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => openPhotoGallery(detail.photos, 0)}
+                                                        className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium hover:bg-muted"
+                                                    >
+                                                        <Camera className="h-3 w-3" />
+                                                        {detail.photos.length}
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-muted-foreground">-</span>
+                                                )}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                {/* Photo Gallery Modal */}
+                {selectedPhotoIndex !== null && selectedDetailPhotos.length > 0 && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+                        <div className="relative max-h-full max-w-full">
+                            <button
+                                onClick={closePhotoGallery}
+                                className="absolute -right-12 -top-12 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 focus:ring-2 focus:ring-white focus:outline-none"
+                            >
+                                <svg
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+
+                            <img
+                                src={getPhotoUrl(selectedDetailPhotos[selectedPhotoIndex])}
+                                alt={`Photo ${selectedPhotoIndex + 1}`}
+                                className="max-h-[80vh] max-w-full rounded-lg object-contain"
+                            />
+
+                            {/* Photo Navigation */}
+                            {selectedDetailPhotos.length > 1 && (
+                                <div className="mt-4 flex items-center justify-center gap-4">
+                                    <button
+                                        onClick={() =>
+                                            setSelectedPhotoIndex((prev) =>
+                                                prev === null ? 0 : prev > 0 ? prev - 1 : selectedDetailPhotos.length - 1
+                                            )
+                                        }
+                                        className="rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                                    >
+                                        <svg
+                                            className="h-6 w-6"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M15 19l-7-7 7-7"
+                                            />
+                                        </svg>
+                                    </button>
+
+                                    <span className="text-sm font-medium text-white">
+                                        {selectedPhotoIndex + 1} / {selectedDetailPhotos.length}
+                                    </span>
+
+                                    <button
+                                        onClick={() =>
+                                            setSelectedPhotoIndex((prev) =>
+                                                prev === null ? 0 : prev < selectedDetailPhotos.length - 1 ? prev + 1 : 0
+                                            )
+                                        }
+                                        className="rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                                    >
+                                        <svg
+                                            className="h-6 w-6"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M9 5l7 7-7 7"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </AppLayout>
     );

@@ -185,17 +185,17 @@
 ## Phase 8: Integration dengan Modul ATK & Bahan Kantor
 
 ### Task 8.1: Trigger Events from ATK Module
-- [x] Dispatch RequestCreated event saat request dibuat [2b82ea3]
-- [x] Dispatch ApprovalNeeded event saat butuh approval L2/L3 [2b82ea3]
-- [x] Dispatch ReorderPointAlert saat stok <= minimal [2b82ea3]
-- [x] Write tests for event dispatch [2b82ea3]
-- [x] Test events are triggered correctly [2b82ea3]
+- [x] Dispatch RequestCreated event saat request dibuat [58456c1]
+- [x] Dispatch ApprovalNeeded event saat butuh approval L2/L3 [58456c1]
+- [x] Dispatch ReorderPointAlert saat stok <= minimal [58456c1]
+- [x] Write tests for event dispatch [58456c1]
+- [x] Test events are triggered correctly [58456c1]
 
 ### Task 8.2: Trigger Events from Bahan Kantor Module
-- [x] Dispatch events untuk office requests [3a68502]
-- [x] Dispatch reorder alert untuk office supplies [3a68502]
-- [x] Write tests for events [3a68502]
-- [x] Test event triggering [3a68502]
+- [x] Dispatch events untuk office requests [58456c1]
+- [x] Dispatch reorder alert untuk office supplies [58456c1]
+- [x] Write tests for events [58456c1]
+- [x] Test event triggering [58456c1]
 
 ### Task 8.3: Task: Conductor - User Manual Verification 'Phase 8: Integration dengan Modul ATK & Bahan Kantor' (Protocol in workflow.md)
 
