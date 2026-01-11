@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OfficeSupplyRequest;
 use App\Models\OfficeSupply;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,12 +15,12 @@ class OfficeSupplyController extends Controller
     /**
      * Display a listing of the office supplies.
      */
-    public function index(): Response
+    public function index(Request $request): Response|JsonResponse
     {
         $query = OfficeSupply::query()->with('mutations');
 
-        $search = request()->string('search')->trim();
-        $kategori = request()->string('kategori')->trim();
+        $search = $request->string('search')->trim();
+        $kategori = $request->string('kategori')->trim();
 
         if ($search->isNotEmpty()) {
             $query->where('nama_barang', 'like', "%{$search}%");
@@ -31,6 +33,10 @@ class OfficeSupplyController extends Controller
         $supplies = $query->orderBy('nama_barang')
             ->paginate(15)
             ->withQueryString();
+
+        if ($request->wantsJson()) {
+            return response()->json($supplies);
+        }
 
         return Inertia::render('officeSupplies/Index', [
             'supplies' => $supplies,
@@ -80,16 +86,20 @@ class OfficeSupplyController extends Controller
     /**
      * Display stock mutations for the specified office supply.
      */
-    public function mutations(OfficeSupply $office_supply): Response
+    public function mutations(Request $request, OfficeSupply $office_supply): Response|JsonResponse
     {
         $query = $office_supply->mutations()->latest();
 
-        $jenis = request()->string('jenis')->trim();
+        $jenis = $request->string('jenis')->trim();
         if ($jenis->isNotEmpty() && in_array($jenis->toString(), ['masuk', 'keluar'])) {
             $query->where('jenis_mutasi', $jenis->toString());
         }
 
         $mutations = $query->paginate(20)->withQueryString();
+
+        if ($request->wantsJson()) {
+            return response()->json($mutations);
+        }
 
         return Inertia::render('officeSupplies/Mutations', [
             'supply' => $office_supply,

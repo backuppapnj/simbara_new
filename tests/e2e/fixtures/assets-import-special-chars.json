@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "generated_at": "2024-01-15T10:30:00Z",
+    "total_records": 3,
+    "source": "SIMAN"
+  },
+  "data": [
+    {
+      "id_aset": 8001,
+      "kd_brg": "10101001",
+      "no_aset": 1,
+      "kode_register": "REG001",
+      "nama": "Laptop Dell & HP \"Pro\" Series",
+      "merk": "Dell/HP",
+      "tipe": "Pro Series",
+      "ur_sskel": "Aset Tetap",
+      "kd_jns_bmn": "101",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "kd_status": "02",
+      "ur_status": "Digunakan",
+      "tercatat": "Ya",
+      "rph_aset": 15000000,
+      "rph_buku": 15000000,
+      "rph_perolehan": 15000000,
+      "lokasi_ruang": "Ruang IT & Network"
+    },
+    {
+      "id_aset": 8002,
+      "kd_brg": "10101002",
+      "no_aset": 2,
+      "kode_register": "REG002",
+      "nama": "Printer 'LaserJet' (2nd Gen)",
+      "merk": "HP",
+      "tipe": "LaserJet Pro",
+      "ur_sskel": "Aset Tetap",
+      "kd_jns_bmn": "102",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "kd_status": "02",
+      "ur_status": "Digunakan",
+      "tercatat": "Ya",
+      "rph_aset": 3500000,
+      "rph_buku": 3500000,
+      "rph_perolehan": 3500000,
+      "lokasi_ruang": "Ruang Admin (Staff)"
+    },
+    {
+      "id_aset": 8003,
+      "kd_brg": "10101003",
+      "no_aset": 3,
+      "kode_register": "REG003",
+      "nama": "Proyektor 4K/Ultra HD <2024>",
+      "merk": "Epson",
+      "tipe": "EB-X450",
+      "ur_sskel": "Aset Tetap",
+      "kd_jns_bmn": "103",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "kd_status": "02",
+      "ur_status": "Digunakan",
+      "tercatat": "Ya",
+      "rph_aset": 12000000,
+      "rph_buku": 12000000,
+      "rph_perolehan": 12000000,
+      "lokasi_ruang": "Ruang Rapat > VIP"
+    }
+  ]
+}

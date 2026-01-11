@@ -1,0 +1,8 @@
+{
+  "track_id": "e2e-fix_20250112",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2025-01-12T00:00:00Z",
+  "updated_at": "2025-01-12T00:00:00Z",
+  "description": "Perbaikan menyeluruh suite test E2E Playwright - 67+ masalah teridentifikasi"
+}

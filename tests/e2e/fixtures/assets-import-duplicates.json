@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "generated_at": "2024-01-15T10:30:00Z",
+    "total_records": 3,
+    "source": "SIMAN"
+  },
+  "data": [
+    {
+      "id_aset": 3001,
+      "kd_brg": "10101001",
+      "no_aset": 1,
+      "kode_register": "REG001",
+      "nama": "Laptop Dell Latitude 5420",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "rph_aset": 15000000,
+      "rph_buku": 15000000,
+      "rph_perolehan": 15000000,
+      "lokasi_ruang": "Ruang IT"
+    },
+    {
+      "id_aset": 3001,
+      "kd_brg": "10101001",
+      "no_aset": 1,
+      "kode_register": "REG001",
+      "nama": "Laptop Dell Latitude 5420 - Updated",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "rph_aset": 15000000,
+      "rph_buku": 15000000,
+      "rph_perolehan": 15000000,
+      "lokasi_ruang": "Ruang IT"
+    },
+    {
+      "id_aset": 3002,
+      "kd_brg": "10101002",
+      "no_aset": 2,
+      "kode_register": "REG002",
+      "nama": "Printer HP LaserJet",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "rph_aset": 3500000,
+      "rph_buku": 3500000,
+      "rph_perolehan": 3500000,
+      "lokasi_ruang": "Ruang Administrasi"
+    }
+  ]
+}

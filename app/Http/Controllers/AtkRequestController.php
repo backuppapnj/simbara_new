@@ -32,7 +32,7 @@ class AtkRequestController extends Controller
         // Admin/approvers can see all requests
         $hasAdminRole = false;
         try {
-            $hasAdminRole = $user->hasAnyRole(['Operator Persediaan', 'Kasubag Umum', 'KPA']);
+            $hasAdminRole = $user->hasAnyRole(['operator_persediaan', 'kasubag_umum', 'kpa', 'super_admin']);
         } catch (\Exception $e) {
             // Role system not set up, treat as regular user
         }
@@ -174,7 +174,7 @@ class AtkRequestController extends Controller
         // Admin/approvers can view all requests
         $hasAdminRole = false;
         try {
-            $hasAdminRole = $user->hasAnyRole(['Operator Persediaan', 'Kasubag Umum', 'KPA']);
+            $hasAdminRole = $user->hasAnyRole(['operator_persediaan', 'kasubag_umum', 'kpa', 'super_admin']);
         } catch (\Exception $e) {
             // Role system not set up or no roles assigned, treat as regular user
             $hasAdminRole = false;

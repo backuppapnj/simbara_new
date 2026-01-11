@@ -9,18 +9,13 @@ use Illuminate\Support\Facades\Http;
 
 class FonnteService
 {
-    protected string $apiToken;
-
     protected string $endpoint = 'https://api.fonnte.com/send';
 
     protected int $maxRetries = 3;
 
     protected int $retryDelay = 1000; // milliseconds
 
-    public function __construct()
-    {
-        $this->apiToken = $this->getApiToken();
-    }
+    public function __construct() {}
 
     /**
      * Send WhatsApp message via Fonnte API
@@ -33,14 +28,23 @@ class FonnteService
      */
     public function send(string $target, string $message): array
     {
+        if (app()->environment('e2e')) {
+            return [
+                'status' => true,
+                'message' => 'E2E stubbed WhatsApp send',
+                'target' => $this->formatPhone($target),
+            ];
+        }
+
         $formattedPhone = $this->formatPhone($target);
+        $apiToken = $this->getApiToken();
 
         $attempts = 0;
         $lastException = null;
 
         while ($attempts < $this->maxRetries) {
             try {
-                $response = Http::withToken($this->apiToken)
+                $response = Http::withToken($apiToken)
                     ->timeout(30)
                     ->post($this->endpoint, [
                         'target' => $formattedPhone,
@@ -128,6 +132,6 @@ class FonnteService
      */
     public function getApiTokenPublic(): string
     {
-        return $this->apiToken;
+        return $this->getApiToken();
     }
 }

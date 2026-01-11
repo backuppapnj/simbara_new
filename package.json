@@ -6,6 +6,8 @@
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
+        "e2e": "playwright test",
+        "e2e:report": "playwright show-report",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",

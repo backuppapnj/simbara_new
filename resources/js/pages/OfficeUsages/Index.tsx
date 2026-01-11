@@ -54,6 +54,13 @@ interface Usage {
     };
 }
 
+interface Supply {
+    id: string;
+    nama_barang: string;
+    satuan: string;
+    stok: number;
+}
+
 interface IndexProps {
     usages: {
         data: Usage[];
@@ -62,13 +69,14 @@ interface IndexProps {
         per_page: number;
         total: number;
     };
+    supplies: Supply[];
     filters: {
         date_from: string | null;
         date_to: string | null;
     };
 }
 
-export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
+export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexProps) {
     const [usageDialog, setUsageDialog] = useState(false);
     const [quickDeductDialog, setQuickDeductDialog] = useState(false);
 
@@ -208,11 +216,15 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                         <Button
                             variant="outline"
                             onClick={() => setQuickDeductDialog(true)}
+                            data-test="quick-deduct-button"
                         >
                             <MinusCircle className="mr-2 size-4" />
                             Quick Deduct
                         </Button>
-                        <Button onClick={() => setUsageDialog(true)}>
+                        <Button
+                            onClick={() => setUsageDialog(true)}
+                            data-test="log-usage-button"
+                        >
                             <Plus className="mr-2 size-4" />
                             Catat Pemakaian
                         </Button>
@@ -361,6 +373,7 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                     Bahan Kantor
                                 </Label>
                                 <Select
+                                    name="supply_id"
                                     value={usageForm.data.supply_id}
                                     onValueChange={(value) =>
                                         usageForm.setData('supply_id', value)
@@ -373,15 +386,11 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                         <SelectItem value="">
                                             Pilih bahan kantor
                                         </SelectItem>
-                                        <SelectItem value="sample-1">
-                                            Kertas A4
-                                        </SelectItem>
-                                        <SelectItem value="sample-2">
-                                            Pulpen Hitam
-                                        </SelectItem>
-                                        <SelectItem value="sample-3">
-                                            Spidol Whiteboard
-                                        </SelectItem>
+                                        {supplies.map((supply) => (
+                                            <SelectItem key={supply.id} value={supply.id}>
+                                                {supply.nama_barang} (Stok: {supply.stok} {supply.satuan})
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 {usageForm.errors.supply_id && (
@@ -461,6 +470,7 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                 <Button
                                     type="submit"
                                     disabled={usageForm.processing}
+                                    data-test="usage-submit-button"
                                 >
                                     {usageForm.processing
                                         ? 'Menyimpan...'
@@ -493,6 +503,7 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                     Bahan Kantor
                                 </Label>
                                 <Select
+                                    name="supply_id"
                                     value={quickDeductForm.data.supply_id}
                                     onValueChange={(value) =>
                                         quickDeductForm.setData(
@@ -508,15 +519,11 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                         <SelectItem value="">
                                             Pilih bahan kantor
                                         </SelectItem>
-                                        <SelectItem value="sample-1">
-                                            Kertas A4
-                                        </SelectItem>
-                                        <SelectItem value="sample-2">
-                                            Pulpen Hitam
-                                        </SelectItem>
-                                        <SelectItem value="sample-3">
-                                            Spidol Whiteboard
-                                        </SelectItem>
+                                        {supplies.map((supply) => (
+                                            <SelectItem key={supply.id} value={supply.id}>
+                                                {supply.nama_barang} (Stok: {supply.stok} {supply.satuan})
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 {quickDeductForm.errors.supply_id && (
@@ -577,6 +584,7 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                 <Button
                                     type="submit"
                                     disabled={quickDeductForm.processing}
+                                    data-test="quick-deduct-submit-button"
                                 >
                                     {quickDeductForm.processing
                                         ? 'Memproses...'

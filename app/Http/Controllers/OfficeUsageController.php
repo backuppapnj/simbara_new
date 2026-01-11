@@ -36,8 +36,14 @@ class OfficeUsageController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        $supplies = OfficeSupply::query()
+            ->select('id', 'nama_barang', 'satuan', 'stok')
+            ->orderBy('nama_barang')
+            ->get();
+
         return Inertia::render('OfficeUsages/Index', [
             'usages' => $usages,
+            'supplies' => $supplies,
             'filters' => [
                 'date_from' => $dateFrom?->format('Y-m-d'),
                 'date_to' => $dateTo?->format('Y-m-d'),

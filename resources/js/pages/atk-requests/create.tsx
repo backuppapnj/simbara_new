@@ -163,6 +163,7 @@ export default function AtkRequestsCreate({
                                         Departemen
                                     </Label>
                                     <Select
+                                        name="department_id"
                                         value={form.data.department_id}
                                         onValueChange={(value) =>
                                             form.setData('department_id', value)
@@ -261,6 +262,7 @@ export default function AtkRequestsCreate({
                                 <div className="space-y-2">
                                     <Label htmlFor="item">Barang</Label>
                                     <Select
+                                        name="item_id"
                                         value={selectedItemId}
                                         onValueChange={setSelectedItemId}
                                     >

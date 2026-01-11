@@ -73,7 +73,7 @@ function TwoFactorSetupStep({
             ) : (
                 <>
                     <div className="mx-auto flex max-w-md overflow-hidden">
-                        <div className="mx-auto aspect-square w-64 rounded-lg border border-border">
+                        <div className="mx-auto aspect-square w-64 rounded-lg border border-border" data-test="2fa-qr-code">
                             <div className="z-10 flex h-full w-full items-center justify-center p-5">
                                 {qrCodeSvg ? (
                                     <div
@@ -316,7 +316,7 @@ export default function TwoFactorSetupModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md" data-test="2fa-setup-modal">
                 <DialogHeader className="flex items-center justify-center">
                     <GridScanIcon />
                     <DialogTitle>{modalConfig.title}</DialogTitle>

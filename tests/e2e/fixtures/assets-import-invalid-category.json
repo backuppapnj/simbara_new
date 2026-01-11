@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "generated_at": "2024-01-15T10:30:00Z",
+    "total_records": 2,
+    "source": "SIMAN"
+  },
+  "data": [
+    {
+      "id_aset": 4001,
+      "kd_brg": "10101001",
+      "no_aset": 1,
+      "kode_register": "REG001",
+      "nama": "Asset with Invalid Category",
+      "kd_jns_bmn": "999999",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "rph_aset": 10000000,
+      "rph_buku": 10000000,
+      "rph_perolehan": 10000000,
+      "lokasi_ruang": "Ruang Test"
+    },
+    {
+      "id_aset": 4002,
+      "kd_brg": "10101002",
+      "no_aset": 2,
+      "kode_register": "REG002",
+      "nama": "Asset with Missing Category",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "rph_aset": 5000000,
+      "rph_buku": 5000000,
+      "rph_perolehan": 5000000,
+      "lokasi_ruang": "Ruang Test"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "generated_at": "2024-01-15T10:30:00Z",
+    "total_records": 4,
+    "source": "SIMAN"
+  },
+  "data": [
+    {
+      "id_aset": 5001,
+      "kd_brg": "10101001",
+      "no_aset": 1,
+      "kode_register": "REG001",
+      "nama": "Valid Asset 1",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "rph_aset": 10000000,
+      "rph_buku": 10000000,
+      "rph_perolehan": 10000000,
+      "lokasi_ruang": "Ruang A"
+    },
+    {
+      "id_aset": 5002,
+      "kd_brg": "10101002",
+      "no_aset": 2,
+      "kode_register": "REG002",
+      "nama": "Invalid Asset - Missing Required Fields",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik"
+    },
+    {
+      "id_aset": 5003,
+      "kd_brg": "10101003",
+      "no_aset": 3,
+      "kode_register": "REG003",
+      "nama": "Valid Asset 2",
+      "kd_kondisi": "2",
+      "ur_kondisi": "Rusak Ringan",
+      "rph_aset": 5000000,
+      "rph_buku": 5000000,
+      "rph_perolehan": 5000000,
+      "lokasi_ruang": "Ruang B"
+    },
+    {
+      "id_aset": 5004,
+      "kd_brg": "10101004",
+      "no_aset": 4,
+      "kode_register": "REG004",
+      "nama": "Invalid Asset - Missing rph_aset",
+      "kd_kondisi": "1",
+      "ur_kondisi": "Baik",
+      "lokasi_ruang": "Ruang C"
+    }
+  ]
+}

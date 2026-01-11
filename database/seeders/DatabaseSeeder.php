@@ -86,6 +86,10 @@ class DatabaseSeeder extends Seeder
         // WARNING: Will fail if locations don't exist (foreign key constraint)
         $this->call(AssetSeeder::class);
 
+        if (app()->environment('e2e')) {
+            $this->call(E2ESeeder::class);
+        }
+
         $this->command->newLine();
         $this->command->info('========================================');
         $this->command->info('Database Seeding Completed!');

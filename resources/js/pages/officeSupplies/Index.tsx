@@ -318,6 +318,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                         className="max-w-sm"
                     />
                     <Select
+                        name="kategori"
                         value={filters.kategori}
                         onValueChange={handleCategoryFilter}
                     >
@@ -487,6 +488,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                                     Kategori
                                 </label>
                                 <Select
+                                    name="kategori"
                                     value={editForm.data.kategori}
                                     onValueChange={(value) =>
                                         editForm.setData('kategori', value)

@@ -17,8 +17,9 @@ class UsersSeeder extends Seeder
     {
         $this->createUsersFromPegawaiData();
         $this->createSuperAdmin();
-        // Demo users untuk testing - commented out, hanya pakai real pegawai
-        // $this->createSampleUsers();
+        if (app()->environment('e2e')) {
+            $this->createSampleUsers();
+        }
         // $this->createMultiRoleTestUsers();
     }
 
