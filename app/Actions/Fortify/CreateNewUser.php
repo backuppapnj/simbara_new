@@ -51,6 +51,9 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        // Normalize phone number before validation
+        $input['phone'] = $this->normalizePhone($input['phone']);
+
         Validator::make($input, $this->rules($input))->validate();
 
         return User::create([
@@ -60,5 +63,22 @@ class CreateNewUser implements CreatesNewUsers
             'nip' => $input['nip'],
             'password' => $input['password'],
         ]);
+    }
+
+    /**
+     * Normalize phone number to +62 format.
+     */
+    protected function normalizePhone(string $phone): string
+    {
+        $phone = preg_replace('/\s+/', '', $phone);
+
+        if (empty($phone)) {
+            return null;
+        }
+
+        // Convert 08... or 628... to +628...
+        $phone = preg_replace('/^(0|62)/', '+62', $phone);
+
+        return $phone;
     }
 }

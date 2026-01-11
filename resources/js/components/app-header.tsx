@@ -30,10 +30,13 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useActiveUrl } from '@/hooks/use-active-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
+import { assets } from '@/routes/assets';
 import { dashboard } from '@/routes';
+import { items } from '@/routes/items';
+import { officeSupplies } from '@/routes/office-supplies';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { BookOpen, Box, Folder, LayoutGrid, Menu, Search, Settings } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
@@ -42,6 +45,26 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Aset',
+        href: assets.index(),
+        icon: Box,
+    },
+    {
+        title: 'ATK',
+        href: items.index(),
+        icon: BookOpen,
+    },
+    {
+        title: 'Bahan Kantor',
+        href: officeSupplies.index(),
+        icon: Folder,
+    },
+    {
+        title: 'Settings',
+        href: '/settings',
+        icon: Settings,
     },
 ];
 

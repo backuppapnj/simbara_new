@@ -17,6 +17,7 @@ class PurchaseFactory extends Factory
     public function definition(): array
     {
         return [
+            'id' => (string) Str::ulid(),
             'no_pembelian' => 'PB-'.date('Ymd').'-'.str_pad(fake()->unique()->numberBetween(1, 9999), 4, '0', STR_PAD_LEFT),
             'tanggal' => fake()->date(),
             'supplier' => fake()->company(),

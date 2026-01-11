@@ -152,22 +152,23 @@
 ## Phase 7: Admin Panel
 
 ### Task 7.1: Create WhatsApp Settings Page
-- [ ] Create Admin/WhatsAppSettings.tsx
-- [ ] Add form to update Fonnte API token
-- [ ] Mask token display (show partial only)
-- [ ] Add test send form
-- [ ] Create TestSendNotification request
-- [ ] Write tests for settings page
-- [ ] Test token update
+- [x] Create Admin/WhatsAppSettings.tsx
+- [x] Add form to update Fonnte API token
+- [x] Mask token display (show partial only)
+- [x] Add test send form
+- [x] Create WhatsAppSettingsController with backend routes
+- [x] Write tests for settings page
+- [x] Test token update
 
 ### Task 7.2: Create Notification Logs Page
-- [ ] Create Admin/NotificationLogs.tsx
-- [ ] Add table with logs
-- [ ] Implement filters (status, event, date, user)
-- [ ] Add pagination
-- [ ] Show log details in modal
-- [ ] Write tests for logs page
-- [ ] Test filtering and display
+- [x] Create Admin/NotificationLogs.tsx
+- [x] Add table with logs
+- [x] Implement filters (status, event, date, user)
+- [x] Add pagination
+- [x] Show log details in modal
+- [x] Create Admin/NotificationLogDetail.tsx for log details
+- [x] Write tests for logs page
+- [x] Test filtering and display
 
 ### Task 7.3: Create NotificationLogController [f53ca3c]
 - [x] Create controller methods for logs

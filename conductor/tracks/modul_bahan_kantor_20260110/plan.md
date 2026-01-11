@@ -100,14 +100,14 @@
 ## Phase 4: Permintaan & Direct Approval
 
 ### Task 4.1: Create Permintaan Form
-- [ ] Create request form for Pegawai
-- [ ] Add dynamic supply rows
-- [ ] Validate stok tersedia (warning only)
-- [ ] Create POST /office-requests route
-- [ ] Save OfficeRequest + OfficeRequestDetails
-- [ ] Set initial status to 'pending'
-- [ ] Write tests for request creation
-- [ ] Test form submission
+- [~] Create request form for Pegawai
+- [~] Add dynamic supply rows
+- [~] Validate stok tersedia (warning only)
+- [~] Create POST /office-requests route
+- [~] Save OfficeRequest + OfficeRequestDetails
+- [~] Set initial status to 'pending'
+- [~] Write tests for request creation
+- [~] Test form submission
 
 ### Task 4.2: Create Direct Approval System
 - [ ] Create approval component

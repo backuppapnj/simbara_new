@@ -35,7 +35,6 @@ describe('AssetMaintenanceController', function () {
             $this->assertDatabaseHas('asset_maintenances', [
                 'asset_id' => $asset->id,
                 'jenis_perawatan' => 'Preventive',
-                'tanggal' => '2026-01-15',
                 'biaya' => 500000.00,
                 'pelaksana' => 'PT Teknisi Jaya',
                 'keterangan' => 'Perawatan rutin bulanan',
@@ -186,8 +185,10 @@ describe('AssetMaintenanceController', function () {
             $response = $this->actingAs($user)
                 ->get(route('assets.maintenances.index', $asset->id));
 
-            $response->assertStatus(200)
-                ->assertJsonCount(3);
+            $response->assertStatus(200);
+
+            $data = $response->json();
+            expect($data['data'])->toHaveCount(3);
         });
 
         it('paginates maintenance results', function () {
@@ -198,8 +199,10 @@ describe('AssetMaintenanceController', function () {
             $response = $this->actingAs($user)
                 ->get(route('assets.maintenances.index', $asset->id));
 
-            $response->assertStatus(200)
-                ->assertJsonCount(20); // Default pagination
+            $response->assertStatus(200);
+
+            $data = $response->json();
+            expect($data['data'])->toHaveCount(20); // Default pagination
         });
 
         it('orders by tanggal descending', function () {

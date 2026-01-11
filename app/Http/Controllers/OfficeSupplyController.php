@@ -32,7 +32,7 @@ class OfficeSupplyController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return Inertia::render('OfficeSupplies/Index', [
+        return Inertia::render('officeSupplies/Index', [
             'supplies' => $supplies,
             'filters' => [
                 'search' => $search->toString(),
@@ -91,7 +91,7 @@ class OfficeSupplyController extends Controller
 
         $mutations = $query->paginate(20)->withQueryString();
 
-        return Inertia::render('OfficeSupplies/Mutations', [
+        return Inertia::render('officeSupplies/Mutations', [
             'supply' => $office_supply,
             'mutations' => $mutations,
             'filters' => [

@@ -72,31 +72,31 @@
 - [x] Test responsive behavior on mobile
 
 ### Task 3.2: Create DashboardLayout Structure
-- [ ] Create `resources/js/Layouts/DashboardLayout.tsx`
-- [ ] Implement Sidebar with collapsible functionality
-- [ ] Implement Header with user menu and notifications
+- [x] Create `resources/js/Layouts/DashboardLayout.tsx` [exists as AppLayout]
+- [x] Implement Sidebar with collapsible functionality
+- [x] Implement Header with user menu and notifications
 - [ ] Write tests for layout state management
 - [ ] Test responsive hamburger menu behavior
 
 ### Task 3.3: Create Sidebar Component
-- [ ] Create `resources/js/Components/layout/Sidebar.tsx`
-- [ ] Add menu items: Dashboard, Aset, ATK, Bahan Kantor, Settings
-- [ ] Implement active state highlighting
-- [ ] Add icons using lucide-react
+- [x] Create `resources/js/Components/layout/Sidebar.tsx` [exists as AppSidebar]
+- [x] Add menu items: Dashboard, Aset, ATK, Bahan Kantor, Settings
+- [x] Implement active state highlighting
+- [x] Add icons using lucide-react
 - [ ] Write tests for menu navigation
 - [ ] Test collapsible behavior
 
 ### Task 3.4: Create Header Component
-- [ ] Create `resources/js/Components/layout/Header.tsx`
-- [ ] Add user avatar with dropdown menu
-- [ ] Add notifications bell with MagicUI animation
-- [ ] Implement logout functionality
+- [x] Create `resources/js/Components/layout/Header.tsx` [exists as AppHeader]
+- [x] Add user avatar with dropdown menu
+- [x] Add notifications bell with MagicUI animation
+- [x] Implement logout functionality
 - [ ] Write tests for header interactions
 
 ### Task 3.5: Create Mobile Navigation
-- [ ] Create `resources/js/Components/layout/MobileNav.tsx`
-- [ ] Implement hamburger menu trigger
-- [ ] Use Sheet component for drawer
+- [x] Create `resources/js/Components/layout/MobileNav.tsx` [integrated in AppHeader]
+- [x] Implement hamburger menu trigger
+- [x] Use Sheet component for drawer
 - [ ] Test mobile responsive behavior
 - [ ] Write tests for mobile navigation
 

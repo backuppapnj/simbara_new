@@ -65,7 +65,7 @@ describe('CreateNewUser validation', function (): void {
 
     it('validates unique phone', function (): void {
         User::factory()->create([
-            'phone' => '081234567890',
+            'phone' => '+6281234567890',
             'nip' => '1111111111',
         ]);
 
@@ -74,7 +74,7 @@ describe('CreateNewUser validation', function (): void {
             'email' => 'test2@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'phone' => '081234567890', // duplicate phone
+            'phone' => '081234567890', // duplicate phone (will be formatted to +6281234567890)
             'nip' => '2222222222',
         ];
 

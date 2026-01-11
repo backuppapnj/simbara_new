@@ -8,7 +8,7 @@ uses(RefreshDatabase::class);
 
 describe('OfficeSupply CRUD', function () {
     beforeEach(function () {
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['email_verified_at' => now()]);
         $this->actingAs($this->user);
     });
 
@@ -18,7 +18,7 @@ describe('OfficeSupply CRUD', function () {
 
             $response = $this->get(route('office-supplies.index'));
 
-            $response->assertSuccessful();
+            $response->assertStatus(200);
         });
 
         it('passes search filter to view', function () {
@@ -27,7 +27,7 @@ describe('OfficeSupply CRUD', function () {
 
             $response = $this->get(route('office-supplies.index', ['search' => 'Gula']));
 
-            $response->assertSuccessful();
+            $response->assertStatus(200);
         });
 
         it('passes category filter to view', function () {
@@ -36,7 +36,7 @@ describe('OfficeSupply CRUD', function () {
 
             $response = $this->get(route('office-supplies.index', ['kategori' => 'Consumables']));
 
-            $response->assertSuccessful();
+            $response->assertStatus(200);
         });
     });
 
@@ -161,7 +161,7 @@ describe('OfficeSupply CRUD', function () {
 
 describe('GET /office-supplies/{id}/mutations', function () {
     beforeEach(function () {
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['email_verified_at' => now()]);
         $this->actingAs($this->user);
     });
 
@@ -170,14 +170,14 @@ describe('GET /office-supplies/{id}/mutations', function () {
 
         $response = $this->get(route('office-supplies.mutations', $supply));
 
-        $response->assertSuccessful();
+        $response->assertStatus(200);
     });
 
     it('passes filter by jenis_mutasi to view', function () {
         $supply = OfficeSupply::factory()->create();
 
-        $response = $this->get(route('office-supplies.mutations', ['jenis' => 'masuk', 'office_supply' => $supply->id]));
+        $response = $this->get(route('office-supplies.mutations', $supply, ['jenis' => 'masuk']));
 
-        $response->assertSuccessful();
+        $response->assertStatus(200);
     });
 });
