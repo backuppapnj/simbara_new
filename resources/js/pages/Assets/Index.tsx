@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import assets from '@/routes/assets';
 import { Head, Link, router } from '@inertiajs/react';
 import { FileText, Search, Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -107,7 +108,7 @@ export default function AssetsIndex({
             status: selectedStatus || undefined,
         };
 
-        router.get(route('assets.index'), params, {
+        router.get(assets.index.url(), params, {
             preserveState: true,
             replace: true,
         });
@@ -120,7 +121,7 @@ export default function AssetsIndex({
         setSelectedStatus('');
 
         router.get(
-            route('assets.index'),
+            assets.index.url(),
             {},
             {
                 preserveState: true,
@@ -141,7 +142,7 @@ export default function AssetsIndex({
             page,
         };
 
-        router.get(route('assets.index'), params, {
+        router.get(assets.index.url(), params, {
             preserveState: true,
             only: ['assets'],
         });
@@ -275,13 +276,13 @@ export default function AssetsIndex({
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <Link href={route('assets.reports.index')}>
+                        <Link href={assets.reports.index.url()}>
                             <Button variant="outline" size="sm">
                                 <FileText className="mr-2 h-4 w-4" />
                                 Laporan
                             </Button>
                         </Link>
-                        <Link href={route('assets.import')}>
+                        <Link href={assets.importMethod.url()}>
                             <Button size="sm">
                                 <Upload className="mr-2 h-4 w-4" />
                                 Import
