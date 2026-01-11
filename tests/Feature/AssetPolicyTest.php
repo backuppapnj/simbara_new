@@ -2,10 +2,27 @@
 
 use App\Models\Asset;
 use App\Models\User;
-use Illuminate\Support\Permission;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
-    Permission::clearCachedPermissions();
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    // Create required permissions
+    $permissions = [
+        'assets.view',
+        'assets.create',
+        'assets.edit',
+        'assets.delete',
+        'assets.photos',
+        'assets.import',
+        'assets.export',
+        'assets.maintenance',
+    ];
+
+    foreach ($permissions as $permission) {
+        Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+    }
 });
 
 it('allows users with assets.view permission to view assets', function () {

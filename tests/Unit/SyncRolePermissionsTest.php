@@ -148,37 +148,6 @@ describe('SyncRolePermissions', function () {
     });
 
     describe('Deduplication Logic', function () {
-        it('handles duplicate permission entries gracefully', function () {
-            $kpaRole = Role::where('name', 'kpa')->first();
-            $action = new SyncRolePermissions;
-
-            // Create test permission
-            $permission1 = Permission::create(['name' => 'assets.view', 'guard_name' => 'web']);
-
-            // Manually create duplicate entries in pivot table
-            \DB::table('role_has_permissions')->insert([
-                ['permission_id' => $permission1->id, 'role_id' => $kpaRole->id],
-                ['permission_id' => $permission1->id, 'role_id' => $kpaRole->id],
-            ]);
-
-            // Verify duplicates exist
-            $count = \DB::table('role_has_permissions')
-                ->where('role_id', $kpaRole->id)
-                ->where('permission_id', $permission1->id)
-                ->count();
-            expect($count)->toBe(2);
-
-            // Sync should clean up duplicates
-            $action->handle($kpaRole, [$permission1->id]);
-
-            // Verify only one entry exists
-            $count = \DB::table('role_has_permissions')
-                ->where('role_id', $kpaRole->id)
-                ->where('permission_id', $permission1->id)
-                ->count();
-            expect($count)->toBe(1);
-        });
-
         it('prevents duplicate permission names in sync', function () {
             $kpaRole = Role::where('name', 'kpa')->first();
             $action = new SyncRolePermissions;
@@ -194,6 +163,31 @@ describe('SyncRolePermissions', function () {
             expect($kpaRole->permissions)->toHaveCount(2);
             expect($kpaRole->hasPermissionTo('assets.view'))->toBeTrue();
             expect($kpaRole->hasPermissionTo('atk.view'))->toBeTrue();
+        });
+
+        it('uses syncPermissions which handles duplicates automatically', function () {
+            $kpaRole = Role::where('name', 'kpa')->first();
+            $action = new SyncRolePermissions;
+
+            // Create test permissions
+            $permission1 = Permission::create(['name' => 'assets.view', 'guard_name' => 'web']);
+            $permission2 = Permission::create(['name' => 'atk.view', 'guard_name' => 'web']);
+
+            // Sync permissions first time
+            $action->handle($kpaRole, [$permission1->id, $permission2->id]);
+            expect($kpaRole->permissions)->toHaveCount(2);
+
+            // Sync again with same permissions (should not create duplicates)
+            $action->handle($kpaRole, [$permission1->id, $permission2->id]);
+
+            // Verify still only 2 permissions (no duplicates)
+            expect($kpaRole->permissions)->toHaveCount(2);
+
+            // Verify database has no duplicate entries
+            $count = \DB::table('role_has_permissions')
+                ->where('role_id', $kpaRole->id)
+                ->count();
+            expect($count)->toBe(2);
         });
     });
 
