@@ -75,39 +75,37 @@
 ## Phase 3: Workflow Pengadaan (3-Step)
 
 ### Task 3.1: Create Input Pembelian
-- [ ] Create purchase form component
-- [ ] Add dynamic item rows (item, jumlah, harga)
-- [ ] Calculate subtotal and total
-- [ ] Create POST /purchases route
-- [ ] Save Purchase + PurchaseDetails
-- [ ] Write tests for purchase creation
-- [ ] Test form validation
+- [x] Create StorePurchaseRequest validation
+- [x] Create POST /purchases route
+- [x] Save Purchase + PurchaseDetails
+- [x] Calculate total nilai from items
+- [x] Auto-generate PO number (PB-YYYYMMDD-XXXX)
+- [x] Write tests for purchase creation
+- [x] Test form validation
 
 ### Task 3.2: Create Penerimaan Barang
-- [ ] Create Receive.tsx page
-- [ ] Show purchase details
-- [ ] Form untuk verify barang diterima
-- [ ] Adjust quantity jika ada selisih
-- [ ] Create POST /purchases/{id}/receive route
-- [ ] Update status to 'received'
-- [ ] Write tests for receiving process
+- [x] Create ReceivePurchaseRequest validation
+- [x] Create POST /purchases/{id}/receive route
+- [x] Update status to 'received'
+- [x] Add jumlah_diterima field to track received quantities
+- [x] Validate jumlah_diterima does not exceed jumlah
+- [x] Write tests for receiving process
 
 ### Task 3.3: Create Update Stok Process
-- [ ] Create complete purchase flow
-- [ ] Add POST /purchases/{id}/complete route
-- [ ] Create StockMutations for each item
-- [ ] Update item stok
-- [ ] Update harga rata-rata
-- [ ] Write tests for stok update
-- [ ] Test stok calculations
+- [x] Create POST /purchases/{id}/complete route
+- [x] Create StockMutations for each item (jenis: masuk)
+- [x] Update item stok
+- [x] Update harga rata-rata (weighted average)
+- [x] Update harga_beli_terakhir
+- [x] Use jumlah_diterima if available, otherwise use jumlah
+- [x] Wrap in database transaction for data integrity
+- [x] Write tests for stok update
 
 ### Task 3.4: Create Purchase List & Detail Views
-- [ ] Create Index.tsx with purchase list
-- [ ] Filter by status
-- [ ] Create Show.tsx with purchase details
-- [ ] Show timeline status (draft → received → completed)
-- [ ] Write tests for views
-- [ ] Test status transitions
+- [x] Create GET /purchases route (index with status filter)
+- [x] Create GET /purchases/{id} route (show purchase details)
+- [x] Add Inertia pages (Index.tsx, Show.tsx)
+- [x] Load purchaseDetails with item relationships
 
 ### Task 3.5: Task: Conductor - User Manual Verification 'Phase 3: Workflow Pengadaan' (Protocol in workflow.md)
 

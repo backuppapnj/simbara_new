@@ -327,7 +327,13 @@ describe('PurchaseController', function () {
                 'jumlah_diterima' => 10,
             ]);
 
-            $this->post("/purchases/{$purchase->id}/complete");
+            $response = $this->post("/purchases/{$purchase->id}/complete");
+
+            // Debug: Check response status
+            if ($response->getStatusCode() !== 302) {
+                dump($response->getStatusCode());
+                dump($response->exception ? $response->exception->getMessage() : 'No exception');
+            }
 
             // If transaction failed, status would not be updated
             $purchase->refresh();

@@ -10,6 +10,7 @@ use App\Models\PurchaseDetail;
 use App\Models\StockMutation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -136,6 +137,7 @@ class PurchaseController extends Controller
 
                 // Create stock mutation
                 StockMutation::create([
+                    'id' => (string) Str::ulid(),
                     'item_id' => $item->id,
                     'jenis_mutasi' => 'masuk',
                     'jumlah' => $jumlahDiterima,

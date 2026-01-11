@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Str;
+use Illuminate\Support\Str;
 
 class StockMutation extends Model
 {
@@ -18,6 +18,7 @@ class StockMutation extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'item_id',
         'jenis_mutasi',
         'jumlah',
