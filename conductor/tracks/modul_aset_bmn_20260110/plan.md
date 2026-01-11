@@ -205,11 +205,11 @@
 - [ ] Test condition update flow
 
 ### Task 6.3: Create Maintenance Feature
-- [x] Create StoreMaintenanceRequest validation
-- [x] Add POST /assets/{id}/maintenance route
-- [x] Create controller method
-- [x] Create AssetMaintenance record
-- [x] Write tests for maintenance
+- [x] Create StoreMaintenanceRequest validation [3e0b69c]
+- [x] Add POST /assets/{id}/maintenance route [3e0b69c]
+- [x] Create controller method [3e0b69c]
+- [x] Create AssetMaintenance record [3e0b69c]
+- [x] Write tests for maintenance [3e0b69c]
 - [ ] Create MaintenanceForm.tsx component
 - [ ] Test maintenance creation flow
 
