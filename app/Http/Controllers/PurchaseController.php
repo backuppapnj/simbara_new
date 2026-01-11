@@ -109,7 +109,7 @@ class PurchaseController extends Controller
      */
     public function receive(Purchase $purchase, ReceivePurchaseRequest $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
-        $this->authorizeReceive($purchase);
+        // Authorization handled in ReceivePurchaseRequest
 
         return DB::transaction(function () use ($request, $purchase) {
             $items = $request->validated('items');
@@ -217,16 +217,6 @@ class PurchaseController extends Controller
             return redirect()->route('purchases.show', $purchase)
                 ->with('success', 'Purchase completed and stock updated successfully.');
         });
-    }
-
-    /**
-     * Authorize receive action.
-     */
-    protected function authorizeReceive(Purchase $purchase): void
-    {
-        if (! in_array($purchase->status, ['draft', 'received'])) {
-            abort(403, 'Only draft or received purchases can be marked as received.');
-        }
     }
 
     /**

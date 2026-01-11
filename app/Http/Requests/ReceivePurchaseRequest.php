@@ -11,7 +11,10 @@ class ReceivePurchaseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // Authorization check: only draft or received purchases can be marked as received
+        $purchase = $this->route('purchase');
+
+        return $purchase && in_array($purchase->status, ['draft', 'received']);
     }
 
     /**
