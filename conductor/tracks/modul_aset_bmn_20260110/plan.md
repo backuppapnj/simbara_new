@@ -311,3 +311,70 @@
 - [ ] Test on desktop viewport
 
 ### Task 9.5: Task: Conductor - User Manual Verification 'Phase 9: Final Integration & Testing' (Protocol in workflow.md)
+
+---
+
+## Phase 10: Reports & Export
+
+### Task 10.1: Create Export Service
+- [x] Create AssetExportService for CSV generation [COMPLETED]
+- [x] Implement exportAssetsToSaktiSimanFormat() method [COMPLETED]
+- [x] Implement exportByLocation() method [COMPLETED]
+- [x] Implement exportByCategory() method [COMPLETED]
+- [x] Implement exportByCondition() method [COMPLETED]
+- [x] Implement exportMaintenanceHistory() method [COMPLETED]
+- [x] Implement exportValueSummary() method [COMPLETED]
+- [x] Implement getAssetsWithFilters() with date/location/category filters [COMPLETED]
+- [x] Implement CSV field escaping for special characters [COMPLETED]
+- [x] Write unit tests for all export methods [COMPLETED]
+
+### Task 10.2: Create Report Controller
+- [x] Create AssetReportController [COMPLETED]
+- [x] Add GET /assets/reports route for reports index page [COMPLETED]
+- [x] Add POST /assets/reports/preview route for report preview [COMPLETED]
+- [x] Add GET /assets/reports/export/sakti-siman route [COMPLETED]
+- [x] Add GET /assets/reports/export/by-location route [COMPLETED]
+- [x] Add GET /assets/reports/export/by-category route [COMPLETED]
+- [x] Add GET /assets/reports/export/by-condition route [COMPLETED]
+- [x] Add GET /assets/reports/export/maintenance-history route [COMPLETED]
+- [x] Add GET /assets/reports/export/value-summary route [COMPLETED]
+- [x] Write feature tests for all export endpoints [COMPLETED]
+
+### Task 10.3: Create Validation Request
+- [x] Create AssetReportFilterRequest [COMPLETED]
+- [x] Add validation for date_from and date_to (with cross-validation) [COMPLETED]
+- [x] Add validation for lokasi_id (exists check) [COMPLETED]
+- [x] Add validation for kd_brg [COMPLETED]
+- [x] Add validation for kd_kondisi (1,2,3) [COMPLETED]
+- [x] Add validation for asset_id [COMPLETED]
+- [x] Add validation for report_type [COMPLETED]
+- [x] Add custom error messages in Indonesian [COMPLETED]
+
+### Task 10.4: Create Reports UI Page
+- [x] Create Assets/Reports.tsx page [COMPLETED]
+- [x] Implement report type selection with radio buttons [COMPLETED]
+- [x] Add filter form (date range, category, condition, location) [COMPLETED]
+- [x] Implement preview functionality [COMPLETED]
+- [x] Implement export functionality with CSV download [COMPLETED]
+- [x] Display preview data in table format [COMPLETED]
+- [x] Style with Tailwind CSS for responsive design [COMPLETED]
+
+### Task 10.5: Testing & Code Quality
+- [x] Run vendor/bin/pint --dirty [COMPLETED]
+- [x] Write unit tests for AssetExportService (14 tests passing) [COMPLETED]
+- [x] Write feature tests for AssetReportController (19 tests passing) [COMPLETED]
+- [x] Verify all export formats match SAKTI/SIMAN requirements [COMPLETED]
+- [x] Test CSV escaping for special characters (commas, quotes, newlines) [COMPLETED]
+- [x] Test filter functionality (date range, location, category, condition) [COMPLETED]
+
+### Task 10.6: Task: Conductor - User Manual Verification 'Phase 10: Reports & Export' (Protocol in workflow.md)
+
+---
+
+**Phase 10 Summary:**
+- Created comprehensive export functionality without external dependencies (Laravel Excel not compatible with PHP 8.5.1)
+- Implemented 6 different report types covering all user requirements
+- Built responsive React UI with real-time preview
+- All export formats compatible with SAKTI/SIMAN import requirements
+- Full test coverage with 33 tests passing (14 unit + 19 feature)
+- Clean code following Laravel 12 and project conventions
