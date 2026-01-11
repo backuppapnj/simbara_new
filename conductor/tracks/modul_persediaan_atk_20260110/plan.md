@@ -156,20 +156,20 @@
 ## Phase 5: Distribusi & Konfirmasi
 
 ### Task 5.1: Create Distribusi Feature
-- [~] Add POST /requests/{id}/distribute route
-- [~] Update status to 'diserahkan'
-- [~] Create distribute form (input jumlah diberikan)
-- [~] Don't create StockMutations yet (wait for confirmation)
-- [~] Write tests for distribusi
-- [~] Test distribusi flow
+- [x] Add POST /requests/{id}/distribute route [8e9d477]
+- [x] Update status to 'diserahkan' [8e9d477]
+- [x] Create distribute form (input jumlah diberikan) [8e9d477]
+- [x] Don't create StockMutations yet (wait for confirmation) [8e9d477]
+- [x] Write tests for distribusi [8e9d477]
+- [x] Test distribusi flow [8e9d477]
 
 ### Task 5.2: Create Konfirmasi Terima
-- [~] Add POST /requests/{id}/confirm-receive route
-- [~] Update status to 'diterima'
-- [~] Create StockMutations (jenis: keluar)
-- [~] Update item stok
-- [~] Write tests for confirmation
-- [~] Test stok reduction
+- [x] Add POST /requests/{id}/confirm-receive route [8e9d477]
+- [x] Update status to 'diterima' [8e9d477]
+- [x] Create StockMutations (jenis: keluar) [8e9d477]
+- [x] Update item stok [8e9d477]
+- [x] Write tests for confirmation [8e9d477]
+- [x] Test stok reduction [8e9d477]
 
 ### Task 5.3: Add Status Tracking UI
 - [ ] Create status timeline component
