@@ -10,10 +10,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { assets } from '@/routes/assets/index';
+import assets from '@/routes/assets/index';
 import { dashboard } from '@/routes';
-import { items } from '@/routes/items/index';
-import { officeSupplies } from '@/routes/office-supplies/index';
+import items from '@/routes/items/index';
+import officeSupplies from '@/routes/office-supplies/index';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Box, Folder, LayoutGrid, Settings } from 'lucide-react';

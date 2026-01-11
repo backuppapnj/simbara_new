@@ -75,30 +75,30 @@
 - [x] Create `resources/js/Layouts/DashboardLayout.tsx` [exists as AppLayout]
 - [x] Implement Sidebar with collapsible functionality
 - [x] Implement Header with user menu and notifications
-- [ ] Write tests for layout state management
-- [ ] Test responsive hamburger menu behavior
+- [x] Write tests for layout state management
+- [x] Test responsive hamburger menu behavior
 
 ### Task 3.3: Create Sidebar Component
 - [x] Create `resources/js/Components/layout/Sidebar.tsx` [exists as AppSidebar]
 - [x] Add menu items: Dashboard, Aset, ATK, Bahan Kantor, Settings
 - [x] Implement active state highlighting
 - [x] Add icons using lucide-react
-- [ ] Write tests for menu navigation
-- [ ] Test collapsible behavior
+- [x] Write tests for menu navigation
+- [x] Test collapsible behavior
 
 ### Task 3.4: Create Header Component
 - [x] Create `resources/js/Components/layout/Header.tsx` [exists as AppHeader]
 - [x] Add user avatar with dropdown menu
 - [x] Add notifications bell with MagicUI animation
 - [x] Implement logout functionality
-- [ ] Write tests for header interactions
+- [x] Write tests for header interactions
 
 ### Task 3.5: Create Mobile Navigation
 - [x] Create `resources/js/Components/layout/MobileNav.tsx` [integrated in AppHeader]
 - [x] Implement hamburger menu trigger
 - [x] Use Sheet component for drawer
-- [ ] Test mobile responsive behavior
-- [ ] Write tests for mobile navigation
+- [x] Test mobile responsive behavior
+- [x] Write tests for mobile navigation
 
 ### Task 3.6: Task: Conductor - User Manual Verification 'Phase 3: Create Layout Components' (Protocol in workflow.md)
 
