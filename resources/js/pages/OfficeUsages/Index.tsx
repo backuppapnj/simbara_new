@@ -10,14 +10,12 @@ import { useState } from 'react';
 import { index, store, quickDeduct } from '@/actions/App/Http/Controllers/OfficeUsageController';
 import { index as supplyIndex } from '@/actions/App/Http/Controllers/OfficeSupplyController';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
 import {
     Select,
@@ -294,14 +292,14 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                 )}
 
                 {/* Usage Dialog */}
-                <AlertDialog open={usageDialog} onOpenChange={setUsageDialog}>
-                    <AlertDialogContent className="max-w-md">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Catat Pemakaian Bahan Kantor</AlertDialogTitle>
-                            <AlertDialogDescription>
+                <Dialog open={usageDialog} onOpenChange={setUsageDialog}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Catat Pemakaian Bahan Kantor</DialogTitle>
+                            <DialogDescription>
                                 Catat pemakaian bahan kantor dengan lengkap
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
+                            </DialogDescription>
+                        </DialogHeader>
                         <form onSubmit={handleUsageSubmit} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="usage_supply_id">Bahan Kantor</Label>
@@ -360,27 +358,27 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                     <p className="text-sm text-destructive">{usageForm.errors.keperluan}</p>
                                 )}
                             </div>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel type="button" onClick={() => setUsageDialog(false)}>
+                            <DialogFooter>
+                                <Button type="button" variant="outline" onClick={() => setUsageDialog(false)}>
                                     Batal
-                                </AlertDialogCancel>
+                                </Button>
                                 <Button type="submit" disabled={usageForm.processing}>
                                     {usageForm.processing ? 'Menyimpan...' : 'Simpan'}
                                 </Button>
-                            </AlertDialogFooter>
+                            </DialogFooter>
                         </form>
-                    </AlertDialogContent>
-                </AlertDialog>
+                    </DialogContent>
+                </Dialog>
 
                 {/* Quick Deduct Dialog */}
-                <AlertDialog open={quickDeductDialog} onOpenChange={setQuickDeductDialog}>
-                    <AlertDialogContent className="max-w-md">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Quick Deduct Stok</AlertDialogTitle>
-                            <AlertDialogDescription>
+                <Dialog open={quickDeductDialog} onOpenChange={setQuickDeductDialog}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Quick Deduct Stok</DialogTitle>
+                            <DialogDescription>
                                 Kurangi stok dengan cepat tanpa mencatat pemakaian lengkap
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
+                            </DialogDescription>
+                        </DialogHeader>
                         <form onSubmit={handleQuickDeductSubmit} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="qd_supply_id">Bahan Kantor</Label>
@@ -427,17 +425,17 @@ export default function OfficeUsagesIndex({ usages, filters }: IndexProps) {
                                     <p className="text-sm text-destructive">{quickDeductForm.errors.keterangan}</p>
                                 )}
                             </div>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel type="button" onClick={() => setQuickDeductDialog(false)}>
+                            <DialogFooter>
+                                <Button type="button" variant="outline" onClick={() => setQuickDeductDialog(false)}>
                                     Batal
-                                </AlertDialogCancel>
+                                </Button>
                                 <Button type="submit" disabled={quickDeductForm.processing}>
                                     {quickDeductForm.processing ? 'Memproses...' : 'Kurangi Stok'}
                                 </Button>
-                            </AlertDialogFooter>
+                            </DialogFooter>
                         </form>
-                    </AlertDialogContent>
-                </AlertDialog>
+                    </DialogContent>
+                </Dialog>
             </div>
         </AppLayout>
     );

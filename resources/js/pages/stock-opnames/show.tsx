@@ -7,7 +7,9 @@ import {
     FileCheck,
     Download,
     AlertTriangle,
+    Camera,
 } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,6 +39,12 @@ interface StockOpnameDetail {
     stok_fisik: number;
     selisih: number;
     keterangan: string | null;
+    photos?: Array<{
+        id: string;
+        file_path: string;
+        file_name: string;
+        url?: string;
+    }>;
 }
 
 interface StockOpname {
@@ -73,6 +81,9 @@ const statusLabels = {
 };
 
 export default function Show({ stockOpname }: ShowProps) {
+    const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+    const [selectedDetailPhotos, setSelectedDetailPhotos] = useState<StockOpnameDetail['photos']>([]);
+
     const handleStatusChange = (action: 'submit' | 'approve') => {
         if (!confirm(`Apakah Anda yakin ingin ${action === 'submit' ? 'mensubmit' : 'mengapprove'} stock opname ini?`)) {
             return;
@@ -89,16 +100,40 @@ export default function Show({ stockOpname }: ShowProps) {
         );
     };
 
+    const openPhotoGallery = (photos: StockOpnameDetail['photos'], index: number) => {
+        if (photos && photos.length > 0) {
+            setSelectedDetailPhotos(photos);
+            setSelectedPhotoIndex(index);
+        }
+    };
+
+    const closePhotoGallery = () => {
+        setSelectedPhotoIndex(null);
+        setSelectedDetailPhotos([]);
+    };
+
+    const getPhotoUrl = (photo: { file_path: string }): string => {
+        return `/storage/${photo.file_path}`;
+    };
+
     const handleDownloadBa = () => {
         window.location.href = route('stock-opnames.ba-pdf', stockOpname);
     };
 
-    const totalSelisih = stockOpname.stock_opname_details.reduce(
-        (sum, detail) => sum + detail.selisih,
-        0
-    );
+    const totalItems = stockOpname.stock_opname_details.length;
+    const itemsWithSelisih = stockOpname.stock_opname_details.filter((detail) => detail.selisih !== 0);
+    const selisihPositif = stockOpname.stock_opname_details
+        .filter((detail) => detail.selisih > 0)
+        .reduce((sum, detail) => sum + detail.selisih, 0);
+    const selisihNegatif = stockOpname.stock_opname_details
+        .filter((detail) => detail.selisih < 0)
+        .reduce((sum, detail) => sum + detail.selisih, 0);
+    const totalSelisih = selisihPositif + selisihNegatif;
 
-    const hasSelisih = stockOpname.stock_opname_details.some((detail) => detail.selisih !== 0);
+    const hasSelisih = itemsWithSelisih.length > 0;
+    const hasPhotos = stockOpname.stock_opname_details.some(
+        (detail) => detail.photos && detail.photos.length > 0
+    );
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -232,27 +267,60 @@ export default function Show({ stockOpname }: ShowProps) {
                 </div>
 
                 {/* Summary */}
+                <div className="grid gap-4 md:grid-cols-4">
+                    <div className="rounded-xl border bg-card p-6">
+                        <div className="text-sm text-muted-foreground">Total Barang</div>
+                        <div className="mt-2 text-2xl font-bold">{totalItems}</div>
+                    </div>
+
+                    <div className="rounded-xl border bg-card p-6">
+                        <div className="text-sm text-muted-foreground">Selisih Positif</div>
+                        <div className="mt-2 text-2xl font-bold text-green-600 dark:text-green-400">
+                            {selisihPositif > 0 && '+'}
+                            {selisihPositif}
+                        </div>
+                    </div>
+
+                    <div className="rounded-xl border bg-card p-6">
+                        <div className="text-sm text-muted-foreground">Selisih Negatif</div>
+                        <div className="mt-2 text-2xl font-bold text-red-600 dark:text-red-400">
+                            {selisihNegatif < 0 && ''}
+                            {selisihNegatif}
+                        </div>
+                    </div>
+
+                    <div className="rounded-xl border bg-card p-6">
+                        <div className="text-sm text-muted-foreground">Dengan Foto</div>
+                        <div className="mt-2 text-2xl font-bold">
+                            {stockOpname.stock_opname_details.filter(
+                                (detail) => detail.photos && detail.photos.length > 0
+                            ).length}
+                        </div>
+                    </div>
+                </div>
+
                 {hasSelisih && (
                     <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-6 dark:border-yellow-800 dark:bg-yellow-950">
                         <div className="flex items-center gap-2">
                             <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                             <h3 className="font-semibold text-yellow-900 dark:text-yellow-100">
-                                Terdapat Selisih Stok
+                                Terdapat {itemsWithSelisih.length} Barang dengan Selisih
                             </h3>
                         </div>
-                        <p className="mt-2 text-sm text-yellow-800 dark:text-yellow-200">
-                            Total selisih:{' '}
-                            <span
-                                className={
-                                    totalSelisih > 0
-                                        ? 'font-bold text-green-700 dark:text-green-300'
-                                        : 'font-bold text-red-700 dark:text-red-300'
-                                }
-                            >
-                                {totalSelisih > 0 && '+'}
-                                {totalSelisih}
-                            </span>
-                        </p>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                                Total selisih positif:{' '}
+                                <span className="font-bold text-green-700 dark:text-green-300">
+                                    +{selisihPositif}
+                                </span>
+                            </p>
+                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                                Total selisih negatif:{' '}
+                                <span className="font-bold text-red-700 dark:text-red-300">
+                                    {selisihNegatif}
+                                </span>
+                            </p>
+                        </div>
                         {stockOpname.status === 'approved' && (
                             <p className="mt-1 text-xs text-yellow-700 dark:text-yellow-300">
                                 Stok telah disesuaikan secara otomatis

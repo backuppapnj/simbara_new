@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ApprovalNeeded;
 use App\Events\RequestCreated;
 use App\Http\Requests\DistributeAtkRequest;
 use App\Http\Requests\RejectAtkRequest;
 use App\Http\Requests\StoreAtkRequest;
-use App\Http\Resources\AtkRequestResource;
 use App\Models\AtkRequest;
 use App\Models\Department;
 use App\Models\Item;
 use App\Models\RequestDetail;
 use App\Models\StockMutation;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -101,7 +98,7 @@ class AtkRequestController extends Controller
     /**
      * Store a newly created request in storage.
      */
-    public function store(StoreAtkRequest $request): JsonResponse
+    public function store(StoreAtkRequest $request)
     {
         $validated = $request->validated();
 
@@ -131,17 +128,18 @@ class AtkRequestController extends Controller
         });
 
         // Dispatch event after request is created
-        RequestCreated::dispatch($atkRequest);
+        if (class_exists(RequestCreated::class)) {
+            RequestCreated::dispatch($atkRequest);
+        }
 
-        return (new AtkRequestResource($atkRequest->load(['requestDetails.item'])))
-            ->response()
-            ->setStatusCode(201);
+        return redirect()->route('atk-requests.show', $atkRequest)
+            ->with('success', 'Permintaan ATK berhasil dibuat.');
     }
 
     /**
      * Display the specified request.
      */
-    public function show(AtkRequest $atkRequest): AtkRequestResource
+    public function show(AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -168,15 +166,24 @@ class AtkRequestController extends Controller
             abort(403, 'You do not have permission to view this request.');
         }
 
-        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
+        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'distributedBy', 'requestDetails.item']);
 
-        return new AtkRequestResource($atkRequest);
+        return Inertia::render('atk-requests/show', [
+            'atkRequest' => $atkRequest,
+            'can' => [
+                'approve_level1' => $user->can('approve_request_l1'),
+                'approve_level2' => $user->can('approve_request_l2'),
+                'approve_level3' => $user->can('approve_request_l3'),
+                'distribute' => $user->can('manage_atk_requests'),
+                'confirm_receive' => $atkRequest->user_id == $user->id,
+            ],
+        ]);
     }
 
     /**
      * Approve request at level 1 (Operator Persediaan).
      */
-    public function approveLevel1(AtkRequest $atkRequest): AtkRequestResource
+    public function approveLevel1(AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -191,18 +198,13 @@ class AtkRequestController extends Controller
             'level1_approval_at' => now(),
         ]);
 
-        // Dispatch event for level 2 approval
-        ApprovalNeeded::dispatch($atkRequest, 2, 'Kasubag Umum');
-
-        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
-
-        return new AtkRequestResource($atkRequest);
+        return redirect()->back()->with('success', 'Permintaan disetujui di Level 1.');
     }
 
     /**
      * Approve request at level 2 (Kasubag Umum).
      */
-    public function approveLevel2(AtkRequest $atkRequest): AtkRequestResource
+    public function approveLevel2(AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -217,18 +219,13 @@ class AtkRequestController extends Controller
             'level2_approval_at' => now(),
         ]);
 
-        // Dispatch event for level 3 approval
-        ApprovalNeeded::dispatch($atkRequest, 3, 'KPA');
-
-        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
-
-        return new AtkRequestResource($atkRequest);
+        return redirect()->back()->with('success', 'Permintaan disetujui di Level 2.');
     }
 
     /**
      * Approve request at level 3 (KPA).
      */
-    public function approveLevel3(AtkRequest $atkRequest): AtkRequestResource
+    public function approveLevel3(AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -243,15 +240,13 @@ class AtkRequestController extends Controller
             'level3_approval_at' => now(),
         ]);
 
-        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
-
-        return new AtkRequestResource($atkRequest);
+        return redirect()->back()->with('success', 'Permintaan disetujui di Level 3.');
     }
 
     /**
      * Reject request.
      */
-    public function reject(RejectAtkRequest $request, AtkRequest $atkRequest): AtkRequestResource
+    public function reject(RejectAtkRequest $request, AtkRequest $atkRequest)
     {
         $validated = $request->validated();
 
@@ -266,15 +261,13 @@ class AtkRequestController extends Controller
             'alasan_penolakan' => $validated['alasan_penolakan'],
         ]);
 
-        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'requestDetails.item']);
-
-        return new AtkRequestResource($atkRequest);
+        return redirect()->back()->with('success', 'Permintaan ditolak.');
     }
 
     /**
      * Distribute items to request.
      */
-    public function distribute(DistributeAtkRequest $request, AtkRequest $atkRequest): AtkRequestResource
+    public function distribute(DistributeAtkRequest $request, AtkRequest $atkRequest)
     {
         $validated = $request->validated();
         $user = auth()->user();
@@ -306,15 +299,13 @@ class AtkRequestController extends Controller
             return $atkRequest;
         });
 
-        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'distributedBy', 'requestDetails.item']);
-
-        return new AtkRequestResource($atkRequest);
+        return redirect()->back()->with('success', 'Barang berhasil didistribusikan.');
     }
 
     /**
      * Confirm receipt of distributed items.
      */
-    public function confirmReceive(AtkRequest $atkRequest): AtkRequestResource
+    public function confirmReceive(AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -372,8 +363,6 @@ class AtkRequestController extends Controller
             return $atkRequest;
         });
 
-        $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'distributedBy', 'requestDetails.item']);
-
-        return new AtkRequestResource($atkRequest);
+        return redirect()->back()->with('success', 'Barang berhasil dikonfirmasi diterima.');
     }
 }

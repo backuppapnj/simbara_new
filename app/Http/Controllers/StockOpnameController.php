@@ -7,8 +7,10 @@ use App\Models\Item;
 use App\Models\StockMutation;
 use App\Models\StockOpname;
 use App\Models\StockOpnameDetail;
+use App\Models\StockOpnamePhoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class StockOpnameController extends Controller
@@ -71,14 +73,32 @@ class StockOpnameController extends Controller
                 'status' => 'draft',
             ]);
 
-            foreach ($request->details as $detail) {
-                StockOpnameDetail::create([
+            foreach ($request->details as $index => $detail) {
+                $stockOpnameDetail = StockOpnameDetail::create([
                     'stock_opname_id' => $stockOpname->id,
                     'item_id' => $detail['item_id'],
                     'stok_sistem' => $detail['stok_sistem'],
                     'stok_fisik' => $detail['stok_fisik'],
                     'keterangan' => $detail['keterangan'] ?? null,
                 ]);
+
+                // Handle photo uploads
+                if (isset($detail['photos']) && is_array($detail['photos'])) {
+                    foreach ($detail['photos'] as $photoIndex => $photoFile) {
+                        if ($photoFile && is_file($photoFile)) {
+                            $path = $photoFile->store('stock-opname-photos', 'public');
+
+                            StockOpnamePhoto::create([
+                                'stock_opname_detail_id' => $stockOpnameDetail->id,
+                                'file_path' => $path,
+                                'file_name' => $photoFile->getClientOriginalName(),
+                                'mime_type' => $photoFile->getMimeType(),
+                                'file_size' => $photoFile->getSize(),
+                                'sequence' => $photoIndex,
+                            ]);
+                        }
+                    }
+                }
             }
 
             return redirect()->route('stock-opnames.show', $stockOpname)
@@ -91,7 +111,7 @@ class StockOpnameController extends Controller
      */
     public function show(StockOpname $stockOpname)
     {
-        $stockOpname->load(['stockOpnameDetails.item', 'approver']);
+        $stockOpname->load(['stockOpnameDetails.item', 'stockOpnameDetails.photos', 'approver']);
 
         return Inertia::render('stock-opnames/show', [
             'stockOpname' => $stockOpname,

@@ -33,6 +33,8 @@ class StoreStockOpnameRequest extends FormRequest
             'details.*.stok_sistem' => ['required', 'integer', 'min:0'],
             'details.*.stok_fisik' => ['required', 'integer', 'min:0'],
             'details.*.keterangan' => ['nullable', 'string'],
+            'details.*.photos' => ['nullable', 'array', 'max:3'],
+            'details.*.photos.*' => ['nullable', 'file', 'image', 'max:5120'], // Max 5MB per photo
         ];
     }
 

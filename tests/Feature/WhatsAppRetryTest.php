@@ -1,13 +1,11 @@
 <?php
 
-use App\Events\RequestCreated;
 use App\Jobs\SendWhatsAppNotification;
 use App\Models\AtkRequest;
 use App\Models\NotificationLog;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 
@@ -271,6 +269,7 @@ describe('WhatsApp Notification Error Handling & Retry Tests', function () {
 
             Http::fake(function ($request) use (&$attemptCount) {
                 $attemptCount++;
+
                 return Http::response([
                     'status' => false,
                     'message' => 'Unauthorized',
@@ -311,6 +310,7 @@ describe('WhatsApp Notification Error Handling & Retry Tests', function () {
 
             Http::fake(function ($request) use (&$attemptCount) {
                 $attemptCount++;
+
                 return Http::response([
                     'status' => false,
                     'message' => 'Rate limit exceeded',

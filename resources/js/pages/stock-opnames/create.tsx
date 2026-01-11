@@ -114,7 +114,36 @@ export default function Create({ items }: CreateProps) {
             return;
         }
 
-        post(route('stock-opnames.store'));
+        // Convert photos data to FormData for file upload
+        const formData = new FormData();
+        formData.append('tanggal', data.tanggal);
+        formData.append('periode_bulan', data.periode_bulan);
+        formData.append('periode_tahun', data.periode_tahun.toString());
+        formData.append('keterangan', data.keterangan);
+
+        data.details.forEach((detail, index) => {
+            formData.append(`details[${index}][item_id]`, detail.item_id);
+            formData.append(`details[${index}][stok_sistem]`, detail.stok_sistem.toString());
+            formData.append(`details[${index}][stok_fisik]`, detail.stok_fisik.toString());
+            formData.append(`details[${index}][keterangan]`, detail.keterangan);
+
+            // Attach photos if any
+            if (detail.photos && detail.photos.length > 0) {
+                detail.photos.forEach((photo) => {
+                    if (photo.file instanceof File) {
+                        formData.append(`details[${index}][photos][]`, photo.file);
+                    }
+                });
+            }
+        });
+
+        post(route('stock-opnames.store'), {
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            forceFormData: true,
+        });
     };
 
     const availableItems = items.filter((item) => !selectedItems.has(item.id));

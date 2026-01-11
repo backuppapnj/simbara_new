@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 
@@ -73,5 +74,13 @@ class StockOpnameDetail extends Model
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    /**
+     * Get the photos for the stock opname detail.
+     */
+    public function photos(): HasMany
+    {
+        return $this->hasMany(StockOpnamePhoto::class, 'stock_opname_detail_id')->orderBy('sequence');
     }
 }

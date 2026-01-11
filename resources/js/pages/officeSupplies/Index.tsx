@@ -12,15 +12,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -311,56 +309,65 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                 )}
 
                 {/* Delete Confirmation Dialog */}
-                <AlertDialog
+                <Dialog
                     open={deleteDialog.open}
                     onOpenChange={(open) => setDeleteDialog({ open, supply: null })}
                 >
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Hapus Bahan Kantor</AlertDialogTitle>
-                            <AlertDialogDescription>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Hapus Bahan Kantor</DialogTitle>
+                            <DialogDescription>
                                 Apakah Anda yakin ingin menghapus &quot;
                                 {deleteDialog.supply?.nama_barang}&quot;? Tindakan ini tidak dapat dibatalkan.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Batal</AlertDialogCancel>
-                            <AlertDialogAction
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button
+                                variant="outline"
+                                onClick={() => setDeleteDialog({ open: false, supply: null })}
+                            >
+                                Batal
+                            </Button>
+                            <Button
                                 onClick={handleDelete}
                                 disabled={deleteForm.processing}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                variant="destructive"
                             >
                                 {deleteForm.processing ? 'Menghapus...' : 'Hapus'}
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
 
                 {/* Edit Dialog */}
-                <AlertDialog open={editDialog.open} onOpenChange={(open) => setEditDialog({ open, supply: null })}>
-                    <AlertDialogContent className="max-w-md">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Edit Bahan Kantor</AlertDialogTitle>
-                            <AlertDialogDescription>
+                <Dialog open={editDialog.open} onOpenChange={(open) => setEditDialog({ open, supply: null })}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Edit Bahan Kantor</DialogTitle>
+                            <DialogDescription>
                                 Edit informasi bahan kantor &quot;{editDialog.supply?.nama_barang}&quot;
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
+                            </DialogDescription>
+                        </DialogHeader>
                         <form onSubmit={(e) => { e.preventDefault(); handleEdit(); }} className="space-y-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Nama Barang</label>
                                 <Input
                                     value={editForm.data.nama_barang}
                                     onChange={(e) => editForm.setData('nama_barang', e.target.value)}
-                                    error={editForm.errors.nama_barang}
                                 />
+                                {editForm.errors.nama_barang && (
+                                    <p className="text-sm text-destructive">{editForm.errors.nama_barang}</p>
+                                )}
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Satuan</label>
                                 <Input
                                     value={editForm.data.satuan}
                                     onChange={(e) => editForm.setData('satuan', e.target.value)}
-                                    error={editForm.errors.satuan}
                                 />
+                                {editForm.errors.satuan && (
+                                    <p className="text-sm text-destructive">{editForm.errors.satuan}</p>
+                                )}
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Kategori</label>
@@ -385,8 +392,10 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                                         type="number"
                                         value={editForm.data.stok}
                                         onChange={(e) => editForm.setData('stok', parseInt(e.target.value) || 0)}
-                                        error={editForm.errors.stok}
                                     />
+                                    {editForm.errors.stok && (
+                                        <p className="text-sm text-destructive">{editForm.errors.stok}</p>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Stok Minimal</label>
@@ -394,21 +403,27 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                                         type="number"
                                         value={editForm.data.stok_minimal}
                                         onChange={(e) => editForm.setData('stok_minimal', parseInt(e.target.value) || 0)}
-                                        error={editForm.errors.stok_minimal}
                                     />
+                                    {editForm.errors.stok_minimal && (
+                                        <p className="text-sm text-destructive">{editForm.errors.stok_minimal}</p>
+                                    )}
                                 </div>
                             </div>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel type="button" onClick={() => setEditDialog({ open: false, supply: null })}>
+                            <DialogFooter>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setEditDialog({ open: false, supply: null })}
+                                >
                                     Batal
-                                </AlertDialogCancel>
+                                </Button>
                                 <Button type="submit" disabled={editForm.processing}>
                                     {editForm.processing ? 'Menyimpan...' : 'Simpan'}
                                 </Button>
-                            </AlertDialogFooter>
+                            </DialogFooter>
                         </form>
-                    </AlertDialogContent>
-                </AlertDialog>
+                    </DialogContent>
+                </Dialog>
             </div>
         </AppLayout>
     );
