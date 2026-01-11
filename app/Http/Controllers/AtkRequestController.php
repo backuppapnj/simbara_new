@@ -63,6 +63,18 @@ class AtkRequestController extends Controller
 
         $requests = $query->latest()->paginate(20);
 
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $requests->items(),
+                'meta' => [
+                    'current_page' => $requests->currentPage(),
+                    'per_page' => $requests->perPage(),
+                    'total' => $requests->total(),
+                ],
+            ]);
+        }
+
         return Inertia::render('atk-requests/index', [
             'requests' => $requests,
             'filters' => $request->only(['status', 'department_id', 'search']),
@@ -133,6 +145,13 @@ class AtkRequestController extends Controller
             RequestCreated::dispatch($atkRequest);
         }
 
+        // Return JSON for API requests, redirect for Inertia requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest->load('requestDetails.item'),
+            ], 201);
+        }
+
         return redirect()->route('atk-requests.show', $atkRequest)
             ->with('success', 'Permintaan ATK berhasil dibuat.');
     }
@@ -140,7 +159,7 @@ class AtkRequestController extends Controller
     /**
      * Display the specified request.
      */
-    public function show(AtkRequest $atkRequest)
+    public function show(Request $request, AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -169,6 +188,13 @@ class AtkRequestController extends Controller
 
         $atkRequest->load(['user', 'department', 'level1Approver', 'level2Approver', 'level3Approver', 'distributedBy', 'requestDetails.item']);
 
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest,
+            ]);
+        }
+
         return Inertia::render('atk-requests/show', [
             'atkRequest' => $atkRequest,
             'can' => [
@@ -184,7 +210,7 @@ class AtkRequestController extends Controller
     /**
      * Approve request at level 1 (Operator Persediaan).
      */
-    public function approveLevel1(AtkRequest $atkRequest)
+    public function approveLevel1(Request $request, AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -204,13 +230,20 @@ class AtkRequestController extends Controller
             ApprovalNeeded::dispatch($atkRequest, 2, 'Kasubag Umum');
         }
 
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest->fresh(),
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Permintaan disetujui di Level 1.');
     }
 
     /**
      * Approve request at level 2 (Kasubag Umum).
      */
-    public function approveLevel2(AtkRequest $atkRequest)
+    public function approveLevel2(Request $request, AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -230,13 +263,20 @@ class AtkRequestController extends Controller
             ApprovalNeeded::dispatch($atkRequest, 3, 'KPA');
         }
 
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest->fresh(),
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Permintaan disetujui di Level 2.');
     }
 
     /**
      * Approve request at level 3 (KPA).
      */
-    public function approveLevel3(AtkRequest $atkRequest)
+    public function approveLevel3(Request $request, AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -250,6 +290,13 @@ class AtkRequestController extends Controller
             'level3_approval_by' => $user->id,
             'level3_approval_at' => now(),
         ]);
+
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest->fresh(),
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Permintaan disetujui di Level 3.');
     }
@@ -271,6 +318,13 @@ class AtkRequestController extends Controller
             'status' => 'rejected',
             'alasan_penolakan' => $validated['alasan_penolakan'],
         ]);
+
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest->fresh(),
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Permintaan ditolak.');
     }
@@ -310,13 +364,20 @@ class AtkRequestController extends Controller
             return $atkRequest;
         });
 
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest->fresh(),
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Barang berhasil didistribusikan.');
     }
 
     /**
      * Confirm receipt of distributed items.
      */
-    public function confirmReceive(AtkRequest $atkRequest)
+    public function confirmReceive(Request $request, AtkRequest $atkRequest)
     {
         $user = auth()->user();
 
@@ -373,6 +434,13 @@ class AtkRequestController extends Controller
 
             return $atkRequest;
         });
+
+        // Return JSON for API requests
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $atkRequest->fresh(),
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Barang berhasil dikonfirmasi diterima.');
     }
