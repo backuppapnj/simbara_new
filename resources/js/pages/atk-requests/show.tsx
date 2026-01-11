@@ -8,12 +8,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import {
     ArrowLeft,
     Building,
@@ -159,9 +160,29 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
         alasan_penolakan: '',
     });
 
+    const distributeForm = useForm({
+        items: atkRequest.request_details?.map((detail) => ({
+            detail_id: detail.id,
+            jumlah_diberikan:
+                detail.jumlah_disetujui ?? detail.jumlah_diminta,
+        })) ?? [],
+    });
+
     const handleReject = () => {
         rejectForm.post(route('atk-requests.reject', atkRequest.id), {
             onFinish: () => {
+                (
+                    document.querySelector(
+                        '[data-dialog-close]',
+                    ) as HTMLButtonElement
+                )?.click();
+            },
+        });
+    };
+
+    const handleDistribute = () => {
+        distributeForm.post(route('atk-requests.distribute', atkRequest.id), {
+            onSuccess: () => {
                 (
                     document.querySelector(
                         '[data-dialog-close]',
@@ -336,6 +357,132 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                                 {rejectForm.processing
                                                     ? 'Memproses...'
                                                     : 'Tolak'}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                        {canDistribute && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button className="bg-orange-600 hover:bg-orange-700">
+                                        <Package className="mr-2 h-4 w-4" />
+                                        Serahkan Barang
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-2xl">
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Distribusikan Barang
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <div className="space-y-4">
+                                        <div className="space-y-3">
+                                            {atkRequest.request_details?.map(
+                                                (detail, index) => (
+                                                    <div
+                                                        key={detail.id}
+                                                        className="flex items-center gap-4 rounded-lg border p-3"
+                                                    >
+                                                        <div className="flex-1">
+                                                            <p className="font-medium">
+                                                                {
+                                                                    detail.item
+                                                                        ?.nama_barang
+                                                                }
+                                                            </p>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                Diminta:{' '}
+                                                                {
+                                                                    detail.jumlah_diminta
+                                                                }
+                                                                , Disetujui:{' '}
+                                                                {detail.jumlah_disetujui ??
+                                                                    '-'}
+                                                            </p>
+                                                        </div>
+                                                        <div className="w-32">
+                                                            <Label
+                                                                htmlFor={`jumlah-${detail.id}`}
+                                                                className="text-xs"
+                                                            >
+                                                                Jumlah
+                                                                Diberikan
+                                                            </Label>
+                                                            <Input
+                                                                id={`jumlah-${detail.id}`}
+                                                                type="number"
+                                                                min={0}
+                                                                max={
+                                                                    detail.jumlah_disetujui ??
+                                                                    detail.jumlah_diminta
+                                                                }
+                                                                value={
+                                                                    distributeForm
+                                                                        .data.items[
+                                                                        index
+                                                                    ]
+                                                                        ?.jumlah_diberikan
+                                                                }
+                                                                onChange={(e) =>
+                                                                    distributeForm.setData(
+                                                                        `items.${index}.jumlah_diberikan`,
+                                                                        Number(
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        ),
+                                                                    )
+                                                                }
+                                                                className="mt-1"
+                                                            />
+                                                            {distributeForm
+                                                                .errors[
+                                                                    `items.${index}.jumlah_diberikan`
+                                                                ] && (
+                                                                <p className="mt-1 text-xs text-red-600">
+                                                                    {
+                                                                        distributeForm
+                                                                            .errors[
+                                                                            `items.${index}.jumlah_diberikan`
+                                                                        ]
+                                                                    }
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ),
+                                            )}
+                                        </div>
+                                        {distributeForm.errors.items && (
+                                            <p className="text-sm text-red-600">
+                                                {
+                                                    distributeForm.errors
+                                                        .items
+                                                }
+                                            </p>
+                                        )}
+                                        <div className="flex justify-end gap-2">
+                                            <Button
+                                                variant="outline"
+                                                onClick={() =>
+                                                    distributeForm.reset()
+                                                }
+                                                data-dialog-close
+                                            >
+                                                Batal
+                                            </Button>
+                                            <Button
+                                                className="bg-orange-600 hover:bg-orange-700"
+                                                onClick={handleDistribute}
+                                                disabled={
+                                                    distributeForm.processing
+                                                }
+                                            >
+                                                {distributeForm.processing
+                                                    ? 'Memproses...'
+                                                    : 'Serahkan'}
                                             </Button>
                                         </div>
                                     </div>

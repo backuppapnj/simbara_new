@@ -3,6 +3,7 @@
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Page;
 use Spatie\Permission\PermissionRegistrar;
 
 use function Pest\Laravel\actingAs;
@@ -25,8 +26,13 @@ test('create button exists on items index page', function () {
     actingAs($this->user)
         ->get(route('items.index'))
         ->assertSuccessful()
-        ->assertSee('Add')
-        ->assertSee('Create');
+        ->assertInertia(fn (Page $page) => (
+            $page->component('items/Index')
+                ->has('items')
+                ->where('auth.user.permissions', fn ($permissions) => (
+                    $permissions->contains('atk.items.create')
+                ))
+        ));
 });
 
 test('can create new item with valid data', function () {

@@ -3,17 +3,23 @@
 use App\Models\AtkRequest;
 use App\Models\RequestDetail;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Spatie\Permission\PermissionRegistrar;
 
-use function Pest\Laravel\actingAs;
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Event::fake();
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    $this->seed(\Database\Seeders\PermissionsSeeder::class);
+    $this->seed(\Database\Seeders\RolesSeeder::class);
 });
 
 it('shows distribute button when user can distribute and status is level3_approved', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('manage_atk_requests');
+    $user->givePermissionTo('atk.requests.distribute');
+    $user->assignRole('kpa'); // Need role for authorization
 
     $atkRequest = AtkRequest::factory()
         ->for($user, 'user')
@@ -21,15 +27,20 @@ it('shows distribute button when user can distribute and status is level3_approv
         ->has(RequestDetail::factory()->count(2), 'requestDetails')
         ->create();
 
-    actingAs($user)
+    $this->actingAs($user)
         ->get(route('atk-requests.show', $atkRequest))
-        ->assertSee('Distribute')
-        ->assertSee('Serahkan Barang');
+        ->assertInertia(fn ($page) => $page
+            ->component('atk-requests/show')
+            ->has('atkRequest')
+            ->has('atkRequest.request_details', 2)
+            ->where('can.distribute', true)
+        );
 });
 
 it('does not show distribute button when status is not level3_approved', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('manage_atk_requests');
+    $user->givePermissionTo('atk.requests.distribute');
+    $user->assignRole('kpa');
 
     $atkRequest = AtkRequest::factory()
         ->for($user, 'user')
@@ -37,10 +48,12 @@ it('does not show distribute button when status is not level3_approved', functio
         ->has(RequestDetail::factory()->count(2), 'requestDetails')
         ->create();
 
-    actingAs($user)
+    $this->actingAs($user)
         ->get(route('atk-requests.show', $atkRequest))
-        ->assertDontSee('Distribute')
-        ->assertDontSee('Serahkan Barang');
+        ->assertInertia(fn ($page) => $page
+            ->component('atk-requests/show')
+            ->where('can.distribute', false)
+        );
 });
 
 it('does not show distribute button when user does not have permission', function () {
@@ -52,15 +65,18 @@ it('does not show distribute button when user does not have permission', functio
         ->has(RequestDetail::factory()->count(2), 'requestDetails')
         ->create();
 
-    actingAs($user)
+    $this->actingAs($user)
         ->get(route('atk-requests.show', $atkRequest))
-        ->assertDontSee('Distribute')
-        ->assertDontSee('Serahkan Barang');
+        ->assertInertia(fn ($page) => $page
+            ->component('atk-requests/show')
+            ->where('can.distribute', false)
+        );
 });
 
 it('can distribute items with valid data', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('manage_atk_requests');
+    $user->givePermissionTo('atk.requests.distribute');
+    $user->assignRole('kpa');
 
     $atkRequest = AtkRequest::factory()
         ->for($user, 'user')
@@ -77,7 +93,7 @@ it('can distribute items with valid data', function () {
 
     $details = $atkRequest->requestDetails;
 
-    actingAs($user)
+    $this->actingAs($user)
         ->post(route('atk-requests.distribute', $atkRequest), [
             'items' => [
                 [
@@ -100,7 +116,8 @@ it('can distribute items with valid data', function () {
 
 it('validates jumlah_diberikan does not exceed jumlah_disetujui', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('manage_atk_requests');
+    $user->givePermissionTo('atk.requests.distribute');
+    $user->assignRole('kpa');
 
     $atkRequest = AtkRequest::factory()
         ->for($user, 'user')
@@ -117,7 +134,7 @@ it('validates jumlah_diberikan does not exceed jumlah_disetujui', function () {
 
     $detail = $atkRequest->requestDetails->first();
 
-    actingAs($user)
+    $this->actingAs($user)
         ->post(route('atk-requests.distribute', $atkRequest), [
             'items' => [
                 [

@@ -80,9 +80,9 @@ class AtkRequestController extends Controller
             'requests' => $requests,
             'filters' => $request->only(['status', 'department_id', 'search']),
             'can' => [
-                'approve_level1' => $user->can('approve_request_l1'),
-                'approve_level2' => $user->can('approve_request_l2'),
-                'approve_level3' => $user->can('approve_request_l3'),
+                'approve_level1' => $user->can('atk.requests.approve'),
+                'approve_level2' => $user->can('atk.requests.approve'),
+                'approve_level3' => $user->can('atk.requests.approve'),
             ],
         ]);
     }
@@ -205,10 +205,10 @@ class AtkRequestController extends Controller
         return Inertia::render('atk-requests/show', [
             'atkRequest' => $atkRequest,
             'can' => [
-                'approve_level1' => $user->can('approve_request_l1'),
-                'approve_level2' => $user->can('approve_request_l2'),
-                'approve_level3' => $user->can('approve_request_l3'),
-                'distribute' => $user->can('manage_atk_requests'),
+                'approve_level1' => $user->can('atk.requests.approve'),
+                'approve_level2' => $user->can('atk.requests.approve'),
+                'approve_level3' => $user->can('atk.requests.approve'),
+                'distribute' => $user->can('atk.requests.distribute'),
                 'confirm_receive' => $atkRequest->user_id == $user->id,
             ],
         ]);

@@ -6,8 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\RolesSeeder::class);
-    $this->seed(\Database\Seeders\UsersSeeder::class);
+    // Seed roles and users
+    (new \Database\Seeders\RolesSeeder())->run();
+    (new \Database\Seeders\UsersSeeder())->run();
 });
 
 describe('Flash Messages Browser Tests', function () {
