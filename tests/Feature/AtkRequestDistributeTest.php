@@ -18,7 +18,7 @@ beforeEach(function () {
 
 it('shows distribute button when user can distribute and status is level3_approved', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('atk.requests.distribute');
+    $user->givePermissionTo('atk.view', 'atk.requests.distribute');
     $user->assignRole('kpa'); // Need role for authorization
 
     $atkRequest = AtkRequest::factory()
@@ -29,6 +29,7 @@ it('shows distribute button when user can distribute and status is level3_approv
 
     $this->actingAs($user)
         ->get(route('atk-requests.show', $atkRequest))
+        ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->component('atk-requests/show')
             ->has('atkRequest')
@@ -39,7 +40,7 @@ it('shows distribute button when user can distribute and status is level3_approv
 
 it('does not show distribute button when status is not level3_approved', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('atk.requests.distribute');
+    $user->givePermissionTo('atk.view', 'atk.requests.distribute');
     $user->assignRole('kpa');
 
     $atkRequest = AtkRequest::factory()
@@ -58,6 +59,7 @@ it('does not show distribute button when status is not level3_approved', functio
 
 it('does not show distribute button when user does not have permission', function () {
     $user = User::factory()->create();
+    $user->givePermissionTo('atk.view'); // Need view permission to access page
 
     $atkRequest = AtkRequest::factory()
         ->for($user, 'user')
@@ -75,7 +77,7 @@ it('does not show distribute button when user does not have permission', functio
 
 it('can distribute items with valid data', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('atk.requests.distribute');
+    $user->givePermissionTo('atk.view', 'atk.requests.distribute');
     $user->assignRole('kpa');
 
     $atkRequest = AtkRequest::factory()
@@ -116,7 +118,7 @@ it('can distribute items with valid data', function () {
 
 it('validates jumlah_diberikan does not exceed jumlah_disetujui', function () {
     $user = User::factory()->create();
-    $user->givePermissionTo('atk.requests.distribute');
+    $user->givePermissionTo('atk.view', 'atk.requests.distribute');
     $user->assignRole('kpa');
 
     $atkRequest = AtkRequest::factory()

@@ -205,11 +205,11 @@ class AtkRequestController extends Controller
         return Inertia::render('atk-requests/show', [
             'atkRequest' => $atkRequest,
             'can' => [
-                'approve_level1' => $user->can('atk.requests.approve'),
-                'approve_level2' => $user->can('atk.requests.approve'),
-                'approve_level3' => $user->can('atk.requests.approve'),
-                'distribute' => $user->can('atk.requests.distribute'),
-                'confirm_receive' => $atkRequest->user_id == $user->id,
+                'approve_level1' => $user->can('atk.requests.approve') && $atkRequest->status === 'pending',
+                'approve_level2' => $user->can('atk.requests.approve') && $atkRequest->status === 'level1_approved',
+                'approve_level3' => $user->can('atk.requests.approve') && $atkRequest->status === 'level2_approved',
+                'distribute' => $user->can('atk.requests.distribute') && $atkRequest->status === 'level3_approved',
+                'confirm_receive' => $atkRequest->user_id == $user->id && $atkRequest->status === 'diserahkan',
             ],
         ]);
     }
