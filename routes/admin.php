@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\NotificationLogController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\WhatsAppSettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,9 +30,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::prefix('roles')->name('roles.')->middleware(['permission:roles.manage'])->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('index');
         Route::get('/{role}', [RoleController::class, 'show'])->name('show');
-        Route::get('/{role}/permissions', [RoleController::class, 'permissions'])->name('permissions');
-        Route::put('/{role}/permissions', [RoleController::class, 'syncPermissions'])->name('sync-permissions');
         Route::put('/{role}/users', [RoleController::class, 'updateUsers'])->name('update-users');
+
+        // Role Permissions Routes
+        Route::get('/{role}/permissions', [RolePermissionController::class, 'index'])->name('permissions.index');
+        Route::put('/{role}/permissions', [RolePermissionController::class, 'update'])->name('permissions.update');
     });
 
     // Permission Management Routes - requires permission management

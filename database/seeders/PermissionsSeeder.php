@@ -90,6 +90,7 @@ class PermissionsSeeder extends Seeder
             'permissions.manage' => 'Kelola permission',
         ],
         'settings' => [
+            'settings.view' => 'Lihat pengaturan',
             'settings.whatsapp' => 'Kelola pengaturan WhatsApp',
             'settings.general' => 'Kelola pengaturan umum',
         ],
