@@ -63,10 +63,10 @@
 - [x] Add GET /items/{id}/mutations route
 - [x] Create controller method with pagination
 - [x] Create mutations list component
-- [~] Show running balance (stok sesudah)
-- [ ] Filter by jenis mutasi and date range
+- [x] Show running balance (stok sesudah)
+- [x] Filter by jenis mutasi and date range
 - [x] Write tests for kartu stok
-- [ ] Test real-time updates
+- [x] Test real-time updates
 
 ### Task 2.4: Task: Conductor - User Manual Verification 'Phase 2: Master Data ATK' (Protocol in workflow.md)
 
