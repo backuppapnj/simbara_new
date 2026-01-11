@@ -139,6 +139,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{officePurchase}', [\App\Http\Controllers\OfficePurchaseController::class, 'show'])->name('show');
     });
 
+    // Office Requests Management
+    Route::prefix('office-requests')->name('office-requests.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\OfficeRequestController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\OfficeRequestController::class, 'store'])->name('store');
+        Route::get('/{officeRequest}', [\App\Http\Controllers\OfficeRequestController::class, 'show'])->name('show');
+
+        // Direct approval routes (no multi-level approval for office supplies)
+        Route::post('/{officeRequest}/approve', [\App\Http\Controllers\OfficeRequestController::class, 'approve'])->name('approve');
+        Route::post('/{officeRequest}/reject', [\App\Http\Controllers\OfficeRequestController::class, 'reject'])->name('reject');
+    });
+
     // ATK Purchases Management
     Route::prefix('purchases')->name('purchases.')->group(function () {
         Route::get('/', [\App\Http\Controllers\PurchaseController::class, 'index'])->name('index');

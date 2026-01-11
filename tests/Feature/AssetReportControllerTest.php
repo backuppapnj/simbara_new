@@ -14,6 +14,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $user = User::factory()->create();
+    $user->markEmailAsVerified();
     actingAs($user);
 });
 

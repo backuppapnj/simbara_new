@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react'
-import Layout from '@/layouts/Layout'
+import AppLayout from '@/layouts/app-layout'
 import { Link } from '@inertiajs/react'
+import { type BreadcrumbItem } from '@/types'
 
 interface NotificationLog {
     id: number

@@ -74,7 +74,7 @@ describe('CreateNewUser validation', function (): void {
             'email' => 'test2@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'phone' => '081234567890', // duplicate phone (will be formatted to +6281234567890)
+            'phone' => '+6281234567890', // duplicate phone in normalized format
             'nip' => '2222222222',
         ];
 

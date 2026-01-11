@@ -1,6 +1,7 @@
 import { Link, Head } from '@inertiajs/react'
 import { useState } from 'react'
-import Layout from '@/layouts/Layout'
+import AppLayout from '@/layouts/app-layout'
+import { type BreadcrumbItem } from '@/types'
 
 interface NotificationLog {
     id: number
@@ -67,11 +68,20 @@ export default function NotificationLogs({ logs, filters }: Props) {
         }
     }
 
-    return (
-        <>
-            <Head title="Notification Logs" />
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Admin',
+            href: '/admin/notification-logs',
+        },
+        {
+            title: 'Notification Logs',
+            href: '',
+        },
+    ]
 
-            <Layout>
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Notification Logs" />
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
                         <h1 className="text-3xl font-bold">Notification Logs</h1>
@@ -189,7 +199,6 @@ export default function NotificationLogs({ logs, filters }: Props) {
                         )}
                     </div>
                 </div>
-            </Layout>
-        </>
+        </AppLayout>
     )
 }

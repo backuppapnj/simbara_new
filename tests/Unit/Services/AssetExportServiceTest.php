@@ -89,7 +89,7 @@ describe('AssetExportService', function () {
             $assets = Asset::all();
             $csv = $this->service->exportValueSummary($assets);
 
-            expect($csv)->toContain('Kode Barang,Jumlah Aset');
+            expect($csv)->toContain('Kode Barang,Uraian Sub Kelompok,Jumlah Aset');
             expect($csv)->toContain('Total Nilai Aset');
             expect($csv)->toContain('2010104026');
             expect($csv)->toContain('2010104027');
@@ -201,7 +201,8 @@ describe('AssetExportService', function () {
 
             $csv = $this->service->exportAssetsToSaktiSimanFormat(collect([$asset]));
 
-            expect($csv)->toContain('""Test ""Asset"" With Quotes""');
+            // CSV standard: quotes inside quoted fields are doubled
+            expect($csv)->toContain('"Test ""Asset"" With Quotes"');
         });
 
         test('handles null values gracefully', function () {

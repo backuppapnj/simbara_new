@@ -26,4 +26,37 @@ class OfficeRequestFactory extends Factory
             'alasan_penolakan' => fake()->optional(0.2)->sentence(),
         ];
     }
+
+    /**
+     * Indicate that the request is pending.
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'pending',
+        ]);
+    }
+
+    /**
+     * Indicate that the request is completed.
+     */
+    public function completed(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'completed',
+            'approved_at' => now(),
+            'completed_at' => now(),
+        ]);
+    }
+
+    /**
+     * Indicate that the request is rejected.
+     */
+    public function rejected(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'rejected',
+            'alasan_penolakan' => 'Test rejection',
+        ]);
+    }
 }

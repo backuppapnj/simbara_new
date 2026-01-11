@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PurchaseDetail>
@@ -20,6 +21,7 @@ class PurchaseDetailFactory extends Factory
         $hargaSatuan = fake()->randomFloat(2, 1000, 50000);
 
         return [
+            'id' => (string) Str::ulid(),
             'purchase_id' => \App\Models\Purchase::factory(),
             'item_id' => \App\Models\Item::factory(),
             'jumlah' => $jumlah,

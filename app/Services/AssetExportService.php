@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Asset;
+use App\Models\AssetMaintenance;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -270,20 +271,23 @@ class AssetExportService
     /**
      * Escape CSV field if it contains special characters.
      */
-    protected function escapeCsvField(?string $value): string
+    protected function escapeCsvField(mixed $value): string
     {
         if ($value === null || $value === '') {
             return '';
         }
 
-        // Wrap in quotes if contains comma, newline, or quote
-        if (str_contains($value, ',') || str_contains($value, "\n") || str_contains($value, '"')) {
-            $value = str_replace('"', '""', $value);
+        // Convert to string if not already
+        $stringValue = (string) $value;
 
-            return '"'.$value.'"';
+        // Wrap in quotes if contains comma, newline, or quote
+        if (str_contains($stringValue, ',') || str_contains($stringValue, "\n") || str_contains($stringValue, '"')) {
+            $stringValue = str_replace('"', '""', $stringValue);
+
+            return '"'.$stringValue.'"';
         }
 
-        return $value;
+        return $stringValue;
     }
 
     /**
