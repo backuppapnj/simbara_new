@@ -1,5 +1,6 @@
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
+import { NavSection } from '@/components/nav-section';
 import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
@@ -10,13 +11,22 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import assets from '@/routes/assets/index';
 import { dashboard } from '@/routes';
+import assets from '@/routes/assets/index';
 import items from '@/routes/items/index';
 import officeSupplies from '@/routes/office-supplies/index';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Box, Folder, LayoutGrid, Settings } from 'lucide-react';
+import { type NavGroup, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import {
+    Bell,
+    BookOpen,
+    Box,
+    Folder,
+    LayoutGrid,
+    Settings,
+    Shield,
+    Users,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -47,6 +57,27 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
+const adminNavItems: NavGroup = {
+    title: 'Admin',
+    items: [
+        {
+            title: 'Manajemen Role',
+            href: '/admin/roles',
+            icon: Shield,
+        },
+        {
+            title: 'Notifikasi',
+            href: '/admin/notification-logs',
+            icon: Bell,
+        },
+        {
+            title: 'Pengguna',
+            href: '/admin/users',
+            icon: Users,
+        },
+    ],
+};
+
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
@@ -61,6 +92,12 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage().props;
+
+    const isAdmin =
+        auth?.user?.roles?.includes('super_admin') ||
+        auth?.user?.roles?.includes('admin');
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -77,6 +114,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
+                {isAdmin && <NavSection group={adminNavItems} />}
             </SidebarContent>
 
             <SidebarFooter>

@@ -4,6 +4,14 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
+## 🚧 Active Tracks
+
+### [ ] RBAC Management
+**Description:** Role-Based Access Control dengan permission dinamis, granular, dan lengkap
+**Location:** [./conductor/tracks/rbac_20260111/](./conductor/tracks/rbac_20260111/)
+
+---
+
 ## 📁 Completed Tracks (Archived)
 
 All completed tracks have been moved to `conductor/archive/`.
@@ -32,11 +40,15 @@ All completed tracks have been moved to `conductor/archive/`.
 **Description:** Camera access, installable PWA
 **Location:** [./conductor/archive/pwa_mobile_20260111/](./conductor/archive/pwa_mobile_20260111/)
 
+### [x] Multi-Role Management ✅
+**Description:** Tambah fitur multi-role untuk user agar 1 pegawai bisa memiliki lebih dari satu role
+**Location:** [./conductor/archive/multi-role_20260111/](./conductor/archive/multi-role_20260111/)
+
 ---
 
 ## 📊 Project Status
 
 **Overall Progress:** 100% COMPLETE ✅
-**Total Tracks:** 6
-**Tests:** 822 passing
+**Total Tracks:** 7
+**Tests:** 872+ passing
 **Status:** PRODUCTION READY

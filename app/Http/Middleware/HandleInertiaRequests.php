@@ -43,9 +43,42 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => fn () => $request->user()
+                    ? array_merge($request->user()->toArray(), [
+                        'permissions' => $this->getUserPermissions($request->user()),
+                        'roles' => $this->getUserRoles($request->user()),
+                    ])
+                    : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * Get user permissions.
+     *
+     * @return array<string>
+     */
+    protected function getUserPermissions(mixed $user): array
+    {
+        if (method_exists($user, 'getAllPermissions')) {
+            return $user->getAllPermissions()->pluck('name')->toArray();
+        }
+
+        return [];
+    }
+
+    /**
+     * Get user roles.
+     *
+     * @return array<string>
+     */
+    protected function getUserRoles(mixed $user): array
+    {
+        if (method_exists($user, 'getRoleNames')) {
+            return $user->getRoleNames()->toArray();
+        }
+
+        return [];
     }
 }

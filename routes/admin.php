@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\NotificationLogController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\WhatsAppSettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'permiss
         ->name('notification-logs.index');
     Route::get('/notification-logs/{log}', [NotificationLogController::class, 'show'])
         ->name('notification-logs.show');
+
+    // Role Management Routes
+    Route::prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', [RoleController::class, 'index'])->name('index');
+        Route::get('/{role}', [RoleController::class, 'show'])->name('show');
+        Route::put('/{role}/users', [RoleController::class, 'updateUsers'])->name('update-users');
+    });
 });
