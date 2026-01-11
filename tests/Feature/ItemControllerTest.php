@@ -298,5 +298,98 @@ describe('ItemController', function () {
 
             $response->assertStatus(200);
         });
+
+        it('calculates running balance for mutations', function () {
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $item = Item::factory()->create(['stok' => 0]);
+
+            // Create multiple mutations
+            \App\Models\StockMutation::factory()->create([
+                'item_id' => $item->id,
+                'jenis_mutasi' => 'masuk',
+                'jumlah' => 100,
+                'stok_sebelum' => 0,
+                'stok_sesudah' => 100,
+                'created_at' => now()->subMinutes(3),
+            ]);
+
+            \App\Models\StockMutation::factory()->create([
+                'item_id' => $item->id,
+                'jenis_mutasi' => 'keluar',
+                'jumlah' => -30,
+                'stok_sebelum' => 100,
+                'stok_sesudah' => 70,
+                'created_at' => now()->subMinutes(2),
+            ]);
+
+            \App\Models\StockMutation::factory()->create([
+                'item_id' => $item->id,
+                'jenis_mutasi' => 'masuk',
+                'jumlah' => 50,
+                'stok_sebelum' => 70,
+                'stok_sesudah' => 120,
+                'created_at' => now()->subMinutes(1),
+            ]);
+
+            $response = $this->actingAs($user)
+                ->get(route('items.mutations', $item));
+
+            $response->assertStatus(200)
+                ->assertInertia(fn ($page) => $page
+                    ->component('items/Mutations')
+                    ->has('item')
+                    ->has('mutations')
+                    ->has('mutations.data', 3)
+                );
+        });
+
+        it('can filter by date range', function () {
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $item = Item::factory()->create();
+
+            // Create mutations on different dates
+            \App\Models\StockMutation::factory()->create([
+                'item_id' => $item->id,
+                'created_at' => now()->subDays(5),
+            ]);
+
+            \App\Models\StockMutation::factory()->create([
+                'item_id' => $item->id,
+                'created_at' => now()->subDays(2),
+            ]);
+
+            \App\Models\StockMutation::factory()->create([
+                'item_id' => $item->id,
+                'created_at' => now(),
+            ]);
+
+            $response = $this->actingAs($user)
+                ->get(route('items.mutations', [
+                    'item' => $item,
+                    'date_from' => now()->subDays(3)->format('Y-m-d'),
+                    'date_to' => now()->format('Y-m-d'),
+                ]));
+
+            $response->assertStatus(200);
+        });
+
+        it('includes item data in mutations response', function () {
+            $user = User::factory()->create(['email_verified_at' => now()]);
+            $item = Item::factory()->create([
+                'kode_barang' => 'ATK-001',
+                'nama_barang' => 'Kertas A4',
+                'stok' => 150,
+            ]);
+
+            $response = $this->actingAs($user)
+                ->get(route('items.mutations', $item));
+
+            $response->assertStatus(200);
+
+            $itemData = $response->viewData('item');
+            $this->assertEquals('ATK-001', $itemData->kode_barang);
+            $this->assertEquals('Kertas A4', $itemData->nama_barang);
+            $this->assertEquals(150, $itemData->stok);
+        });
     });
 });

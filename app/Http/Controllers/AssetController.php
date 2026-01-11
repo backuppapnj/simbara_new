@@ -6,12 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ImportAssetRequest;
 use App\Http\Requests\StoreAssetPhotoRequest;
+use App\Http\Requests\StoreMaintenanceRequest;
 use App\Http\Requests\UpdateAssetPhotoRequest;
+use App\Http\Requests\UpdateMaintenanceRequest;
 use App\Models\Asset;
+use App\Models\AssetMaintenance;
 use App\Models\AssetPhoto;
 use App\Services\AssetImportService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class AssetController extends Controller
@@ -282,5 +284,58 @@ class AssetController extends Controller
         return response()->json([
             'message' => 'Photo deleted successfully',
         ]);
+    }
+
+    /**
+     * Store a new maintenance record for an asset.
+     */
+    public function maintenanceStore(StoreMaintenanceRequest $request, string $id)
+    {
+        $asset = Asset::findOrFail($id);
+
+        $maintenance = $asset->maintenances()->create($request->validated());
+
+        return back()->with('success', 'Perawatan aset berhasil ditambahkan');
+    }
+
+    /**
+     * Get maintenances for an asset.
+     */
+    public function maintenancesIndex(string $id)
+    {
+        $asset = Asset::findOrFail($id);
+
+        $maintenances = $asset->maintenances()
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return response()->json($maintenances);
+    }
+
+    /**
+     * Update a maintenance record.
+     */
+    public function maintenancesUpdate(UpdateMaintenanceRequest $request, string $assetId, string $maintenanceId)
+    {
+        $asset = Asset::findOrFail($assetId);
+        $maintenance = AssetMaintenance::where('asset_id', $assetId)->findOrFail($maintenanceId);
+
+        $maintenance->update($request->validated());
+
+        return back()->with('success', 'Perawatan aset berhasil diperbarui');
+    }
+
+    /**
+     * Delete a maintenance record.
+     */
+    public function maintenancesDestroy(string $assetId, string $maintenanceId)
+    {
+        $asset = Asset::findOrFail($assetId);
+        $maintenance = AssetMaintenance::where('asset_id', $assetId)->findOrFail($maintenanceId);
+
+        $maintenance->delete();
+
+        return back()->with('success', 'Perawatan aset berhasil dihapus');
     }
 }

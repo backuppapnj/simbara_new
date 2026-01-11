@@ -79,7 +79,7 @@ class ItemController extends Controller
     }
 
     /**
-     * Display stock mutations for the specified item.
+     * Display stock mutations for the specified item with running balance.
      */
     public function mutations(Item $item): Response
     {
@@ -90,13 +90,35 @@ class ItemController extends Controller
             $query->where('jenis_mutasi', $jenis->toString());
         }
 
+        $dateFrom = request()->string('date_from')->trim();
+        $dateTo = request()->string('date_to')->trim();
+
+        if ($dateFrom->isNotEmpty()) {
+            $query->whereDate('created_at', '>=', $dateFrom->toString());
+        }
+
+        if ($dateTo->isNotEmpty()) {
+            $query->whereDate('created_at', '<=', $dateTo->toString());
+        }
+
         $mutations = $query->paginate(20)->withQueryString();
+
+        // Calculate running balance for each mutation
+        $mutations->getCollection()->transform(function ($mutation) use ($item) {
+            $mutation->running_balance = $item->stockMutations()
+                ->where('created_at', '<=', $mutation->created_at)
+                ->sum('jumlah');
+
+            return $mutation;
+        });
 
         return Inertia::render('items/Mutations', [
             'item' => $item,
             'mutations' => $mutations,
             'filters' => [
                 'jenis' => $jenis->toString(),
+                'date_from' => $dateFrom->toString(),
+                'date_to' => $dateTo->toString(),
             ],
         ]);
     }

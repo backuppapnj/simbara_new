@@ -1,8 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
-import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Camera, Save, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { ItemPhotoCapture, type CapturedPhoto } from '@/components/stock-opname/item-photo-capture';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -43,10 +44,12 @@ export default function Create({ items }: CreateProps) {
             stok_sistem: number;
             stok_fisik: number;
             keterangan: string;
+            photos: CapturedPhoto[];
         }>,
     });
 
     const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+    const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
     const handleAddItem = (itemId: string) => {
         if (selectedItems.has(itemId)) return;
@@ -62,6 +65,7 @@ export default function Create({ items }: CreateProps) {
                 stok_sistem: item.stok,
                 stok_fisik: item.stok,
                 keterangan: '',
+                photos: [],
             },
         ]);
     };
@@ -79,10 +83,22 @@ export default function Create({ items }: CreateProps) {
         });
     };
 
-    const handleDetailChange = (index: number, field: string, value: string | number) => {
+    const handleDetailChange = (index: number, field: string, value: string | number | CapturedPhoto[]) => {
         const newDetails = [...data.details];
         newDetails[index] = { ...newDetails[index], [field]: value };
         setData('details', newDetails);
+    };
+
+    const toggleItemExpanded = (index: number) => {
+        setExpandedItems((prev) => {
+            const newSet = new Set(prev);
+            if (newSet.has(index)) {
+                newSet.delete(index);
+            } else {
+                newSet.add(index);
+            }
+            return newSet;
+        });
     };
 
     const calculateSelisih = (index: number) => {

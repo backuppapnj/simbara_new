@@ -74,6 +74,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/{photoId}', [\App\Http\Controllers\AssetController::class, 'photosUpdate'])->name('update');
             Route::delete('/{photoId}', [\App\Http\Controllers\AssetController::class, 'photosDestroy'])->name('destroy');
         });
+
+        // Asset Maintenances
+        Route::prefix('{id}/maintenance')->name('maintenance.')->group(function () {
+            Route::post('/', [\App\Http\Controllers\AssetController::class, 'maintenanceStore'])->name('store');
+        });
+
+        Route::prefix('{assetId}/maintenances')->name('maintenances.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\AssetController::class, 'maintenancesIndex'])->name('index');
+            Route::put('/{maintenanceId}', [\App\Http\Controllers\AssetController::class, 'maintenancesUpdate'])->name('update');
+            Route::delete('/{maintenanceId}', [\App\Http\Controllers\AssetController::class, 'maintenancesDestroy'])->name('destroy');
+        });
+
+        // Asset Reports & Exports
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\AssetReportController::class, 'index'])->name('index');
+            Route::post('/preview', [\App\Http\Controllers\AssetReportController::class, 'preview'])->name('preview');
+            Route::get('/export/sakti-siman', [\App\Http\Controllers\AssetReportController::class, 'exportSaktiSiman'])->name('export.sakti-siman');
+            Route::get('/export/by-location', [\App\Http\Controllers\AssetReportController::class, 'exportByLocation'])->name('export.by-location');
+            Route::get('/export/by-category', [\App\Http\Controllers\AssetReportController::class, 'exportByCategory'])->name('export.by-category');
+            Route::get('/export/by-condition', [\App\Http\Controllers\AssetReportController::class, 'exportByCondition'])->name('export.by-condition');
+            Route::get('/export/maintenance-history', [\App\Http\Controllers\AssetReportController::class, 'exportMaintenanceHistory'])->name('export.maintenance-history');
+            Route::get('/export/value-summary', [\App\Http\Controllers\AssetReportController::class, 'exportValueSummary'])->name('export.value-summary');
+        });
     });
 
     // Stock Opnames
@@ -98,6 +121,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{atkRequest}/approve-level2', [\App\Http\Controllers\AtkRequestController::class, 'approveLevel2'])->name('approve-level2');
         Route::post('/{atkRequest}/approve-level3', [\App\Http\Controllers\AtkRequestController::class, 'approveLevel3'])->name('approve-level3');
         Route::post('/{atkRequest}/reject', [\App\Http\Controllers\AtkRequestController::class, 'reject'])->name('reject');
+    });
+
+    // Office Supplies Management
+    Route::prefix('office-supplies')->name('office-supplies.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\OfficeSupplyController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\OfficeSupplyController::class, 'store'])->name('store');
+        Route::put('/{office_supply}', [\App\Http\Controllers\OfficeSupplyController::class, 'update'])->name('update');
+        Route::delete('/{office_supply}', [\App\Http\Controllers\OfficeSupplyController::class, 'destroy'])->name('destroy');
+        Route::get('/{office_supply}/mutations', [\App\Http\Controllers\OfficeSupplyController::class, 'mutations'])->name('mutations');
+    });
+
+    // Office Purchases Management
+    Route::prefix('office-purchases')->name('office-purchases.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\OfficePurchaseController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\OfficePurchaseController::class, 'store'])->name('store');
+        Route::get('/{officePurchase}', [\App\Http\Controllers\OfficePurchaseController::class, 'show'])->name('show');
+    });
+
+    // ATK Purchases Management
+    Route::prefix('purchases')->name('purchases.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\PurchaseController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\PurchaseController::class, 'store'])->name('store');
+        Route::get('/{purchase}', [\App\Http\Controllers\PurchaseController::class, 'show'])->name('show');
+        Route::post('/{purchase}/receive', [\App\Http\Controllers\PurchaseController::class, 'receive'])->name('receive');
+        Route::post('/{purchase}/complete', [\App\Http\Controllers\PurchaseController::class, 'complete'])->name('complete');
     });
 });
 

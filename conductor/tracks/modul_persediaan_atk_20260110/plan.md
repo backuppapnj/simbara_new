@@ -63,7 +63,7 @@
 - [x] Add GET /items/{id}/mutations route
 - [x] Create controller method with pagination
 - [x] Create mutations list component
-- [ ] Show running balance (stok sesudah)
+- [~] Show running balance (stok sesudah)
 - [ ] Filter by jenis mutasi and date range
 - [x] Write tests for kartu stok
 - [ ] Test real-time updates

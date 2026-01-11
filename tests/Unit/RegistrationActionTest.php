@@ -120,7 +120,7 @@ describe('CreateNewUser user creation', function (): void {
         expect($user)->toBeInstanceOf(User::class);
         expect($user->name)->toBe('Test User');
         expect($user->email)->toBe('test@example.com');
-        expect($user->phone)->toBe('081234567890');
+        expect($user->phone)->toBe('+6281234567890');
         expect($user->nip)->toBe('1234567890');
     });
 });

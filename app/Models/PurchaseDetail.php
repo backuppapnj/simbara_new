@@ -21,6 +21,7 @@ class PurchaseDetail extends Model
         'purchase_id',
         'item_id',
         'jumlah',
+        'jumlah_diterima',
         'harga_satuan',
         'subtotal',
     ];
@@ -48,6 +49,7 @@ class PurchaseDetail extends Model
     {
         return [
             'jumlah' => 'integer',
+            'jumlah_diterima' => 'integer',
             'harga_satuan' => 'decimal:2',
             'subtotal' => 'decimal:2',
         ];
