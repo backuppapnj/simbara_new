@@ -45,10 +45,10 @@
 ## Phase 2: Master Data Bahan Kantor
 
 ### Task 2.1: Create OfficeSupplies CRUD
-- [ ] Create OfficeSupplyController with CRUD methods
-- [ ] Add routes: GET /office-supplies, POST /office-supplies, PUT /office-supplies/{id}
-- [ ] Create validation rules (OfficeSupplyRequest)
-- [ ] Write tests for CRUD operations
+- [x] Create OfficeSupplyController with CRUD methods (3a68502)
+- [x] Add routes: GET /office-supplies, POST /office-supplies, PUT /office-supplies/{id} (3a68502)
+- [x] Create validation rules (OfficeSupplyRequest) (3a68502)
+- [x] Write tests for CRUD operations (3a68502)
 - [ ] Test permissions per role
 
 ### Task 2.2: Create OfficeSupplies UI Components
@@ -61,13 +61,13 @@
 - [ ] Test responsive behavior
 
 ### Task 2.3: Create Mutations List View
-- [ ] Add GET /office-supplies/{id}/mutations route
-- [ ] Create controller method with pagination
-- [ ] Create mutations list component (sederhana)
+- [x] Add GET /office-supplies/{id}/mutations route (3a68502)
+- [x] Create controller method with pagination (3a68502)
+- [x] Create mutations list component (sederhana) (3a68502)
 - [ ] Show: tanggal, jenis, jumlah, tipe, keterangan
 - [ ] Filter by jenis mutasi and date range
-- [ ] Write tests for mutations view
-- [ ] Test list display
+- [x] Write tests for mutations view (3a68502)
+- [x] Test list display (3a68502)
 
 ### Task 2.4: Task: Conductor - User Manual Verification 'Phase 2: Master Data Bahan Kantor' (Protocol in workflow.md)
 
@@ -135,30 +135,30 @@
 ## Phase 5: Pencatatan Pemakaian
 
 ### Task 5.1: Create Manual Usage Input
-- [ ] Create usage form component
-- [ ] Input: supply, jumlah, tanggal, keperluan
-- [ ] Create POST /office-usages route
-- [ ] Save OfficeUsage
-- [ ] Create OfficeMutation (jenis: keluar, tipe: manual)
-- [ ] Update stok
-- [ ] Write tests for manual usage
-- [ ] Test stok update
+- [x] Create usage form component (d405bd1)
+- [x] Input: supply, jumlah, tanggal, keperluan (d405bd1)
+- [x] Create POST /office-usages route (d405bd1)
+- [x] Save OfficeUsage (d405bd1)
+- [x] Create OfficeMutation (jenis: keluar, tipe: manual) (d405bd1)
+- [x] Update stok (d405bd1)
+- [x] Write tests for manual usage (d405bd1)
+- [x] Test stok update (d405bd1)
 
 ### Task 5.2: Create Quick Deduct Feature
-- [ ] Create quick deduct form (minimal)
-- [ ] Input: supply, jumlah, keterangan singkat
-- [ ] Create POST /office-mutations/quick-deduct route
-- [ ] Create OfficeMutation langsung (jenis: keluar, tipe: quick_deduct)
-- [ ] Update stok
-- [ ] Write tests for quick deduct
-- [ ] Test quick stok reduction
+- [x] Create quick deduct form (minimal) (d405bd1)
+- [x] Input: supply, jumlah, keterangan singkat (d405bd1)
+- [x] Create POST /office-mutations/quick-deduct route (d405bd1)
+- [x] Create OfficeMutation langsung (jenis: keluar, tipe: quick_deduct) (d405bd1)
+- [x] Update stok (d405bd1)
+- [x] Write tests for quick deduct (d405bd1)
+- [x] Test quick stok reduction (d405bd1)
 
 ### Task 5.3: Create Usage List View
-- [ ] Create Index.tsx with usage list
-- [ ] Filter by date range and user
+- [x] Create Index.tsx with usage list (d405bd1)
+- [x] Filter by date range and user (d405bd1)
 - [ ] Show usage history
-- [ ] Write tests for view
-- [ ] Test list display
+- [x] Write tests for view (d405bd1)
+- [x] Test list display (d405bd1)
 
 ### Task 5.4: Task: Conductor - User Manual Verification 'Phase 5: Pencatatan Pemakaian' (Protocol in workflow.md)
 
