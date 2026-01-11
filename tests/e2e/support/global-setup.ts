@@ -71,6 +71,19 @@ export default async function globalSetup() {
     stdio: 'inherit',
   });
 
+  // Run WAL checkpoint after migration to ensure database consistency
+  // This is important for SQLite in WAL mode to ensure all changes are flushed
+  if (fs.existsSync(dbFilePath)) {
+    try {
+      execSync(`sqlite3 "${dbFilePath}" "PRAGMA wal_checkpoint(TRUNCATE);"`, {
+        cwd: projectRoot,
+        stdio: 'inherit',
+      });
+    } catch (error) {
+      console.warn('Warning: WAL checkpoint failed after migration:', error);
+    }
+  }
+
   if (!fs.existsSync(manifestPath)) {
     execSync('npm run build', { cwd: projectRoot, stdio: 'inherit' });
   }
