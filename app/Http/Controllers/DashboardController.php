@@ -106,10 +106,10 @@ class DashboardController extends Controller
     {
         // Get last 6 months of data using MySQL DATE_FORMAT
         $data = AtkRequest::query()
-            ->selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as `year_month`, COUNT(*) as requests')
+            ->selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as month_key, COUNT(*) as requests')
             ->where('tanggal', '>=', now()->subMonths(6))
-            ->groupBy('`year_month`')
-            ->orderBy('`year_month`')
+            ->groupBy('month_key')
+            ->orderBy('month_key')
             ->get();
 
         // Calculate expenditure by summing up request details with item prices
@@ -121,9 +121,9 @@ class DashboardController extends Controller
 
         // Format month names in PHP using Carbon and calculate expenditure
         return $data->map(fn ($item) => [
-            'month' => $item->year_month ? Carbon::parse($item->year_month.'-01')->format('M') : '',
+            'month' => $item->month_key ? Carbon::parse($item->month_key.'-01')->format('M') : '',
             'requests' => $item->requests,
-            'expenditure' => (int) ($requests->get($item->year_month)?->sum(fn ($request) => $request->requestDetails->sum(fn ($detail) => ($detail->jumlah_diberikan ?? $detail->jumlah_disetujui ?? $detail->jumlah_diminta) * ($detail->item?->harga_rata_rata ?? 0)
+            'expenditure' => (int) ($requests->get($item->month_key)?->sum(fn ($request) => $request->requestDetails->sum(fn ($detail) => ($detail->jumlah_diberikan ?? $detail->jumlah_disetujui ?? $detail->jumlah_diminta) * ($detail->item?->harga_rata_rata ?? 0)
             )
             ) ?? 0),
         ])->toArray();
