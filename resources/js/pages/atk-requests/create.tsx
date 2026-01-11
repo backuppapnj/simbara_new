@@ -249,6 +249,14 @@ export default function AtkRequestsCreate({
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
+                            {form.errors.items && (
+                                <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-900 dark:bg-red-900/20">
+                                    <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" />
+                                    <p className="text-sm text-red-800 dark:text-red-200">
+                                        {form.errors.items}
+                                    </p>
+                                </div>
+                            )}
                             {stockWarning && (
                                 <div className="flex items-start gap-2 rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-900 dark:bg-yellow-900/20">
                                     <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-600 dark:text-yellow-400" />

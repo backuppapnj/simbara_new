@@ -11,17 +11,28 @@ use App\Models\StockOpname;
 use App\Models\StockOpnameDetail;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class E2ESeeder extends Seeder
 {
     public function run(): void
     {
-        $this->seedDepartments();
-        $this->seedOfficeSupplies();
-        $this->seedAtkItems();
-        $this->seedPurchases();
-        $this->seedStockOpname();
+        DB::beginTransaction();
+
+        try {
+            $this->seedDepartments();
+            $this->seedOfficeSupplies();
+            $this->seedAtkItems();
+            $this->seedPurchases();
+            $this->seedStockOpname();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     protected function seedDepartments(): void
@@ -137,6 +148,15 @@ class E2ESeeder extends Seeder
 
     protected function seedPurchases(): void
     {
+        // Validate dependency: Items must exist
+        $itemCount = Item::count();
+        if ($itemCount === 0) {
+            throw new RuntimeException(
+                'Cannot seed purchases: No items found in database. '.
+                'Please seed items first before creating purchases.'
+            );
+        }
+
         $purchase = Purchase::factory()->draft()->create([
             'id' => (string) Str::ulid(),
             'no_pembelian' => 'PB-'.date('Ymd').'-0001',
@@ -160,14 +180,30 @@ class E2ESeeder extends Seeder
 
     protected function seedStockOpname(): void
     {
+        // Validate dependency: Admin user must exist
         $approver = User::where('email', 'admin@pa-penajam.go.id')->first();
+        if (! $approver) {
+            throw new RuntimeException(
+                'Cannot seed stock opname: Admin user (admin@pa-penajam.go.id) not found. '.
+                'Please seed users first before creating stock opname.'
+            );
+        }
+
+        // Validate dependency: Items must exist
+        $itemCount = Item::count();
+        if ($itemCount === 0) {
+            throw new RuntimeException(
+                'Cannot seed stock opname: No items found in database. '.
+                'Please seed items first before creating stock opname.'
+            );
+        }
 
         $stockOpname = StockOpname::factory()->approved()->create([
             'no_so' => 'SO-'.date('Ymd').'-0001',
             'tanggal' => now()->toDateString(),
             'periode_bulan' => now()->translatedFormat('F'),
             'periode_tahun' => (int) now()->format('Y'),
-            'approved_by' => $approver?->id,
+            'approved_by' => $approver->id,
             'approved_at' => now(),
         ]);
 

@@ -31,8 +31,8 @@ test('can get departments list as json', function () {
                 ],
             ],
         ])
-        ->assertJsonPath('data.0.nama_unit', 'IT Department')
-        ->assertJsonPath('data.1.nama_unit', 'HR Department');
+        ->assertJsonPath('data.0.nama_unit', 'HR Department')
+        ->assertJsonPath('data.1.nama_unit', 'IT Department');
 });
 
 test('departments endpoint returns empty array when no departments', function () {

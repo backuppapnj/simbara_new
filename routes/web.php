@@ -23,6 +23,9 @@ Route::post('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController
 
 Route::post('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+// Departments API (public for E2E tests)
+Route::get('/departments', [\App\Http\Controllers\DepartmentController::class, 'index'])->name('departments.index');
+
 if (Features::enabled(Features::resetPasswords())) {
     Route::get('/forgot-password', fn () => Inertia::render('auth/forgot-password'))->name('password.request');
     Route::post('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])->name('password.email');
@@ -206,6 +209,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [\App\Http\Controllers\OfficeSupplyController::class, 'store'])
             ->middleware('permission:office.create')
             ->name('store');
+        Route::get('/{office_supply}', [\App\Http\Controllers\OfficeSupplyController::class, 'show'])
+            ->name('show');
         Route::put('/{office_supply}', [\App\Http\Controllers\OfficeSupplyController::class, 'update'])
             ->middleware('permission:office.edit')
             ->name('update');

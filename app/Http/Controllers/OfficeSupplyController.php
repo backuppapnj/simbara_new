@@ -60,6 +60,22 @@ class OfficeSupplyController extends Controller
     }
 
     /**
+     * Display the specified office supply.
+     */
+    public function show(Request $request, OfficeSupply $office_supply): Response|JsonResponse
+    {
+        if ($request->wantsJson()) {
+            return response()->json([
+                'data' => $office_supply,
+            ]);
+        }
+
+        return Inertia::render('officeSupplies/Show', [
+            'supply' => $office_supply,
+        ]);
+    }
+
+    /**
      * Update the specified office supply in storage.
      */
     public function update(OfficeSupplyRequest $request, OfficeSupply $office_supply): RedirectResponse

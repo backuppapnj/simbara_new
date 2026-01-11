@@ -2,11 +2,11 @@ import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { StrictMode, useEffect } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 import { Toaster } from './components/ui/sonner';
-import { toast } from 'sonner';
+import { FlashHandler } from './components/flash-handler';
 
 // Import PWA service worker registration
 import { registerSW } from 'virtual:pwa-register';
@@ -25,6 +25,7 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
+                <FlashHandler />
                 <App {...props} />
                 <Toaster />
             </StrictMode>,
