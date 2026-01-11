@@ -132,6 +132,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{office_supply}/mutations', [\App\Http\Controllers\OfficeSupplyController::class, 'mutations'])->name('mutations');
     });
 
+    // Office Usages Management
+    Route::prefix('office-usages')->name('office-usages.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\OfficeUsageController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\OfficeUsageController::class, 'store'])->name('store');
+    });
+
+    // Office Mutations
+    Route::prefix('office-mutations')->name('office-mutations.')->group(function () {
+        Route::post('/quick-deduct', [\App\Http\Controllers\OfficeUsageController::class, 'quickDeduct'])->name('quick-deduct');
+    });
+
     // Office Purchases Management
     Route::prefix('office-purchases')->name('office-purchases.')->group(function () {
         Route::get('/', [\App\Http\Controllers\OfficePurchaseController::class, 'index'])->name('index');
