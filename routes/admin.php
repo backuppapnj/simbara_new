@@ -49,10 +49,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     // User Management Routes
     Route::prefix('users')->name('users.')->group(function () {
-        // User Export - requires users.view permission (checked in policy)
+        // User Export - must come before /{user} route
         Route::get('/export', UserExportController::class)
             ->middleware(['permission:users.view'])
             ->name('export');
+
+        // User CRUD Routes - authorization handled by UserPolicy
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{user}', [UserController::class, 'show'])->name('show');
+        Route::put('/{user}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+
+        // User Restore (soft delete)
+        Route::post('/{id}/restore', [UserController::class, 'restore'])->name('restore');
 
         // User role sync - requires super_admin (checked in controller)
         Route::put('/{user}/roles', [UserController::class, 'syncRoles'])->name('sync-roles');
@@ -60,7 +70,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         // User Impersonation Routes
         // Start impersonation requires users.impersonate permission
         Route::post('/{user}/impersonate', [ImpersonateController::class, 'start'])
-            ->middleware(['permission:users.impersonate'])
             ->name('impersonate');
 
         // Stop impersonation only requires authentication (session check handles authorization)
