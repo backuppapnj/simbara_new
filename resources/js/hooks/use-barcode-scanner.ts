@@ -1,4 +1,4 @@
-import { Html5Qrcode, Html5QrcodeError } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 import { useRef, useState } from 'react';
 
 export interface BarcodeScannerError {
@@ -57,7 +57,7 @@ export function useBarcodeScanner(
                         navigator.vibrate(200);
                     }
                 },
-                (errorMessage: string, error: Html5QrcodeError) => {
+                (errorMessage: string) => {
                     // Ignore scan errors - they happen frequently when no code is in view
                     // Only log for debugging
                     if (process.env.NODE_ENV === 'development') {

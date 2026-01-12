@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import React from 'react';
 
 interface ShimmerProps {
@@ -39,7 +39,7 @@ export const Shimmer: React.FC<ShimmerProps> = ({
     );
 };
 
-interface ShimmerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ShimmerButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref'> {
     children: React.ReactNode;
     shimmerColor?: string;
     shimmerSize?: string;

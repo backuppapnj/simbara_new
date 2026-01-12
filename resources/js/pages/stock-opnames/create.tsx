@@ -4,6 +4,7 @@ import {
 } from '@/components/stock-opname/item-photo-capture';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import stockOpnames from '@/routes/stock-opnames';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Camera, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -37,7 +38,7 @@ interface CreateProps {
 }
 
 export default function Create({ items }: CreateProps) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, transform } = useForm({
         tanggal: new Date().toISOString().split('T')[0],
         periode_bulan: new Date().toLocaleString('id-ID', { month: 'long' }),
         periode_tahun: new Date().getFullYear(),
@@ -122,42 +123,41 @@ export default function Create({ items }: CreateProps) {
         }
 
         // Convert photos data to FormData for file upload
-        const formData = new FormData();
-        formData.append('tanggal', data.tanggal);
-        formData.append('periode_bulan', data.periode_bulan);
-        formData.append('periode_tahun', data.periode_tahun.toString());
-        formData.append('keterangan', data.keterangan);
+        transform((data) => {
+            const formData = new FormData();
+            formData.append('tanggal', data.tanggal);
+            formData.append('periode_bulan', data.periode_bulan);
+            formData.append('periode_tahun', data.periode_tahun.toString());
+            formData.append('keterangan', data.keterangan);
 
-        data.details.forEach((detail, index) => {
-            formData.append(`details[${index}][item_id]`, detail.item_id);
-            formData.append(
-                `details[${index}][stok_sistem]`,
-                detail.stok_sistem.toString(),
-            );
-            formData.append(
-                `details[${index}][stok_fisik]`,
-                detail.stok_fisik.toString(),
-            );
-            formData.append(`details[${index}][keterangan]`, detail.keterangan);
+            data.details.forEach((detail, index) => {
+                formData.append(`details[${index}][item_id]`, detail.item_id);
+                formData.append(
+                    `details[${index}][stok_sistem]`,
+                    detail.stok_sistem.toString(),
+                );
+                formData.append(
+                    `details[${index}][stok_fisik]`,
+                    detail.stok_fisik.toString(),
+                );
+                formData.append(`details[${index}][keterangan]`, detail.keterangan);
 
-            // Attach photos if any
-            if (detail.photos && detail.photos.length > 0) {
-                detail.photos.forEach((photo) => {
-                    if (photo.file instanceof File) {
-                        formData.append(
-                            `details[${index}][photos][]`,
-                            photo.file,
-                        );
-                    }
-                });
-            }
+                // Attach photos if any
+                if (detail.photos && detail.photos.length > 0) {
+                    detail.photos.forEach((photo) => {
+                        if (photo.file instanceof File) {
+                            formData.append(
+                                `details[${index}][photos][]`,
+                                photo.file,
+                            );
+                        }
+                    });
+                }
+            });
+            return formData as any; // Cast to any to avoid type mismatch with expected FormDataConvertible
         });
 
-        post(route('stock-opnames.store'), {
-            data: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+        post(stockOpnames.store.url(), {
             forceFormData: true,
         });
     };
@@ -168,15 +168,15 @@ export default function Create({ items }: CreateProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Buat Stock Opname" />
 
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
-                {/* Header */}
-                <div className="flex items-center gap-4">
-                    <Link
-                        href={route('stock-opnames.index')}
-                        className="inline-flex items-center gap-2 rounded-lg border bg-card px-4 py-2 text-sm font-medium hover:bg-muted"
-                    >
-                        <ArrowLeft className="h-4 w-4" />
-                        Kembali
+                <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
+                    {/* Header */}
+                    <div className="flex items-center gap-4">
+                        <Link
+                            href={stockOpnames.index.url()}
+                            className="inline-flex items-center gap-2 rounded-lg border bg-card px-4 py-2 text-sm font-medium hover:bg-muted"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                            Kembali
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">
@@ -611,7 +611,7 @@ export default function Create({ items }: CreateProps) {
                     {/* Actions */}
                     <div className="flex items-center justify-end gap-4 rounded-xl border bg-card p-6">
                         <Link
-                            href={route('stock-opnames.index')}
+                            href={stockOpnames.index.url()}
                             className="inline-flex items-center gap-2 rounded-lg border px-6 py-2.5 text-sm font-medium hover:bg-muted"
                         >
                             Batal

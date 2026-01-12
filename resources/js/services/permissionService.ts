@@ -1,4 +1,6 @@
 import { router } from '@inertiajs/react';
+import permissions from '@/routes/admin/permissions';
+import roles from '@/routes/admin/roles';
 
 export interface Permission {
     id: number;
@@ -43,6 +45,13 @@ export interface GetRolePermissionsResponse {
     all: RolePermission[];
 }
 
+declare global {
+    interface Window {
+        permissions?: GetPermissionsResponse;
+        rolePermissions?: Record<number, GetRolePermissionsResponse>;
+    }
+}
+
 const permissionService = {
     /**
      * Get all permissions grouped by module
@@ -66,7 +75,7 @@ const permissionService = {
      * Create a new permission
      */
     createPermission: (data: CreatePermissionData) => {
-        return router.post(route('admin.permissions.store'), data, {
+        return router.post(permissions.store.url(), data as any, {
             preserveScroll: true,
             onSuccess: () => {
                 console.log('Permission created successfully');
@@ -81,7 +90,7 @@ const permissionService = {
      * Update an existing permission
      */
     updatePermission: (id: number, data: UpdatePermissionData) => {
-        return router.put(route('admin.permissions.update', id), data, {
+        return router.put(permissions.update.url(id), data as any, {
             preserveScroll: true,
             onSuccess: () => {
                 console.log('Permission updated successfully');
@@ -96,7 +105,7 @@ const permissionService = {
      * Delete a permission
      */
     deletePermission: (id: number) => {
-        return router.delete(route('admin.permissions.destroy', id), {
+        return router.delete(permissions.destroy.url(id), {
             preserveScroll: true,
             onSuccess: () => {
                 console.log('Permission deleted successfully');
@@ -112,8 +121,8 @@ const permissionService = {
      */
     syncRolePermissions: (roleId: number, permissionIds: number[]) => {
         return router.put(
-            route('admin.roles.sync-permissions', roleId),
-            { permission_ids: permissionIds },
+            roles.syncPermissions.url(roleId),
+            { permission_ids: permissionIds } as any,
             {
                 preserveScroll: true,
                 onSuccess: () => {
@@ -130,7 +139,7 @@ const permissionService = {
      * Navigate to permission list
      */
     navigateToPermissions: () => {
-        return router.get(route('admin.permissions.index'));
+        return router.get(permissions.index.url());
     },
 
     /**
@@ -140,7 +149,7 @@ const permissionService = {
         roleId: number,
         tab: string = 'permissions',
     ) => {
-        return router.get(route('admin.roles.show', roleId), { tab });
+        return router.get(roles.show.url(roleId), { tab });
     },
 };
 

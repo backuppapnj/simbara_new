@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import assets from '@/routes/assets';
 import { Link } from '@inertiajs/react';
 import { ChevronRight, DollarSign, MapPin, Package } from 'lucide-react';
 
@@ -60,7 +61,7 @@ const getLocationDisplay = (asset: Asset): string => {
 export default function AssetCard({ asset }: AssetCardProps) {
     return (
         <Link
-            href={route('assets.show', asset.id)}
+            href={assets.show.url(asset.id)}
             className="block transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
             <Card className="h-full cursor-pointer transition-shadow hover:shadow-md">

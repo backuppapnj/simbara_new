@@ -41,7 +41,7 @@ export default function WhatsAppSettings({
 
     const handleSettingsSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        settingsForm.patch(update(), {
+        settingsForm.patch(update.url(), {
             onSuccess: () => {
                 settingsForm.reset();
             },
@@ -50,7 +50,7 @@ export default function WhatsAppSettings({
 
     const handleTestSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        testForm.post(update().url.replace('/update', '/test-send'), {
+        testForm.post(update.url().replace('/update', '/test-send'), {
             onSuccess: () => {
                 setShowTestForm(false);
                 testForm.reset();

@@ -11,6 +11,7 @@ use App\Models\NotificationLog;
 use App\Models\OfficeRequest;
 use App\Models\OfficeSupply;
 use App\Models\StockOpname;
+use App\Models\User;
 use App\Policies\AssetPolicy;
 use App\Policies\AtkRequestPolicy;
 use App\Policies\ItemPolicy;
@@ -18,6 +19,7 @@ use App\Policies\NotificationLogPolicy;
 use App\Policies\OfficeRequestPolicy;
 use App\Policies\OfficeSupplyPolicy;
 use App\Policies\StockOpnamePolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -35,6 +37,7 @@ class AuthServiceProvider extends ServiceProvider
         OfficeRequest::class => OfficeRequestPolicy::class,
         OfficeSupply::class => OfficeSupplyPolicy::class,
         StockOpname::class => StockOpnamePolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**

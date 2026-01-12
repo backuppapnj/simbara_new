@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
+import roles from '@/routes/admin/roles';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import {
@@ -57,6 +58,8 @@ interface Permission {
     module: string;
     description: string | null;
     assigned: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 interface PermissionGroup {
@@ -130,7 +133,7 @@ export default function RoleShow({
     const handleTabChange = (tab: TabValue) => {
         setActiveTab(tab);
         router.get(
-            route('admin.roles.show', role.id),
+            roles.show.url(role.id),
             { ...filters, tab },
             {
                 preserveState: true,
@@ -143,7 +146,7 @@ export default function RoleShow({
     useEffect(() => {
         const timer = setTimeout(() => {
             router.get(
-                route('admin.roles.show', role.id),
+                roles.show.url(role.id),
                 { ...filters, tab: activeTab, search: searchQuery },
                 {
                     preserveState: true,
@@ -244,12 +247,12 @@ export default function RoleShow({
         e.preventDefault();
         setIsLoading(true);
 
-        const routeName =
+        const updateUrl =
             activeTab === 'users'
-                ? 'admin.roles.update-users'
-                : 'admin.roles.sync-permissions';
+                ? roles.updateUsers.url(role.id)
+                : roles.syncPermissions.url(role.id);
 
-        form.put(route(routeName, role.id), {
+        form.put(updateUrl, {
             onSuccess: () => {
                 const tabName = activeTab === 'users' ? 'User' : 'Permission';
                 setToastMessage(`${tabName} assignments updated successfully!`);
@@ -289,7 +292,7 @@ export default function RoleShow({
         },
         {
             title: 'Roles',
-            href: route('admin.roles.index'),
+            href: roles.index.url(),
         },
         {
             title: role.name,
@@ -306,7 +309,7 @@ export default function RoleShow({
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
-                            href={route('admin.roles.index')}
+                            href={roles.index.url()}
                             className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                         >
                             <Button variant="ghost" size="sm">

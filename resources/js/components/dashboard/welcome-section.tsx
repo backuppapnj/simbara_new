@@ -1,9 +1,10 @@
 import { usePage } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
+import { type SharedData } from '@/types';
 
 export default function WelcomeSection() {
-    const { props } = usePage();
+    const { props } = usePage<SharedData>();
     const user = props.auth?.user as { name: string } | undefined;
 
     const getCurrentDate = () => {

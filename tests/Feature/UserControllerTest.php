@@ -10,7 +10,14 @@ uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
     // Seed roles before each test
-    Artisan::call('db:seed', ['--class' => 'RoleSeeder']);
+    Artisan::call('db:seed', ['--class' => 'RolesSeeder']);
+
+    // Create a super_admin user for tests
+    $admin = User::factory()->create([
+        'email' => 'admin@test.com',
+        'name' => 'Admin User',
+    ]);
+    $admin->assignRole('super_admin');
 });
 
 describe('UserController Index', function () {
@@ -24,7 +31,9 @@ describe('UserController Index', function () {
             ->assertStatus(200);
 
         // Check if it returns Inertia response
-        expect($response->viewData('page'))->toBeObject();
+        $page = $response->viewData('page');
+        expect($page)->toBeArray();
+        expect($page['component'])->toBe('Admin/Users/Index');
     });
 
     it('filters users by search term', function () {
@@ -149,8 +158,15 @@ describe('UserController Store', function () {
         $user = User::factory()->create();
         $user->assignRole('pegawai');
 
+        $userData = [
+            'name' => 'Test User',
+            'email' => 'test2@example.com',
+            'password' => 'Password123',
+            'password_confirmation' => 'Password123',
+        ];
+
         actingAs($user)
-            ->post('/admin/users', [])
+            ->post('/admin/users', $userData)
             ->assertStatus(403);
     });
 });
@@ -182,8 +198,13 @@ describe('UserController Update', function () {
 
         $targetUser = User::factory()->create();
 
+        $updateData = [
+            'name' => 'New Name',
+            'email' => $targetUser->email,
+        ];
+
         actingAs($user)
-            ->put("/admin/users/{$targetUser->id}", [])
+            ->put("/admin/users/{$targetUser->id}", $updateData)
             ->assertStatus(403);
     });
 });

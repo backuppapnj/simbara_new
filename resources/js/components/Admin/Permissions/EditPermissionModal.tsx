@@ -10,6 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import permissions from '@/routes/admin/permissions';
 import type { Permission } from '@/services/permissionService';
 import { useForm } from '@inertiajs/react';
 import { Loader2, Save, Shield } from 'lucide-react';
@@ -48,7 +49,7 @@ export default function EditPermissionModal({
             return;
         }
 
-        form.put(route('admin.permissions.update', permission.id), {
+        form.put(permissions.update.url(permission.id), {
             onSuccess: () => {
                 form.reset();
                 onSuccess?.();
@@ -103,7 +104,7 @@ export default function EditPermissionModal({
                                 id="name"
                                 placeholder="e.g., view_assets, create_atk_requests"
                                 value={form.data.name}
-                                onChange={(e) =>
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                     form.setData('name', e.target.value)
                                 }
                                 disabled={form.processing}
@@ -132,7 +133,7 @@ export default function EditPermissionModal({
                                 id="description"
                                 placeholder="Briefly describe what this permission controls..."
                                 value={form.data.description}
-                                onChange={(e) =>
+                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                     form.setData('description', e.target.value)
                                 }
                                 disabled={form.processing}

@@ -1,5 +1,6 @@
 import { DataTable, type Column } from '@/components/enhanced/data-table';
 import { Badge } from '@/components/ui/badge';
+import assets from '@/routes/assets';
 import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { Eye } from 'lucide-react';
@@ -15,9 +16,11 @@ interface Asset {
     id: string;
     kd_brg: string | null;
     nama: string | null;
+    merk: string | null;
     ur_kondisi: string | null;
     kd_kondisi: string | null;
     rph_aset: number | null;
+    lokasi_ruang: string | null;
     location: Location | null;
 }
 
@@ -136,7 +139,7 @@ const columns: Column<Asset>[] = [
         accessor: 'id',
         cell: (asset) => (
             <Link
-                href={route('assets.show', asset.id)}
+                href={assets.show.url(asset.id)}
                 className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
             >
                 <Eye className="h-4 w-4" />

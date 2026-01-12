@@ -2,6 +2,7 @@ import { Column, DataTable } from '@/components/enhanced/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import atkRequests from '@/routes/atk-requests';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Eye, Plus } from 'lucide-react';
@@ -166,7 +167,7 @@ export default function AtkRequestsIndex({
             header: 'Aksi',
             accessor: (row) => (
                 <div className="flex items-center gap-2">
-                    <Link href={route('atk-requests.show', row.id)}>
+                    <Link href={atkRequests.show.url(row.id)}>
                         <Button variant="ghost" size="sm">
                             <Eye className="h-4 w-4" />
                         </Button>
@@ -180,7 +181,7 @@ export default function AtkRequestsIndex({
 
     const handleFilterChange = (key: string, value: string) => {
         router.get(
-            route('atk-requests.index'),
+            atkRequests.index.url(),
             {
                 ...filters,
                 [key]: value,
@@ -204,7 +205,7 @@ export default function AtkRequestsIndex({
                             Kelola permintaan ATK dengan workflow approval
                         </p>
                     </div>
-                    <Link href={route('atk-requests.create')}>
+                    <Link href={atkRequests.create.url()}>
                         <Button>
                             <Plus className="mr-2 h-4 w-4" />
                             Buat Permintaan

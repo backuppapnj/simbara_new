@@ -10,6 +10,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
+import atkRequests from '@/routes/atk-requests';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { AlertCircle, ArrowLeft, Package, Plus, Trash2 } from 'lucide-react';
@@ -123,7 +124,9 @@ export default function AtkRequestsCreate({
         form.transform((data) => ({
             ...data,
             items: requestItems,
-        })).post(route('atk-requests.store'));
+        }));
+        
+        form.post(atkRequests.store.url());
     };
 
     const filteredItems = items.filter((item) => item.stok > 0);
@@ -132,14 +135,14 @@ export default function AtkRequestsCreate({
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Buat Permintaan ATK" />
 
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
-                {/* Header */}
-                <div className="flex items-center gap-4">
-                    <Link href={route('atk-requests.index')}>
-                        <Button variant="ghost" size="icon">
-                            <ArrowLeft className="h-5 w-5" />
-                        </Button>
-                    </Link>
+                <div className="flex h-full flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6">
+                    {/* Header */}
+                    <div className="flex items-center gap-4">
+                        <Link href={atkRequests.index.url()}>
+                            <Button variant="ghost" size="icon">
+                                <ArrowLeft className="h-5 w-5" />
+                            </Button>
+                        </Link>
                     <div>
                         <h1 className="text-2xl font-bold">
                             Buat Permintaan ATK
@@ -403,7 +406,7 @@ export default function AtkRequestsCreate({
 
                     {/* Actions */}
                     <div className="flex items-center justify-end gap-4">
-                        <Link href={route('atk-requests.index')}>
+                        <Link href={atkRequests.index.url()}>
                             <Button type="button" variant="outline">
                                 Batal
                             </Button>

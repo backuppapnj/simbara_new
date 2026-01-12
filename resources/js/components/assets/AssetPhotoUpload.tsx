@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import assets from '@/routes/assets';
 import { router } from '@inertiajs/react';
 import { Camera, Loader2, Upload, X } from 'lucide-react';
 import { useState } from 'react';
@@ -58,7 +59,7 @@ export function AssetPhotoUpload({
                 formData.append('caption', caption);
             }
 
-            await router.post(route('assets.photos.store', assetId), formData, {
+            await router.post(assets.photos.store.url(assetId), formData, {
                 onSuccess: () => {
                     setPhotoData(null);
                     setCaption('');
@@ -154,7 +155,7 @@ export function AssetPhotoUpload({
                         <Textarea
                             id="caption"
                             value={caption}
-                            onChange={(e) => setCaption(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCaption(e.target.value)}
                             placeholder="Masukkan keterangan foto..."
                             rows={2}
                             maxLength={255}

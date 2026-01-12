@@ -90,6 +90,8 @@ const categories = [
     'Lainnya',
 ];
 
+const allSelectValue = '__all__';
+
 export default function ItemsIndex({ items, filters }: ItemsProps) {
     const { props } = usePage();
     const auth = props.auth as {
@@ -137,7 +139,7 @@ export default function ItemsIndex({ items, filters }: ItemsProps) {
     });
 
     const handleSearch = () => {
-        router.get(index().url(), {
+        router.get(index.url(), {
             search: search || undefined,
             kategori: selectedCategory || undefined,
         });
@@ -146,7 +148,7 @@ export default function ItemsIndex({ items, filters }: ItemsProps) {
     const handleClearFilters = () => {
         setSearch('');
         setSelectedCategory('');
-        router.get(index().url());
+        router.get(index());
     };
 
     const openCreateDialog = () => {
@@ -156,7 +158,7 @@ export default function ItemsIndex({ items, filters }: ItemsProps) {
 
     const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        createForm.post(store().url, {
+        createForm.post(store.url(), {
             onSuccess: () => {
                 setCreateDialog(false);
                 createForm.reset();
@@ -316,14 +318,18 @@ export default function ItemsIndex({ items, filters }: ItemsProps) {
                     <div>
                         <Label htmlFor="category">Category</Label>
                         <Select
-                            value={selectedCategory}
-                            onValueChange={setSelectedCategory}
+                            value={selectedCategory || allSelectValue}
+                            onValueChange={(value) =>
+                                setSelectedCategory(
+                                    value === allSelectValue ? '' : value,
+                                )
+                            }
                         >
                             <SelectTrigger id="category" className="w-[200px]">
                                 <SelectValue placeholder="Pilih kategori" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="">All</SelectItem>
+                                <SelectItem value={allSelectValue}>All</SelectItem>
                                 {categories.map((cat) => (
                                     <SelectItem key={cat} value={cat}>
                                         {cat}
@@ -481,7 +487,7 @@ export default function ItemsIndex({ items, filters }: ItemsProps) {
                                         }
                                         size="sm"
                                         onClick={() =>
-                                            router.get(index().url(), {
+                                            router.get(index.url(), {
                                                 ...filters,
                                                 page: i + 1,
                                             })

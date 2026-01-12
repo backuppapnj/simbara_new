@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useBarcodeScanner } from '@/hooks/use-barcode-scanner';
 import { cn } from '@/lib/utils';
 import { AlertCircle, CheckCircle, Scan, X } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
 export interface BarcodeScannerProps {
     onScanSuccess?: (code: string, result?: unknown) => void;
@@ -22,10 +22,8 @@ export function BarcodeScanner({
     showCloseButton = true,
 }: BarcodeScannerProps) {
     const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
-    const scannerElementId = useMemo(
-        () => `barcode-scanner-${Math.random().toString(36).substring(7)}`,
-        [],
-    );
+    const id = useId();
+    const scannerElementId = `barcode-scanner-${id.replace(/:/g, '')}`;
     const hasScannedRef = useRef(false);
     const stopScanningRef = useRef<(() => Promise<void>) | null>(null);
 
@@ -77,7 +75,7 @@ export function BarcodeScanner({
         return () => {
             cleanup();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, []);
 
     const handleRestart = () => {
@@ -143,7 +141,7 @@ export function BarcodeScanner({
 
                 {/* Scanner element */}
                 <div
-                    id={scannerElementId.current}
+                    id={scannerElementId}
                     className={cn(
                         'h-full w-full',
                         !isLoading && !error && 'block',

@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import purchasesRoutes from '@/routes/purchases';
 import { Head, Link, router } from '@inertiajs/react';
 import {
     CheckCircle,
@@ -61,6 +62,7 @@ interface PaginatedData {
     next_page_url: string | null;
     prev_page_url: string | null;
     links: PaginationLink[];
+    total: number;
 }
 
 interface IndexProps {
@@ -97,7 +99,7 @@ const formatCurrency = (amount: number): string => {
 export default function PurchasesIndex({ purchases, filters }: IndexProps) {
     const handleFilterChange = (key: string, value: string) => {
         router.get(
-            route('purchases.index'),
+            purchasesRoutes.index.url(),
             { ...filters, [key]: value },
             { preserveState: true },
         );
@@ -119,7 +121,7 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
             return;
         }
 
-        router.visit(route('purchases.show', purchase), {
+        router.visit(purchasesRoutes.show.url(purchase), {
             method: 'get',
         });
     };
@@ -134,7 +136,7 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
         }
 
         router.post(
-            route('purchases.complete', purchase),
+            purchasesRoutes.complete.url(purchase),
             {},
             {
                 onSuccess: () => {
@@ -162,7 +164,7 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                         </p>
                     </div>
                     <Link
-                        href={route('purchases.create')}
+                        href={purchasesRoutes.create.url()}
                         className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
                     >
                         <Plus className="h-4 w-4" />
@@ -231,7 +233,7 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                         <div className="flex items-end">
                             <button
                                 onClick={() =>
-                                    router.get(route('purchases.index'))
+                                    router.get(purchasesRoutes.index.url())
                                 }
                                 className="rounded-md border border-input bg-background px-3 py-1.5 text-sm hover:bg-muted"
                             >
@@ -327,8 +329,7 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
-                                                        href={route(
-                                                            'purchases.show',
+                                                        href={purchasesRoutes.show.url(
                                                             purchase,
                                                         )}
                                                         className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
@@ -380,14 +381,7 @@ export default function PurchasesIndex({ purchases, filters }: IndexProps) {
                         <div className="flex items-center justify-between border-t px-4 py-3">
                             <div className="text-sm text-muted-foreground">
                                 Menampilkan {purchases.data.length} dari{' '}
-                                {purchases.links[0].url
-                                    ? new URLSearchParams(
-                                          purchases.links.last_page_url.split(
-                                              '?',
-                                          )[1],
-                                      ).get('per_page')
-                                    : '-'}{' '}
-                                data
+                                {purchases.total} data
                             </div>
                             <div className="flex gap-2">
                                 {purchases.links.map((link, index) => (

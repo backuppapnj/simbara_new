@@ -123,7 +123,7 @@ function calculateDimensions(
 /**
  * Convert data URL to size in bytes
  */
-function dataUrlToSize(dataUrl: string): number {
+export function dataUrlToSize(dataUrl: string): number {
     const base64 = dataUrl.split(',')[1];
     if (!base64) return 0;
     return Math.round((base64.length * 3) / 4);

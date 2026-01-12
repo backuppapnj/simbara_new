@@ -96,7 +96,7 @@ export function usePushNotification(): UsePushNotificationReturn {
         }
     };
 
-    const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
+    const urlBase64ToUint8Array = (base64String: string): BufferSource => {
         const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
         const base64 = (base64String + padding)
             .replace(/-/g, '+')
@@ -154,7 +154,7 @@ export function usePushNotification(): UsePushNotificationReturn {
                     endpoint: subscriptionData.endpoint,
                     key: subscriptionData.keys?.p256dh,
                     token: subscriptionData.keys?.auth,
-                    content_encoding: subscriptionData.encoding || 'aesgcm',
+                    content_encoding: 'aesgcm',
                 }),
             });
 

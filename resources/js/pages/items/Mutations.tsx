@@ -95,10 +95,7 @@ export default function ItemMutations({
     filters,
 }: MutationsProps) {
     // Enable Inertia v2 polling for real-time updates (every 5 seconds)
-    const { start, stop } = usePoll(5000, {
-        preserveState: true,
-        preserveScroll: true,
-    });
+    const { start, stop } = usePoll(5000);
 
     const handleManualRefresh = () => {
         // Stop and restart polling to force immediate refresh

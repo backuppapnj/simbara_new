@@ -1,5 +1,10 @@
 /// <reference lib="webworker" />
 
+interface SyncEvent extends ExtendableEvent {
+    readonly lastChance: boolean;
+    readonly tag: string;
+}
+
 declare const self: ServiceWorkerGlobalScope;
 
 interface PushNotificationData {
@@ -49,7 +54,7 @@ self.addEventListener('push', (event: PushEvent) => {
         }
     }
 
-    const options: NotificationOptions = {
+    const options: NotificationOptions & { image?: string; actions?: Array<{ action: string; title: string; icon?: string }> } = {
         body: notificationData.body,
         icon: notificationData.icon || '/icons/icon-192x192.png',
         badge: notificationData.badge || '/icons/icon-96x96.png',
@@ -71,7 +76,7 @@ self.addEventListener('push', (event: PushEvent) => {
     };
 
     event.waitUntil(
-        self.registration.showNotification(notificationData.title, options),
+        self.registration.showNotification(notificationData.title, options as NotificationOptions & { image?: string; actions?: Array<{ action: string; title: string; icon?: string }> }),
     );
 });
 
@@ -106,8 +111,8 @@ self.addEventListener('notificationclick', (event: NotificationEvent) => {
                 }
 
                 // If no existing window, open a new one
-                if (clients.openWindow) {
-                    return clients.openWindow(url);
+                if (self.clients.openWindow) {
+                    return self.clients.openWindow(url);
                 }
             }),
     );
@@ -122,11 +127,12 @@ self.addEventListener('notificationclose', (event: NotificationEvent) => {
 });
 
 // Sync event for background sync
-self.addEventListener('sync', (event: ExtendableEvent) => {
-    console.log('[Service Worker] Sync event:', event.tag);
+self.addEventListener('sync', (event: any) => {
+    const syncEvent = event as SyncEvent;
+    console.log('[Service Worker] Sync event:', syncEvent.tag);
 
-    if (event.tag === 'sync-forms') {
-        event.waitUntil(
+    if (syncEvent.tag === 'sync-forms') {
+        syncEvent.waitUntil(
             // Handle form synchronization
             Promise.resolve(),
         );

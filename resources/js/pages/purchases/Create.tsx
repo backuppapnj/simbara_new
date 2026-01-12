@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import purchasesRoutes from '@/routes/purchases';
 import { Head, Link, router } from '@inertiajs/react';
 import {
     ArrowLeft,
@@ -140,12 +141,16 @@ export default function PurchaseCreate({ items }: CreateProps) {
         }
 
         router.post(
-            route('purchases.store'),
+            purchasesRoutes.store.url(),
             {
                 tanggal,
                 supplier,
                 keterangan,
-                items: purchaseItems,
+                items: purchaseItems.map((item, index) => ({
+                    item_id: item.item_id,
+                    jumlah: item.jumlah,
+                    harga_satuan: item.harga_satuan,
+                })),
             },
             {
                 onSuccess: () => {
@@ -168,7 +173,7 @@ export default function PurchaseCreate({ items }: CreateProps) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
-                            href={route('purchases.index')}
+                            href={purchasesRoutes.index.url()}
                             className="inline-flex items-center gap-2 rounded-lg border border-input bg-background px-3 py-2 text-sm font-medium hover:bg-muted"
                         >
                             <ArrowLeft className="h-4 w-4" />
@@ -428,7 +433,7 @@ export default function PurchaseCreate({ items }: CreateProps) {
                     {/* Actions */}
                     <div className="flex items-center justify-end gap-3 rounded-xl border bg-card p-6">
                         <Link
-                            href={route('purchases.index')}
+                            href={purchasesRoutes.index.url()}
                             className="rounded-lg border border-input bg-background px-6 py-2.5 text-sm font-medium hover:bg-muted"
                         >
                             Batal

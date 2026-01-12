@@ -42,6 +42,7 @@ interface DashboardProps {
     };
     summary?: SummaryData;
     charts?: ChartData;
+    [key: string]: any;
 }
 
 export default function Dashboard() {

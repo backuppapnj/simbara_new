@@ -30,7 +30,6 @@ class StoreUserRequest extends FormRequest
             'department' => ['nullable', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'roles' => ['nullable', 'array'],
-            'roles.*' => ['exists:roles,id'],
             'is_active' => ['nullable', 'boolean'],
         ];
     }

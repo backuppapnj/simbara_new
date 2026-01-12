@@ -44,9 +44,11 @@ import { useState } from 'react';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Bahan Keperluan Kantor',
-        href: index().url,
+        href: index.url(),
     },
 ];
+
+const allSelectValue = '__all__';
 
 interface Supply {
     id: string;
@@ -100,7 +102,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
 
     const handleSearch = (search: string) => {
         router.get(
-            index().url,
+            index.url(),
             { ...filters, search },
             { preserveState: true },
         );
@@ -108,7 +110,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
 
     const handleCategoryFilter = (kategori: string) => {
         router.get(
-            index().url,
+            index.url(),
             { ...filters, kategori },
             { preserveState: true },
         );
@@ -117,7 +119,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
     const handleDelete = () => {
         if (!deleteDialog.supply) return;
 
-        deleteForm.delete(destroy({ office_supply: deleteDialog.supply.id }), {
+        deleteForm.delete(destroy({ office_supply: deleteDialog.supply.id }).url, {
             onSuccess: () => {
                 setDeleteDialog({ open: false, supply: null });
             },
@@ -127,7 +129,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
     const handleEdit = () => {
         if (!editDialog.supply) return;
 
-        editForm.put(update({ office_supply: editDialog.supply.id }), {
+        editForm.put(update({ office_supply: editDialog.supply.id }).url, {
             onSuccess: () => {
                 setEditDialog({ open: false, supply: null });
                 editForm.reset();
@@ -153,7 +155,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
         {
             id: 'nama_barang',
             header: 'Nama Barang',
-            accessor: 'nama_barang',
+            accessor: (supply) => supply.nama_barang,
             sortable: true,
             cell: (supply) => (
                 <div className="flex items-center gap-2">
@@ -171,7 +173,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
         {
             id: 'kategori',
             header: 'Kategori',
-            accessor: 'kategori',
+            accessor: (supply) => supply.kategori,
             sortable: true,
             cell: (supply) => (
                 <Badge
@@ -188,7 +190,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
         {
             id: 'stok',
             header: 'Stok',
-            accessor: 'stok',
+            accessor: (supply) => supply.stok,
             sortable: true,
             cell: (supply) => (
                 <span
@@ -205,13 +207,14 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
         {
             id: 'stok_minimal',
             header: 'Stok Minimal',
-            accessor: 'stok_minimal',
+            accessor: (supply) => supply.stok_minimal,
             sortable: true,
             cell: (supply) => `${supply.stok_minimal} ${supply.satuan}`,
         },
         {
             id: 'actions',
             header: 'Aksi',
+            accessor: () => null,
             cell: (supply) => (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -257,7 +260,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                         </p>
                     </div>
                     <Button asChild>
-                        <Link href={index().url}>
+                        <Link href={index()}>
                             <Plus className="mr-2 size-4" />
                             Tambah Baru
                         </Link>
@@ -319,14 +322,20 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                     />
                     <Select
                         name="kategori"
-                        value={filters.kategori}
-                        onValueChange={handleCategoryFilter}
+                        value={filters.kategori || allSelectValue}
+                        onValueChange={(value) =>
+                            handleCategoryFilter(
+                                value === allSelectValue ? '' : value,
+                            )
+                        }
                     >
                         <SelectTrigger className="w-[200px]">
                             <SelectValue placeholder="Filter Kategori" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Kategori</SelectItem>
+                            <SelectItem value={allSelectValue}>
+                                Semua Kategori
+                            </SelectItem>
                             <SelectItem value="Consumables">
                                 Consumables
                             </SelectItem>
@@ -368,7 +377,7 @@ export default function OfficeSuppliesIndex({ supplies, filters }: IndexProps) {
                                         }
                                         size="sm"
                                         onClick={() =>
-                                            router.get(index().url, {
+                                            router.get(index(), {
                                                 ...filters,
                                                 page: i + 1,
                                             })

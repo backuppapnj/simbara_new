@@ -4,10 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import type {
-    PermissionGroup,
-    RolePermission,
-} from '@/services/permissionService';
+import type { PermissionGroup } from '@/services/permissionService';
 import { ChevronDown, ChevronRight, Search, Shield } from 'lucide-react';
 import { useState } from 'react';
 
@@ -63,7 +60,7 @@ export default function PermissionList({
     };
 
     // Check if all permissions in a module are selected
-    const isModuleFullySelected = (permissions: RolePermission[]): boolean => {
+    const isModuleFullySelected = (permissions: PermissionGroup['permissions']): boolean => {
         return (
             permissions.length > 0 &&
             permissions.every((p) => selectedPermissionIds.includes(p.id))
@@ -72,7 +69,7 @@ export default function PermissionList({
 
     // Check if some permissions in a module are selected
     const isModulePartiallySelected = (
-        permissions: RolePermission[],
+        permissions: PermissionGroup['permissions'],
     ): boolean => {
         return permissions.some((p) => selectedPermissionIds.includes(p.id));
     };

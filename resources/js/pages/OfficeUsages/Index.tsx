@@ -33,7 +33,7 @@ import { useState } from 'react';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Pemakaian Bahan Kantor',
-        href: index().url,
+        href: index.url(),
     },
 ];
 
@@ -98,7 +98,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
         value: string,
     ) => {
         router.get(
-            index().url,
+            index.url(),
             { ...filters, [field]: value || null },
             { preserveState: true },
         );
@@ -106,7 +106,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
 
     const handleUsageSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        usageForm.post(store(), {
+        usageForm.post(store.url(), {
             onSuccess: () => {
                 setUsageDialog(false);
                 usageForm.reset();
@@ -116,7 +116,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
 
     const handleQuickDeductSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        quickDeductForm.post(quickDeduct(), {
+        quickDeductForm.post(quickDeduct.url(), {
             onSuccess: () => {
                 setQuickDeductDialog(false);
                 quickDeductForm.reset();
@@ -136,7 +136,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
         {
             id: 'tanggal',
             header: 'Tanggal',
-            accessor: 'tanggal',
+            accessor: (usage) => usage.tanggal,
             sortable: true,
             cell: (usage) => (
                 <div className="flex items-center gap-2">
@@ -148,7 +148,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
         {
             id: 'supply',
             header: 'Item',
-            accessor: 'supply.nama_barang',
+            accessor: (usage) => usage.supply.nama_barang,
             sortable: true,
             cell: (usage) => (
                 <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
         {
             id: 'jumlah',
             header: 'Jumlah',
-            accessor: 'jumlah',
+            accessor: (usage) => usage.jumlah,
             sortable: true,
             cell: (usage) => (
                 <Badge variant="outline">
@@ -178,7 +178,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
         {
             id: 'keperluan',
             header: 'Keperluan',
-            accessor: 'keperluan',
+            accessor: (usage) => usage.keperluan,
             cell: (usage) => (
                 <span className="text-sm">{usage.keperluan || '-'}</span>
             ),
@@ -186,7 +186,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
         {
             id: 'user',
             header: 'User',
-            accessor: 'user.name',
+            accessor: (usage) => usage.user.name,
             sortable: true,
             cell: (usage) => (
                 <div className="flex items-center gap-2">
@@ -300,7 +300,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                             variant="ghost"
                             size="sm"
                             onClick={() =>
-                                router.get(index().url, {
+                                router.get(index.url(), {
                                     date_from: null,
                                     date_to: null,
                                 })
@@ -339,7 +339,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                         }
                                         size="sm"
                                         onClick={() =>
-                                            router.get(index().url, {
+                                            router.get(index.url(), {
                                                 ...filters,
                                                 page: i + 1,
                                             })
@@ -383,9 +383,6 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                         <SelectValue placeholder="Pilih bahan kantor" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">
-                                            Pilih bahan kantor
-                                        </SelectItem>
                                         {supplies.map((supply) => (
                                             <SelectItem key={supply.id} value={supply.id}>
                                                 {supply.nama_barang} (Stok: {supply.stok} {supply.satuan})
@@ -406,7 +403,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                     type="number"
                                     min="1"
                                     value={usageForm.data.jumlah}
-                                    onChange={(e) =>
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                         usageForm.setData(
                                             'jumlah',
                                             e.target.value,
@@ -425,7 +422,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                     id="usage_tanggal"
                                     type="date"
                                     value={usageForm.data.tanggal}
-                                    onChange={(e) =>
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                         usageForm.setData(
                                             'tanggal',
                                             e.target.value,
@@ -446,7 +443,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                     id="usage_keperluan"
                                     placeholder="Jelaskan keperluan pemakaian..."
                                     value={usageForm.data.keperluan}
-                                    onChange={(e) =>
+                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                         usageForm.setData(
                                             'keperluan',
                                             e.target.value,
@@ -516,9 +513,6 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                         <SelectValue placeholder="Pilih bahan kantor" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">
-                                            Pilih bahan kantor
-                                        </SelectItem>
                                         {supplies.map((supply) => (
                                             <SelectItem key={supply.id} value={supply.id}>
                                                 {supply.nama_barang} (Stok: {supply.stok} {supply.satuan})
@@ -539,7 +533,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                     type="number"
                                     min="1"
                                     value={quickDeductForm.data.jumlah}
-                                    onChange={(e) =>
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                         quickDeductForm.setData(
                                             'jumlah',
                                             e.target.value,
@@ -560,7 +554,7 @@ export default function OfficeUsagesIndex({ usages, supplies, filters }: IndexPr
                                     id="qd_keterangan"
                                     placeholder="Keterangan singkat..."
                                     value={quickDeductForm.data.keterangan}
-                                    onChange={(e) =>
+                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                         quickDeductForm.setData(
                                             'keterangan',
                                             e.target.value,

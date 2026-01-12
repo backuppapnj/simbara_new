@@ -17,6 +17,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import permissions from '@/routes/admin/permissions';
 import { type CreatePermissionData } from '@/services/permissionService';
 import { useForm } from '@inertiajs/react';
 import { Loader2, Plus, Shield } from 'lucide-react';
@@ -77,28 +78,23 @@ export default function CreatePermissionModal({
             return;
         }
 
-        // Submit with proper module value
-        form.submit(
-            'post',
-            route('admin.permissions.store'),
-            {
-                ...form.data,
-                module: moduleValue,
+        // Update the module value before submitting
+        form.setData('module', moduleValue);
+
+        // Submit the form
+        form.submit('post', permissions.store.url(), {
+            onSuccess: () => {
+                form.reset();
+                setCustomModule('');
+                setSelectedModule('');
+                setIsCustomModule(false);
+                onSuccess?.();
+                onOpenChange(false);
             },
-            {
-                onSuccess: () => {
-                    form.reset();
-                    setCustomModule('');
-                    setSelectedModule('');
-                    setIsCustomModule(false);
-                    onSuccess?.();
-                    onOpenChange(false);
-                },
-                onError: (errors) => {
-                    console.error('Error creating permission:', errors);
-                },
+            onError: (errors) => {
+                console.error('Error creating permission:', errors);
             },
-        );
+        });
     };
 
     const handleModuleChange = (value: string) => {
@@ -139,7 +135,7 @@ export default function CreatePermissionModal({
                                 id="name"
                                 placeholder="e.g., view_assets, create_atk_requests"
                                 value={form.data.name}
-                                onChange={(e) =>
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                     form.setData('name', e.target.value)
                                 }
                                 disabled={form.processing}
@@ -208,7 +204,7 @@ export default function CreatePermissionModal({
                                         id="module"
                                         placeholder="Enter custom module name"
                                         value={customModule}
-                                        onChange={(e) => {
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                             setCustomModule(e.target.value);
                                             form.setData(
                                                 'module',
@@ -254,7 +250,7 @@ export default function CreatePermissionModal({
                                 id="description"
                                 placeholder="Briefly describe what this permission controls..."
                                 value={form.data.description}
-                                onChange={(e) =>
+                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                     form.setData('description', e.target.value)
                                 }
                                 disabled={form.processing}

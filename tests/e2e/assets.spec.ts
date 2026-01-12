@@ -21,7 +21,7 @@ test.describe('Asset Management', () => {
     await page.goto('/assets');
 
     // Find search input
-    const searchInput = page.getByPlaceholderText('Cari aset...');
+    const searchInput = page.getByPlaceholder('Cari aset...');
     await expect(searchInput).toBeVisible();
 
     await searchInput.fill('TestSearch');

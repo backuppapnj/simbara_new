@@ -40,29 +40,30 @@ createInertiaApp({
 initializeTheme();
 
 // Register PWA service worker
-const updateSW = registerSW({
-    onNeedRefresh() {
-        if (confirm('New content available. Reload to update?')) {
-            updateSW(true);
-        }
-    },
-    onOfflineReady() {
-        console.log('App is ready to work offline');
-    },
-    onRegistered(registration) {
-        console.log('Service Worker registered:', registration);
+if (import.meta.env.PROD) {
+    const updateSW = registerSW({
+        onNeedRefresh() {
+            if (confirm('New content available. Reload to update?')) {
+                updateSW(true);
+            }
+        },
+        onOfflineReady() {
+            console.log('App is ready to work offline');
+        },
+        onRegistered(registration: ServiceWorkerRegistration | undefined) {
+            console.log('Service Worker registered:', registration);
 
-        // Check for updates every hour
-        if (registration) {
-            setInterval(
-                () => {
-                    registration.update();
-                },
-                60 * 60 * 1000,
-            );
-        }
-    },
-    onRegisterError(error) {
-        console.error('Service Worker registration error:', error);
-    },
-});
+            if (registration) {
+                setInterval(
+                    () => {
+                        registration.update();
+                    },
+                    60 * 60 * 1000,
+                );
+            }
+        },
+        onRegisterError(error: unknown) {
+            console.error('Service Worker registration error:', error);
+        },
+    });
+}

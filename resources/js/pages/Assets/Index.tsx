@@ -21,10 +21,11 @@ import {
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import assets from '@/routes/assets';
+import { index as assetsIndex, importMethod, show } from '@/routes/assets';
+import { index as reportsIndex } from '@/routes/assets/reports';
 import { Head, Link, router } from '@inertiajs/react';
 import { FileText, Search, Upload, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Location {
     id: string;
@@ -79,6 +80,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const allSelectValue = '__all__';
+
 export default function AssetsIndex({
     assets,
     filters,
@@ -90,15 +93,7 @@ export default function AssetsIndex({
     );
     const [selectedLokasi, setSelectedLokasi] = useState(filters.lokasi || '');
     const [selectedStatus, setSelectedStatus] = useState(filters.status || '');
-
-    // Debounced search
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            applyFilters();
-        }, 500);
-
-        return () => clearTimeout(timer);
-    }, [searchQuery]);
+    const isInitialMount = useRef(true);
 
     const applyFilters = () => {
         const params: Record<string, string | undefined> = {
@@ -108,11 +103,25 @@ export default function AssetsIndex({
             status: selectedStatus || undefined,
         };
 
-        router.get(assets.index.url(), params, {
+        router.get(assetsIndex.url(), params, {
             preserveState: true,
             replace: true,
         });
     };
+
+    // Debounced search
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            applyFilters();
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery, selectedKondisi, selectedLokasi, selectedStatus]);
 
     const clearFilters = () => {
         setSearchQuery('');
@@ -121,7 +130,7 @@ export default function AssetsIndex({
         setSelectedStatus('');
 
         router.get(
-            assets.index.url(),
+            assetsIndex.url(),
             {},
             {
                 preserveState: true,
@@ -142,7 +151,7 @@ export default function AssetsIndex({
             page,
         };
 
-        router.get(assets.index.url(), params, {
+        router.get(assetsIndex.url(), params, {
             preserveState: true,
             only: ['assets'],
         });
@@ -276,13 +285,13 @@ export default function AssetsIndex({
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <Link href={assets.reports.index.url()}>
+                        <Link href={reportsIndex.url()}>
                             <Button variant="outline" size="sm">
                                 <FileText className="mr-2 h-4 w-4" />
                                 Laporan
                             </Button>
                         </Link>
-                        <Link href={assets.importMethod.url()}>
+                        <Link href={importMethod.url()}>
                             <Button size="sm">
                                 <Upload className="mr-2 h-4 w-4" />
                                 Import
@@ -340,17 +349,23 @@ export default function AssetsIndex({
                         <div className="space-y-2">
                             <Label htmlFor="lokasi">Lokasi</Label>
                             <Select
-                                value={selectedLokasi}
-                                onValueChange={setSelectedLokasi}
+                                value={selectedLokasi || allSelectValue}
+                                onValueChange={(value) =>
+                                    setSelectedLokasi(
+                                        value === allSelectValue ? '' : value,
+                                    )
+                                }
                             >
                                 <SelectTrigger id="lokasi">
                                     <SelectValue placeholder="Semua lokasi" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">
+                                    <SelectItem value={allSelectValue}>
                                         Semua lokasi
                                     </SelectItem>
-                                    {filterOptions.locations.map((location) => (
+                                    {filterOptions.locations
+                                        .filter((location) => location.id !== '')
+                                        .map((location) => (
                                         <SelectItem
                                             key={location.id}
                                             value={location.id}
@@ -368,17 +383,23 @@ export default function AssetsIndex({
                         <div className="space-y-2">
                             <Label htmlFor="kondisi">Kondisi</Label>
                             <Select
-                                value={selectedKondisi}
-                                onValueChange={setSelectedKondisi}
+                                value={selectedKondisi || allSelectValue}
+                                onValueChange={(value) =>
+                                    setSelectedKondisi(
+                                        value === allSelectValue ? '' : value,
+                                    )
+                                }
                             >
                                 <SelectTrigger id="kondisi">
                                     <SelectValue placeholder="Semua kondisi" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">
+                                    <SelectItem value={allSelectValue}>
                                         Semua kondisi
                                     </SelectItem>
-                                    {filterOptions.kondisi.map((option) => (
+                                    {filterOptions.kondisi
+                                        .filter((option) => option.value !== '')
+                                        .map((option) => (
                                         <SelectItem
                                             key={option.value}
                                             value={option.value}
@@ -394,17 +415,23 @@ export default function AssetsIndex({
                         <div className="space-y-2">
                             <Label htmlFor="status">Status</Label>
                             <Select
-                                value={selectedStatus}
-                                onValueChange={setSelectedStatus}
+                                value={selectedStatus || allSelectValue}
+                                onValueChange={(value) =>
+                                    setSelectedStatus(
+                                        value === allSelectValue ? '' : value,
+                                    )
+                                }
                             >
                                 <SelectTrigger id="status">
                                     <SelectValue placeholder="Semua status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">
+                                    <SelectItem value={allSelectValue}>
                                         Semua status
                                     </SelectItem>
-                                    {filterOptions.status.map((option) => (
+                                    {filterOptions.status
+                                        .filter((option) => option.value !== '')
+                                        .map((option) => (
                                         <SelectItem
                                             key={option.value}
                                             value={option.value}

@@ -65,7 +65,7 @@ export function useCamera() {
     };
 
     const capturePhoto = (
-        videoRef: React.RefObject<HTMLVideoElement>,
+        videoRef: React.RefObject<HTMLVideoElement | null>,
     ): string | null => {
         const video = videoRef.current;
         if (!video || !stream) {

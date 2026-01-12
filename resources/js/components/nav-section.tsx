@@ -41,7 +41,7 @@ export function NavSection({ group }: { group: NavGroup }) {
                         {group.items.map((item) => (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild>
-                                    <a href={item.href}>
+                                    <a href={typeof item.href === 'string' ? item.href : item.href.url}>
                                         {item.icon && <item.icon />}
                                         <span>{item.title}</span>
                                     </a>

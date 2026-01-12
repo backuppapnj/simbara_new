@@ -15,7 +15,7 @@ import { dashboard } from '@/routes';
 import assets from '@/routes/assets/index';
 import items from '@/routes/items/index';
 import officeSupplies from '@/routes/office-supplies/index';
-import { type NavGroup, type NavItem } from '@/types';
+import { type NavGroup, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     Bell,
@@ -32,22 +32,22 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: dashboard().url,
         icon: LayoutGrid,
     },
     {
         title: 'Aset',
-        href: assets.index(),
+        href: assets.index().url,
         icon: Box,
     },
     {
         title: 'ATK',
-        href: items.index(),
+        href: items.index().url,
         icon: BookOpen,
     },
     {
         title: 'Bahan Kantor',
-        href: officeSupplies.index(),
+        href: officeSupplies.index().url,
         icon: Folder,
     },
     {
@@ -92,7 +92,7 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { auth } = usePage().props;
+    const { auth } = usePage<SharedData>().props;
 
     const isAdmin =
         auth?.user?.roles?.includes('super_admin') ||
@@ -104,7 +104,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={dashboard().url} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

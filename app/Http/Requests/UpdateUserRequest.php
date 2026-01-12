@@ -32,7 +32,6 @@ class UpdateUserRequest extends FormRequest
             'department' => ['nullable', 'string', 'max:255'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'roles' => ['nullable', 'array'],
-            'roles.*' => ['exists:roles,id'],
             'is_active' => ['nullable', 'boolean'],
             'email_verified' => ['nullable', 'boolean'],
         ];

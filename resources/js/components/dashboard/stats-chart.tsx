@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import type HTMLAttributes from 'react-html-attributes';
+import { type HTMLAttributes } from 'react';
 import {
     Bar,
     BarChart,

@@ -232,7 +232,7 @@ test.describe('Purchases - Create Purchase // Membuat Pembelian', () => {
     const addItemButton = page.getByRole('button', { name: /Tambah Barang/i });
 
     // Initial state - no items
-    let initialCount = await page.locator('select').count();
+    const initialCount = await page.locator('select').count();
 
     // Add item - Tambah item
     await addItemButton.click();

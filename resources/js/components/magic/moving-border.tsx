@@ -11,7 +11,7 @@ interface MovingBorderProps {
     borderClassName?: string;
     from?: string;
     to?: string;
-    onClick?: () => void;
+    onClick?: (e?: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export const MovingBorder: React.FC<MovingBorderProps> = ({
@@ -113,11 +113,6 @@ export const MovingBorderButton: React.FC<MovingBorderButtonProps> = ({
             borderClassName={borderClassName}
             from={from}
             to={to}
-            onClick={() => {
-                if (props.onClick) {
-                    props.onClick();
-                }
-            }}
         >
             <button {...props}>{children}</button>
         </MovingBorder>

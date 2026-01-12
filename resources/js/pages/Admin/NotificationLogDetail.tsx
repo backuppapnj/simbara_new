@@ -1,4 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
+import notificationLogs from '@/routes/admin/notification-logs';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
@@ -55,7 +56,7 @@ export default function NotificationLogDetail({ log }: Props) {
                         Notification Log Detail
                     </h1>
                     <Link
-                        href={route('admin.notification-logs.index')}
+                        href={notificationLogs.index.url()}
                         className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
                     >
                         Back to Logs

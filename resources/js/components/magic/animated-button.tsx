@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import React from 'react';
 
-interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AnimatedButtonProps extends HTMLMotionProps<'button'> {
     children: React.ReactNode;
     variant?: 'primary' | 'secondary' | 'shimmer';
     size?: 'sm' | 'md' | 'lg';

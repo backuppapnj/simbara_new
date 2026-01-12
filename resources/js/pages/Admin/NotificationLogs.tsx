@@ -1,4 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
+import notificationLogs from '@/routes/admin/notification-logs';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
@@ -37,7 +38,7 @@ interface Props {
     logs: {
         data: NotificationLog[];
         links: PaginationLinks;
-        meta: Meta;
+        meta?: Meta;
     };
     filters: {
         status?: string;
@@ -50,6 +51,8 @@ interface Props {
 
 export default function NotificationLogs({ logs, filters }: Props) {
     const [currentFilters, setCurrentFilters] = useState(filters);
+    const data = logs?.data ?? [];
+    const meta = logs?.meta;
 
     const handleFilterChange = (key: string, value: string) => {
         setCurrentFilters({ ...currentFilters, [key]: value });
@@ -124,7 +127,7 @@ export default function NotificationLogs({ logs, filters }: Props) {
                             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700"
                         />
                         <Link
-                            href={route('admin.notification-logs.index')}
+                            href={notificationLogs.index.url()}
                             className="flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
                         >
                             Clear Filters
@@ -156,7 +159,7 @@ export default function NotificationLogs({ logs, filters }: Props) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-                                {logs.data.map((log) => (
+                                {data.map((log) => (
                                     <tr key={log.id}>
                                         <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-900 dark:text-gray-100">
                                             {log.id}
@@ -188,14 +191,14 @@ export default function NotificationLogs({ logs, filters }: Props) {
                         </table>
                     </div>
 
-                    {logs.meta.last_page > 1 && (
+                    {(meta?.last_page ?? 0) > 1 && meta?.links?.length && (
                         <div className="mt-4 flex items-center justify-between">
                             <div className="text-sm text-gray-700 dark:text-gray-300">
-                                Showing {logs.meta.from} to {logs.meta.to} of{' '}
-                                {logs.meta.total} results
+                                Showing {meta.from ?? 0} to {meta.to ?? 0} of{' '}
+                                {meta.total ?? data.length} results
                             </div>
                             <div className="flex gap-2">
-                                {logs.meta.links.map((link, index) => (
+                                {meta.links.map((link, index) => (
                                     <Link
                                         key={index}
                                         href={link.url || '#'}

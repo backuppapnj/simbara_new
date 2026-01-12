@@ -123,20 +123,26 @@ export default function AssetReports() {
         setLoading(true);
         setPreviewData(null);
         try {
-            await filterForm.post(preview().url, {
-                data: {
-                    report_type: selectedReport,
-                    ...filterForm.data(),
-                },
-                onSuccess: (page) => {
-                    const data = (page.props as any).preview;
-                    setPreviewData(data);
-                    toast.success('Data preview berhasil dimuat');
-                },
-                onError: () => {
-                    toast.error('Gagal memuat data preview');
+            const params = new URLSearchParams();
+            Object.entries(filterForm.data).forEach(([key, value]) => {
+                if (value) params.append(key, value as string);
+            });
+            params.append('report_type', selectedReport);
+
+            const response = await fetch(`${preview().url}?${params.toString()}`, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
                 },
             });
+
+            if (response.ok) {
+                const data = await response.json();
+                setPreviewData(data);
+                toast.success('Data preview berhasil dimuat');
+            } else {
+                toast.error('Gagal memuat data preview');
+            }
         } catch (error) {
             toast.error('Terjadi kesalahan saat memuat preview');
         } finally {
@@ -161,11 +167,11 @@ export default function AssetReports() {
 
             const exportAction = exportActions[selectedReport];
             const params = new URLSearchParams();
-            Object.entries(filterForm.data()).forEach(([key, value]) => {
-                if (value) params.append(key, value as string);
-            });
+        Object.entries(filterForm.data).forEach(([key, value]) => {
+            if (value) params.append(key, value as string);
+        });
 
-            const fullUrl = `${exportAction().url}?${params.toString()}`;
+        const fullUrl = `${exportAction().url}?${params.toString()}`;
             window.open(fullUrl, '_blank');
             toast.success('Laporan sedang diunduh');
         } catch (error) {
@@ -338,7 +344,7 @@ export default function AssetReports() {
                                 <input
                                     type="date"
                                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                                    value={filterForm.data('start_date')}
+                                    value={filterForm.data.start_date}
                                     onChange={(e) =>
                                         filterForm.setData(
                                             'start_date',
@@ -354,7 +360,7 @@ export default function AssetReports() {
                                 <input
                                     type="date"
                                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                                    value={filterForm.data('end_date')}
+                                    value={filterForm.data.end_date}
                                     onChange={(e) =>
                                         filterForm.setData(
                                             'end_date',
@@ -375,7 +381,7 @@ export default function AssetReports() {
                                         type="text"
                                         className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         placeholder="Cth: Ruang Aula"
-                                        value={filterForm.data('location')}
+                                        value={filterForm.data.location}
                                         onChange={(e) =>
                                             filterForm.setData(
                                                 'location',
@@ -392,7 +398,7 @@ export default function AssetReports() {
                                         type="text"
                                         className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                         placeholder="Cth: 1.3.2.01.01.001"
-                                        value={filterForm.data('category')}
+                                        value={filterForm.data.category}
                                         onChange={(e) =>
                                             filterForm.setData(
                                                 'category',
@@ -407,7 +413,7 @@ export default function AssetReports() {
                                     </label>
                                     <select
                                         className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                                        value={filterForm.data('condition')}
+                                        value={filterForm.data.condition}
                                         onChange={(e) =>
                                             filterForm.setData(
                                                 'condition',

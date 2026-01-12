@@ -1,12 +1,12 @@
-import type { User } from '@/types';
+import type { SharedData, User } from '@/types';
 import { usePage } from '@inertiajs/react';
 
 /**
  * Permission checking composable for frontend authorization
  */
 export function usePermission() {
-    const page = usePage();
-    const user = page.props.auth?.user as User | undefined;
+    const page = usePage<SharedData>();
+    const user = page.props.auth?.user;
 
     /**
      * Check if user has a specific permission
@@ -27,8 +27,9 @@ export function usePermission() {
             return false;
         }
 
+        const userPermissions = user.permissions;
         return permissions.some((permission) =>
-            user.permissions.includes(permission),
+            userPermissions.includes(permission),
         );
     };
 
@@ -40,8 +41,9 @@ export function usePermission() {
             return false;
         }
 
+        const userPermissions = user.permissions;
         return permissions.every((permission) =>
-            user.permissions.includes(permission),
+            userPermissions.includes(permission),
         );
     };
 
@@ -64,7 +66,8 @@ export function usePermission() {
             return false;
         }
 
-        return roles.some((role) => user.roles.includes(role));
+        const userRoles = user.roles;
+        return roles.some((role) => userRoles.includes(role));
     };
 
     /**
@@ -75,7 +78,8 @@ export function usePermission() {
             return false;
         }
 
-        return roles.every((role) => user.roles.includes(role));
+        const userRoles = user.roles;
+        return roles.every((role) => userRoles.includes(role));
     };
 
     return {

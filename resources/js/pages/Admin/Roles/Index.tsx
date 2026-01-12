@@ -8,6 +8,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
+import adminRolesRoutes from '@/routes/admin/roles';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import { Eye, Shield, Users } from 'lucide-react';
@@ -68,7 +69,7 @@ export default function RolesIndex({ roles }: IndexProps) {
         },
         {
             title: 'Roles',
-            href: route('admin.roles.index'),
+            href: adminRolesRoutes.index.url(),
         },
     ];
 
@@ -166,12 +167,13 @@ export default function RolesIndex({ roles }: IndexProps) {
                                               </div>
                                           </div>
                                           <div className="flex gap-2">
-                                              <Link
-                                                  href={route(
-                                                      'admin.roles.show',
+                                            <Link
+                                                  href={adminRolesRoutes.show.url(
+                                                      role.id,
                                                       {
-                                                          id: role.id,
-                                                          tab: 'users',
+                                                          query: {
+                                                              tab: 'users',
+                                                          },
                                                       },
                                                   )}
                                                   className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -190,11 +192,12 @@ export default function RolesIndex({ roles }: IndexProps) {
                                                   </Button>
                                               </Link>
                                               <Link
-                                                  href={route(
-                                                      'admin.roles.show',
+                                                  href={adminRolesRoutes.show.url(
+                                                      role.id,
                                                       {
-                                                          id: role.id,
-                                                          tab: 'permissions',
+                                                          query: {
+                                                              tab: 'permissions',
+                                                          },
                                                       },
                                                   )}
                                                   className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"

@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import stockOpnames from '@/routes/stock-opnames';
 import { Head, Link, router } from '@inertiajs/react';
 import {
     AlertTriangle,
@@ -86,7 +87,7 @@ export default function Show({ stockOpname }: ShowProps) {
         null,
     );
     const [selectedDetailPhotos, setSelectedDetailPhotos] = useState<
-        StockOpnameDetail['photos']
+        NonNullable<StockOpnameDetail['photos']>
     >([]);
 
     const handleStatusChange = (action: 'submit' | 'approve') => {
@@ -98,8 +99,13 @@ export default function Show({ stockOpname }: ShowProps) {
             return;
         }
 
+        const actionUrl =
+            action === 'submit'
+                ? stockOpnames.submit.url(stockOpname)
+                : stockOpnames.approve.url(stockOpname);
+
         router.post(
-            route(`stock-opnames.${action}`, stockOpname),
+            actionUrl,
             {},
             {
                 onSuccess: () => {
@@ -112,7 +118,7 @@ export default function Show({ stockOpname }: ShowProps) {
     };
 
     const openPhotoGallery = (
-        photos: StockOpnameDetail['photos'],
+        photos: NonNullable<StockOpnameDetail['photos']>,
         index: number,
     ) => {
         if (photos && photos.length > 0) {
@@ -131,7 +137,7 @@ export default function Show({ stockOpname }: ShowProps) {
     };
 
     const handleDownloadBa = () => {
-        window.location.href = route('stock-opnames.ba-pdf', stockOpname);
+        window.location.href = stockOpnames.baPdf.url(stockOpname);
     };
 
     const totalItems = stockOpname.stock_opname_details.length;
@@ -160,7 +166,7 @@ export default function Show({ stockOpname }: ShowProps) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
-                            href={route('stock-opnames.index')}
+                            href={stockOpnames.index.url()}
                             className="inline-flex items-center gap-2 rounded-lg border bg-card px-4 py-2 text-sm font-medium hover:bg-muted"
                         >
                             <ArrowLeft className="h-4 w-4" />
@@ -472,6 +478,7 @@ export default function Show({ stockOpname }: ShowProps) {
                                                         <button
                                                             type="button"
                                                             onClick={() =>
+                                                                detail.photos &&
                                                                 openPhotoGallery(
                                                                     detail.photos,
                                                                     0,

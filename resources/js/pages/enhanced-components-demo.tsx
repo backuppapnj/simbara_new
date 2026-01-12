@@ -223,7 +223,7 @@ export default function EnhancedComponentsDemo() {
     };
 
     return (
-        <AppLayout title="Enhanced Components Demo">
+        <AppLayout>
             <div className="space-y-6 p-6">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">

@@ -1,5 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import stockOpnamesRoutes from '@/routes/stock-opnames';
 import { Head, Link, router } from '@inertiajs/react';
 import {
     Check,
@@ -94,7 +95,7 @@ const statusLabels = {
 export default function Index({ stockOpnames, filters }: IndexProps) {
     const handleFilterChange = (key: string, value: string) => {
         router.get(
-            route('stock-opnames.index'),
+            stockOpnamesRoutes.index.url(),
             { ...filters, [key]: value },
             { preserveState: true },
         );
@@ -112,8 +113,13 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
             return;
         }
 
+        const actionUrl =
+            action === 'submit'
+                ? stockOpnamesRoutes.submit.url(stockOpname)
+                : stockOpnamesRoutes.approve.url(stockOpname);
+
         router.post(
-            route(`stock-opnames.${action}`, stockOpname),
+            actionUrl,
             {},
             {
                 onSuccess: () => {
@@ -126,7 +132,7 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
     };
 
     const handleDownloadBa = (stockOpname: StockOpname) => {
-        window.location.href = route('stock-opnames.ba-pdf', stockOpname);
+        window.location.assign(stockOpnamesRoutes.baPdf.url(stockOpname));
     };
 
     return (
@@ -145,7 +151,7 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                         </p>
                     </div>
                     <Link
-                        href={route('stock-opnames.create')}
+                        href={stockOpnamesRoutes.create.url()}
                         className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
                     >
                         <Plus className="h-4 w-4" />
@@ -347,8 +353,7 @@ export default function Index({ stockOpnames, filters }: IndexProps) {
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Link
-                                                            href={route(
-                                                                'stock-opnames.show',
+                                                            href={stockOpnamesRoutes.show.url(
                                                                 so,
                                                             )}
                                                             className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"

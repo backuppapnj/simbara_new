@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import assets from '@/routes/assets';
 import { router } from '@inertiajs/react';
 import { Star, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
@@ -38,7 +39,7 @@ export function AssetPhotoGallery({
 
         try {
             await router.delete(
-                route('assets.photos.destroy', [assetId, photoId]),
+                assets.photos.destroy.url([assetId, photoId]),
                 {
                     onSuccess: () => {
                         setPhotos((prev) =>
@@ -66,7 +67,7 @@ export function AssetPhotoGallery({
     const handleSetPrimary = async (photoId: string) => {
         try {
             await router.put(
-                route('assets.photos.update', [assetId, photoId]),
+                assets.photos.update.url([assetId, photoId]),
                 {
                     is_primary: true,
                 },

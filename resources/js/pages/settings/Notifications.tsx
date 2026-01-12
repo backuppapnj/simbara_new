@@ -31,6 +31,7 @@ interface NotificationSettings {
 
 interface PageProps {
     settings: NotificationSettings;
+    [key: string]: unknown;
 }
 
 export default function NotificationSettings() {

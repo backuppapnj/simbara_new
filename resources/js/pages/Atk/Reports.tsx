@@ -127,8 +127,8 @@ const reportTypes: Array<{
 export default function AtkReports() {
     const [reportType, setReportType] = useState<ReportType>('monthly');
     const [filters, setFilters] = useState<ReportFilter>({
-        bulan: new Date().getMonth() + 1,
-        tahun: new Date().getFullYear(),
+        bulan: String(new Date().getMonth() + 1),
+        tahun: String(new Date().getFullYear()),
     });
     const [previewData, setPreviewData] = useState<PreviewData | null>(null);
     const [isLoading, setIsLoading] = useState(false);

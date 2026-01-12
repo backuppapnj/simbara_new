@@ -10,10 +10,6 @@ This file tracks all major tracks for the project. Each track has its own detail
 **Description:** Perbaikan menyeluruh suite test E2E Playwright - 67+ masalah teridentifikasi
 **Location:** [./conductor/tracks/e2e-fix_20250112/](./conductor/tracks/e2e-fix_20250112/)
 
-### [~] User Management UI
-**Description:** User Management UI - Membuat antarmuka pengelolaan user (CRUD, Role Assignment, Impersonate, Audit Log)
-**Location:** [./conductor/tracks/user_management_ui_20260113/](./conductor/tracks/user_management_ui_20260113/)
-
 ---
 
 ## 📁 Completed Tracks (Archived)
@@ -56,11 +52,15 @@ All completed tracks have been moved to `conductor/archive/`.
 **Description:** Remove users.view, roles.manage, settings.whatsapp dari kasubag_umum, hanya super_admin yang punya permission sistem
 **Location:** [./conductor/archive/rbac_refinement_20260111/](./conductor/archive/rbac_refinement_20260111/)
 
+### [x] User Management UI ✅
+**Description:** User Management UI - Membuat antarmuka pengelolaan user (CRUD, Role Assignment, Impersonate, Audit Log)
+**Location:** [./conductor/archive/user_management_ui_20260113/](./conductor/archive/user_management_ui_20260113/)
+
 ---
 
 ## 📊 Project Status
 
-**Overall Progress:** 88% COMPLETE (2 active tracks)
-**Total Tracks:** 11 (9 completed, 2 active)
-**Tests:** 1019 passing
-**Status:** IN DEVELOPMENT - E2E test fixes & User Management UI in progress
+**Overall Progress:** 91% COMPLETE (1 active track)
+**Total Tracks:** 11 (10 completed, 1 active)
+**Tests:** 1036 passing (UserController: 17, AuditLog: 29, ImpersonateMiddleware: 8, RoleSync: 11, etc.)
+**Status:** IN DEVELOPMENT - E2E test fixes in progress

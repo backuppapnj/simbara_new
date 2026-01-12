@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
+import atkRequests from '@/routes/atk-requests';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import {
@@ -169,7 +170,7 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
     });
 
     const handleReject = () => {
-        rejectForm.post(route('atk-requests.reject', atkRequest.id), {
+        rejectForm.post(atkRequests.reject.url(atkRequest.id), {
             onFinish: () => {
                 (
                     document.querySelector(
@@ -181,7 +182,7 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
     };
 
     const handleDistribute = () => {
-        distributeForm.post(route('atk-requests.distribute', atkRequest.id), {
+        distributeForm.post(atkRequests.distribute.url(atkRequest.id), {
             onSuccess: () => {
                 (
                     document.querySelector(
@@ -193,12 +194,18 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
     };
 
     const handleApprove = (level: number) => {
-        const routeName = `atk-requests.approve-level${level}` as const;
-        router.post(route(routeName, atkRequest.id));
+        const approveUrl =
+            level === 1
+                ? atkRequests.approveLevel1.url(atkRequest.id)
+                : level === 2
+                  ? atkRequests.approveLevel2.url(atkRequest.id)
+                  : atkRequests.approveLevel3.url(atkRequest.id);
+
+        router.post(approveUrl);
     };
 
     const handleConfirmReceive = () => {
-        router.post(route('atk-requests.confirm-receive', atkRequest.id));
+        router.post(atkRequests.confirmReceive.url(atkRequest.id));
     };
 
     const canApproveLevel1 =
@@ -235,7 +242,7 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link href={route('atk-requests.index')}>
+                        <Link href={atkRequests.index.url()}>
                             <Button variant="ghost" size="icon">
                                 <ArrowLeft className="h-5 w-5" />
                             </Button>
@@ -320,7 +327,7 @@ export default function AtkRequestsShow({ atkRequest, can }: ShowProps) {
                                                     rejectForm.data
                                                         .alasan_penolakan
                                                 }
-                                                onChange={(e) =>
+                                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                                     rejectForm.setData(
                                                         'alasan_penolakan',
                                                         e.target.value,
