@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -14,12 +15,14 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
 
     /**
      * @property-read \Illuminate\Database\Eloquent\Collection<int, PushSubscription> $pushSubscriptions
      * @property-read NotificationSetting|null $notificationSetting
      * @property-read \Illuminate\Database\Eloquent\Collection<int, NotificationLog> $notificationLogs
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, AuditLog> $auditLogs
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, AuditLog> $actorLogs
      */
 
     /**
@@ -33,6 +36,7 @@ class User extends Authenticatable
         'phone',
         'nip',
         'position',
+        'department',
         'is_active',
         'password',
     ];
@@ -109,5 +113,21 @@ class User extends Authenticatable
     public function notificationLogs(): HasMany
     {
         return $this->hasMany(NotificationLog::class);
+    }
+
+    /**
+     * Get the audit logs for the user (when user is the target).
+     */
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class);
+    }
+
+    /**
+     * Get the audit logs where the user is the actor.
+     */
+    public function actorLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class, 'actor_id');
     }
 }
