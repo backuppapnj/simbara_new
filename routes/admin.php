@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\ImpersonateController;
 use App\Http\Controllers\Admin\NotificationLogController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UserExportController;
 use App\Http\Controllers\Admin\WhatsAppSettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,5 +45,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::post('/', [PermissionController::class, 'store'])->name('store');
         Route::put('/{permission}', [PermissionController::class, 'update'])->name('update');
         Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy');
+    });
+
+    // User Management Routes
+    Route::prefix('users')->name('users.')->group(function () {
+        // User Export - requires users.view permission (checked in policy)
+        Route::get('/export', UserExportController::class)
+            ->middleware(['permission:users.view'])
+            ->name('export');
+
+        // User role sync - requires super_admin (checked in controller)
+        Route::put('/{user}/roles', [UserController::class, 'syncRoles'])->name('sync-roles');
+
+        // User Impersonation Routes
+        // Start impersonation requires users.impersonate permission
+        Route::post('/{user}/impersonate', [ImpersonateController::class, 'start'])
+            ->middleware(['permission:users.impersonate'])
+            ->name('impersonate');
+
+        // Stop impersonation only requires authentication (session check handles authorization)
+        Route::get('/stop-impersonate', [ImpersonateController::class, 'stop'])
+            ->name('stop-impersonate');
     });
 });
